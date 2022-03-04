@@ -1,0 +1,10 @@
+^C:\USERS\DIOGO\DOCUMENTS\GITHUB\SRCDR\BUILD\CMAKEFILES\9E2F26EB508C70ECEDB9CEDD238AFF5C\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Diogo/Documents/GitHub/srcDR -BC:/Users/Diogo/Documents/GitHub/srcDR/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Diogo/Documents/GitHub/srcDR/build/class2.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

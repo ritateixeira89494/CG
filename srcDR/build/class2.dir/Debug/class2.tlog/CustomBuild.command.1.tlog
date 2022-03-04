@@ -1,0 +1,10 @@
+^C:\USERS\DIOGO\DESKTOP\DIOGO\TRABALHOS DA ESCOLA\3ANO2SEM\CG\AULA2\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Diogo/Desktop/Diogo/Trabalhos da escola/3ano2sem/CG/aula2" "-BC:/Users/Diogo/Desktop/Diogo/Trabalhos da escola/3ano2sem/CG/aula2/build" --check-stamp-file "C:/Users/Diogo/Desktop/Diogo/Trabalhos da escola/3ano2sem/CG/aula2/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
