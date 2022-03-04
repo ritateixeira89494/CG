@@ -14,6 +14,23 @@ int transUP = 0.0f;
 int rotateRigth = 0.0f;
 int rotateUP = 0.0f;
 
+void drawAxis() {
+	glBegin(GL_LINES);
+
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(20.0, 0.0, 0.0);
+
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 20.0, 0.0);
+
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 20.0);
+	glEnd();
+}
+
 void drawSquare(float xOr, float yOr, float side) {
 	//glutWireCube(side);
 
@@ -154,6 +171,7 @@ void renderScene(void) {
 	//glutWireTeapot(1);
 	//drawPiramide();
 	drawPlane(10, 8);
+	drawAxis();
 	// End of frame
 	glutSwapBuffers();
 }
