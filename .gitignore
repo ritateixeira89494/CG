@@ -30,3 +30,22 @@
 *.exe
 *.out
 *.app
+
+# .3d Models
+*.3d
+
+# Binary output and libs
+*target/
+
+# CMake stuff
+*CMakeCache.txt
+*cmake_install.cmake
+*Makefile
+*CMakeFiles/
+
+# I don't know what this is but its in my folder
+*.fuse*
+
+# VSCode and CLion stuff
+*.idea/
+*.vscode/
