@@ -1,11 +1,9 @@
-#include <GL/gl.h>
-#include <cstdlib>
-#include <stdlib.h>
 #include <stdio.h>
 
-#include "GL/glut.h"
 #include "model.h"
+#include "triangle.h"
 
+using namespace std;
 
 namespace model {
     int Model::get_n_triangles() {
@@ -18,26 +16,30 @@ namespace model {
             return -1;
         }
 
-        int triangs = 0;
-        fscanf(f, "%d\n", &triangs);
+        GLfloat point1[3];
+        GLfloat point2[3];
+        GLfloat point3[3];
 
-        points = (GLfloat *) malloc(3*triangs*sizeof(GLfloat));
+        fscanf(f, "%d\n", &n_triangles); 
 
-        int mem = triangs * 9;
+        int mem = n_triangles * 9;
         for(int i = 0; i < mem; i+=9) {
-            fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n", &points[i+0], &points[i+1], &points[i+2],
-                                                            &points[i+3], &points[i+4], &points[i+5],
-                                                            &points[i+6], &points[i+7], &points[i+8]
-            );
+            fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n", &point1[0], &point1[1], &point1[2],
+                                                            &point2[0], &point2[1], &point2[2],
+                                                            &point3[0], &point3[1], &point3[2]
+                   );
+            triangles.push_back(new Triangle(
+                point1[0], point1[1], point1[2],
+                point2[0], point2[1], point2[2],
+                point3[0], point3[1], point3[2]
+                ));
         }
 
-        n_triangles = triangs;
-
-        return 0;
+        return n_triangles;
     }
 
-    void Model::init() {
+    Model::Model() {
         n_triangles = 0;
-        points = NULL;
+        triangles = {};
     }
 }

@@ -1,17 +1,27 @@
-#include "tinyxml2.h"
-#include "io/model.h"
-#include <GL/gl.h>
 #include <GL/glut.h>
-#include <cstdio>
+#include <iostream>
 
-using namespace tinyxml2;
+#include "io/model.h"
+
+using namespace std;
 using namespace model;
 
 int main(int argc, char *argv[]) {
+    if(argc != 2) {
+        clog << "Wrong number of arguments provided! Required 1" << endl;
+        return -1;
+    }
+    
     Model m;
-    m.init();
+    
+    char *path = argv[1];
+    int err_code = m.load_model(path);
+    if(err_code == -1) {
+        clog << "File \"" << path << "\" not found!" << endl;
+        return -2;
+    }
 
-    m.load_model((char *) "test.3d");
+    cout << "Number of triangles: " << m.get_n_triangles() << endl;
 
-    printf("n_triangs = %d", m.get_n_triangles());
+    return 0;
 }
