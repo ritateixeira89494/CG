@@ -38,8 +38,19 @@ namespace model {
         return n_triangles;
     }
 
+    vector<Triangle *> Model::get_triangles() {
+        return triangles;
+    }
+
     Model::Model() {
         n_triangles = 0;
         triangles = {};
+    }
+
+    Model::Model(char *path) {
+        n_triangles = 0;
+        triangles = {};
+
+        load_model(path);
     }
 }

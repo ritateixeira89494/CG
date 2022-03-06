@@ -1,5 +1,5 @@
-#ifndef __IO_H__
-#define __IO_H__
+#ifndef __MODEL_H__
+#define __MODEL_H__
 
 #include "triangle.h"
 #include <GL/glut.h>
@@ -15,8 +15,10 @@ namespace model {
             vector<Triangle *> triangles;
         public:
             Model();                    // Initializes an empty model
+            Model(char *path);          // Initializes and loads a ".3d" model
             int get_n_triangles();      // Returns the number of triangles
             int load_model(char *path); // Loads the model from a ".3d" file
+            vector<Triangle *> get_triangles();
     };
 }
 

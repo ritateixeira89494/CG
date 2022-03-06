@@ -1,6 +1,5 @@
 #include "triangle.h"
-#include <GL/gl.h>
-#include <type_traits>
+#include <GL/glut.h>
 
 #include <tuple>
 
