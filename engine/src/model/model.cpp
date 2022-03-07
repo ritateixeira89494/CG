@@ -24,9 +24,10 @@ namespace model {
 
         int mem = n_triangles * 9;
         for(int i = 0; i < mem; i+=9) {
-            fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n", &point1[0], &point1[1], &point1[2],
-                                                            &point2[0], &point2[1], &point2[2],
-                                                            &point3[0], &point3[1], &point3[2]
+            fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n",
+                   &point1[0], &point1[1], &point1[2],
+                   &point2[0], &point2[1], &point2[2],
+                   &point3[0], &point3[1], &point3[2]
                    );
             triangles.push_back(new Triangle(
                 point1[0], point1[1], point1[2],

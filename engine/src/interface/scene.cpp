@@ -3,19 +3,41 @@
 namespace interface {
     Scene::Scene() {
         models = {};
+        set_position(0,0,0);
+        set_camera_pos(15,10,15);
+        set_up(0,1,0);
+        set_rotation(0);
+        set_fov(60);
+        set_near(1);
+        set_far(1000);
     }
 
     // TODO: Code this function
     Scene::Scene(char *path) {
         models = {};
-        Model *m = new Model(path);
+        set_position(0,0,0);
+        set_camera_pos(15,10,15);
+        set_up(0,1,0);
+        set_rotation(0);
+        set_fov(60);
+        set_near(1);
+        set_far(1000);
+
+        auto *m = new Model(path);
 
         models.push_back(m);
     }
 
     Scene::Scene(vector<Model *> m) {
         models = {};
-        
+        set_position(0,0,0);
+        set_camera_pos(15,10,15);
+        set_up(0,1,0);
+        set_rotation(0);
+        set_fov(60);
+        set_near(1);
+        set_far(1000);
+
         for(Model *model : m) {
             models.push_back(model);
         }
@@ -43,5 +65,58 @@ namespace interface {
         get<0>(position)+=x;
         get<1>(position)+=y;
         get<2>(position)+=z;
+    }
+
+    void Scene::rotate_models(GLfloat angle) {
+        rotation+=angle;
+    }
+
+    tuple<GLfloat, GLfloat, GLfloat> Scene::get_position() {
+        return position;
+    }
+    void Scene::set_position(GLfloat x, GLfloat y, GLfloat z) {
+        position = make_tuple(x,y,z);
+    }
+
+    GLfloat Scene::get_rotation() {
+        return rotation;
+    }
+    void Scene::set_rotation(GLfloat angle) {
+        rotation = angle;
+    }
+
+    tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_pos() {
+        return camera_pos;
+    }
+    void Scene::set_camera_pos(GLfloat x, GLfloat y, GLfloat z) {
+        camera_pos = make_tuple(x, y, z);
+    }
+
+    tuple<GLfloat, GLfloat, GLfloat> Scene::get_up() {
+        return up;
+    }
+    void Scene::set_up(GLfloat x, GLfloat y, GLfloat z) {
+        up = make_tuple(x, y, z);
+    }
+
+    GLfloat Scene::get_fov() {
+        return fov;
+    }
+    void Scene::set_fov(GLfloat fov2) {
+        fov = fov2;
+    }
+
+    GLfloat Scene::get_near()  {
+        return near;
+    }
+    void Scene::set_near(GLfloat near2) {
+        near = near2;
+    }
+
+    GLfloat Scene::get_far() {
+        return far;
+    }
+    void Scene::set_far(GLfloat far2) {
+        far = far2;
     }
 }
