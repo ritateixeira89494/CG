@@ -57,6 +57,25 @@ void render() {
     glutSwapBuffers();
 }
 
+void parse_key(unsigned char key, int x, int y) {
+    switch(key) {
+        case 'a':
+            scene->move_models(-0.1, 0, 0);
+            break;
+        case 'd':
+            scene->move_models(0.1, 0, 0);
+            break;
+        case 'w':
+            scene->move_models(0, 0, -0.1);
+            break;
+        case 's':
+            scene->move_models(0, 0, 0.1);
+            break;
+    }
+
+    glutPostRedisplay();
+}
+
 void run(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
@@ -64,14 +83,14 @@ void run(int argc, char *argv[]) {
     glutInitWindowSize(800,800);
     glutCreateWindow("CG2022 Engine");
 
-    scene = new Scene(argv[1]);
-
     glutDisplayFunc(render);
     glutReshapeFunc(change_size);
+    glutKeyboardFunc(parse_key);
 
     glEnable(GL_DEPTH_TEST);
-
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    scene = new Scene(argv[1]);
 
     glutMainLoop();
 }

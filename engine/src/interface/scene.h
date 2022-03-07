@@ -9,12 +9,15 @@ using namespace model;
 namespace interface {
     class Scene {
         vector<Model *> models;
+        tuple<GLfloat, GLfloat, GLfloat> position;
+
         void render_scene();
         public:
             Scene();
             Scene(char *path);
             Scene(vector<Model *> models);
             void render_models();
+            void move_models(GLfloat x, GLfloat y, GLfloat z);
     };
 } // namespace interface
 

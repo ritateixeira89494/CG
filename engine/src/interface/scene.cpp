@@ -31,11 +31,17 @@ namespace interface {
                 tuple<GLfloat, GLfloat, GLfloat> p2 = tri->get_p2();
                 tuple<GLfloat, GLfloat, GLfloat> p3 = tri->get_p3();
 
-                glVertex3f(get<0>(p1), get<1>(p1), get<2>(p1));
-                glVertex3f(get<0>(p2), get<1>(p2), get<2>(p2));
-                glVertex3f(get<0>(p3), get<1>(p3), get<2>(p3));
+                glVertex3f(get<0>(p1) + get<0>(position), get<1>(p1) + get<1>(position), get<2>(p1) + get<2>(position));
+                glVertex3f(get<0>(p2) + get<0>(position), get<1>(p2) + get<1>(position), get<2>(p2) + get<2>(position));
+                glVertex3f(get<0>(p3) + get<0>(position), get<1>(p3) + get<1>(position), get<2>(p3) + get<2>(position));
             }
         }
         glEnd();
+    }
+
+    void Scene::move_models(GLfloat x, GLfloat y, GLfloat z) {
+        get<0>(position)+=x;
+        get<1>(position)+=y;
+        get<2>(position)+=z;
     }
 }
