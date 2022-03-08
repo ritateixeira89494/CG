@@ -4,6 +4,9 @@
     <ClCompile Include="C:\Users\Diogo\Documents\GitHub\srcDR\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Diogo\Documents\GitHub\srcDR\CMakeLists.txt" />
@@ -12,5 +15,18 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{80D9079E-9D2E-329C-8C8E-89E9A899C32D}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\point.cpp">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\point.h">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Box.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

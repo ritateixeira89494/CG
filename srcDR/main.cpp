@@ -1,18 +1,24 @@
+
+#include <math.h>
+#include "main.h"
+#include "point.h"
+
+#include <stdio.h>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
-
-#include <math.h>
-#include "main.h"
-#include <stdio.h>
-
+#include "build/Box.h"
 int transRigth = 0.0f;
 int transUP = 0.0f;
 
 int rotateRigth = 0.0f;
 int rotateUP = 0.0f;
+
+int sizeSquare = 1;
+int divisions= 8;
+
 
 void drawAxis() {
 	glBegin(GL_LINES);
@@ -31,47 +37,73 @@ void drawAxis() {
 	glEnd();
 }
 
-void drawSquare(float xOr, float yOr, float side) {
-	//glutWireCube(side);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	printf("Um quadradinho: %f %f %f\n", xOr, yOr, side);
-	float zero = 0.0f;
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	// X axis in red
-	glVertex3f(xOr + side, zero, yOr);
-
-	glVertex3f(xOr, zero, yOr);
-	glVertex3f(xOr, zero, yOr + side);
-
-	glEnd();
-
-	glColor3f(1.0f, 1.0f, 0.5f);
-	glBegin(GL_TRIANGLES);
-	// X axis in red
-	glVertex3f(xOr + side, zero, yOr + side);
-
-	glVertex3f(xOr + side, zero, yOr);
-	glVertex3f(xOr, 0.0f, yOr + side);
-
-	glEnd();
-	}
 
 // Desenha um plano a partir dos pontos individuais. 
 // De cada ponto, sabe-se o lado de cada quadrado, logo é fácil desenhar o resto do quadrado.
 void drawPlane(float length, float divisions) {
 	float increment = length / divisions;
 	printf("Increment original %f", increment);
+	//Draw base and top
 	for (float line = 0; line < length; line = line + increment) {
 		for (float collumn = 0; collumn < length; collumn = collumn+ increment) {
-			drawSquare(line, collumn, increment);
+		//	drawSquareUp(line, collumn, increment, length);
+			drawSquareDown(line, collumn, increment);
+			
 			printf("Um quadrado %f", increment);
 		}
 	}
 }
 
+// Desenha um plano a partir dos pontos individuais. 
+// De cada ponto, sabe-se o lado de cada quadrado, logo é fácil desenhar o resto do quadrado.
+void drawPlaneXY(float length, float divisions) {
+	float increment = length / divisions;
+	printf("Increment original %f", increment);
+	//Draw base and top
+	for (float line = 0; line < length; line = line + increment) {
+		for (float collumn = 0; collumn < length; collumn = collumn + increment) {
+			drawSquareXY(line, collumn, increment);
+			drawSquareXY(line, collumn, increment, length);
+			printf("Um quadrado %f", increment);
+		}
+	}
+}
+// Desenha um plano a partir dos pontos individuais. 
+// De cada ponto, sabe-se o lado de cada quadrado, logo é fácil desenhar o resto do quadrado.
+void drawPlaneYZ(float length, float divisions) {
+	float increment = length / divisions;
+	printf("Increment original %f", increment);
+	//Draw base and top
+	for (float line = 0; line < length; line = line + increment) {
+		for (float collumn = 0; collumn < length; collumn = collumn + increment) {
+			drawSquareYZ(line, collumn, increment);
+			drawSquareYZ(line, collumn, increment, length);
+			printf("Um quadrado %f", increment);
+		}
+	}
+}
+
+
+void drawBox(float length, float divisions) {
+	float increment = length / divisions;
+	for (float line = 0; line < length; line = line + increment) {
+
+		for (float collumn = 0; collumn < length; collumn = collumn + increment) {
+			drawSquareUp(line, collumn, increment, length);
+			drawSquareDown(line, collumn, increment);
+			drawSquareXY(line, collumn, increment);
+			drawSquareXY(line, collumn, increment, length);
+			drawSquareYZ(line, collumn, increment);
+			drawSquareYZ(line, collumn, increment, length);
+			printf("Um quadrado %f", increment);
+		}
+	}
+	//drawPlane(length, divisions);
+	//drawPlaneXY(length, divisions);
+	//drawPlaneYZ(length, divisions);
+
+}
 
 void drawPiramide(void) {
 	int sideSize = 1.0f;
@@ -170,7 +202,7 @@ void renderScene(void) {
 // put drawing instructions here
 	//glutWireTeapot(1);
 	//drawPiramide();
-	drawPlane(10, 8);
+	drawBox(sizeSquare, divisions);
 	drawAxis();
 	// End of frame
 	glutSwapBuffers();
