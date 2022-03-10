@@ -60,9 +60,13 @@ namespace interface {
         models.push_back(m);
          */
 
+        models = {};
         XMLDocument doc;
 
         if (doc.LoadFile(path) == 0); // TODO: handle error here;
+
+        set_position(0, 0, 0);
+        set_rotation(0);
 
         XMLElement *world = doc.FirstChildElement();
 
@@ -72,13 +76,12 @@ namespace interface {
         // Position coordinates
         XMLElement *positionElement = camera->FirstChildElement("position");
         coordinates positionCoord = getCoordinatesFromElement(positionElement);
-        set_position(positionCoord.x, positionCoord.x, positionCoord.z);
+        set_camera_pos(positionCoord.x, positionCoord.x, positionCoord.z);
 
         // LookAt coordinates
         XMLElement *lookAt = camera->FirstChildElement("lookAt");
         coordinates lookAtCoord = getCoordinatesFromElement(lookAt);
-        set_camera_pos(lookAtCoord.x, lookAtCoord.y, lookAtCoord.z);
-
+        //(lookAtCoord.x, lookAtCoord.y, lookAtCoord.z); TODO: Function call missing
 
         // Up coordinates
         XMLElement *upElement = camera->FirstChildElement("up");
@@ -95,19 +98,16 @@ namespace interface {
         cout << "Projection parameters: fov=" << fov << " near=" << near << " far=" << far << endl;
 
         // Models
-        models = {};
-        XMLElement *modelsElement = world->FirstChildElement("group")->FirstChildElement("models");
 
-        XMLElement *model = modelsElement->FirstChildElement("model");
-        while (model != nullptr) {
-            model = model->NextSiblingElement();
+        XMLNode *modelsNode = world->FirstChildElement("group")->FirstChild();
 
-            char filePath[50]; // TODO: Potential overflow
-            model->Attribute("file", filePath);
-            cout << filePath;
-        }
 
-        auto *m = new Model();
+        XMLElement *model = modelsNode->FirstChildElement("model");
+
+        const char* modelPath = model->Attribute("file");
+        cout << modelPath << endl;
+
+        auto *m = new Model(modelPath);
 
         models.push_back(m);
     }
