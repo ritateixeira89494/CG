@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.17)
 
 project(engine)
 
@@ -18,10 +18,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-find_package(tinyxml2 REQUIRED)
+# find_package(tinyxml2 REQUIRED)
 
 include_directories(${OpenGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 link_libraries(${OpenGL_LIBRARY_DIRS} ${GLUT_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS} ${GLUT_DEFINITIONS})
 
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} tinyxml2)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
