@@ -9,7 +9,7 @@ Scene *scene;
 
 void placeAxis() {
         glBegin(GL_LINES);
-        // X axis in red
+        // X Axis in red
         glColor3f(1.0f, 0.0f, 0.0f);
         glVertex3f(0.0f, 0.0f, 0.0f);
         glVertex3f( 10.0f, 0.0f, 0.0f);
@@ -84,6 +84,8 @@ void parse_key(unsigned char key, int x, int y) {
         case 'e':
             scene->rotate_models(-0.4);
             break;
+        default:
+            return;
     }
 
     glutPostRedisplay();
@@ -101,7 +103,7 @@ void run(int argc, char *argv[]) {
     glutKeyboardFunc(parse_key);
 
     glEnable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT, GL_LINE);
 
     scene = new Scene(argv[1]);
 

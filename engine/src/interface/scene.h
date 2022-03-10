@@ -10,13 +10,6 @@ namespace interface {
     class Scene {
         vector<Model *> models;
         tuple<GLfloat, GLfloat, GLfloat> position;
-        tuple<GLfloat, GLfloat, GLfloat> camera_pos;
-        tuple<GLfloat, GLfloat, GLfloat> camera_center;
-        tuple<GLfloat, GLfloat, GLfloat> up;
-        GLfloat rotation;
-        GLfloat fov;
-        GLfloat near;
-        GLfloat far;
 
         public:
             Scene();

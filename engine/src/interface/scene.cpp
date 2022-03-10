@@ -45,21 +45,6 @@ namespace interface {
 
     // TODO: Code this function
     Scene::Scene(char *path) {
-        /*
-        models = {};
-        set_position(0,0,0);
-        set_camera_pos(15,10,15);
-        set_up(0,1,0);
-        set_rotation(0);
-        set_fov(60);
-        set_near(1);
-        set_far(1000);
-
-        auto *m = new Model(path);
-
-        models.push_back(m);
-         */
-
         models = {};
         XMLDocument doc;
 
@@ -81,7 +66,7 @@ namespace interface {
         // LookAt coordinates
         XMLElement *lookAt = camera->FirstChildElement("lookAt");
         coordinates lookAtCoord = getCoordinatesFromElement(lookAt);
-        //(lookAtCoord.x, lookAtCoord.y, lookAtCoord.z); TODO: Function call missing
+        set_camera_center(lookAtCoord.x, lookAtCoord.y, lookAtCoord.z); //TODO: Function call missing
 
         // Up coordinates
         XMLElement *upElement = camera->FirstChildElement("up");
