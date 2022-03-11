@@ -9,15 +9,21 @@
 #else
 #include <GL/glut.h>
 #endif
-#include "build/Box.h"
-int transRigth = 0.0f;
-int transUP = 0.0f;
-
-int rotateRigth = 0.0f;
-int rotateUP = 0.0f;
+#include "build/Box.cpp"
+#include "build/sphere.cpp"
+#include "build/Piramide.cpp"
 
 int sizeSquare = 1;
 int divisions= 8;
+
+//Camara
+float posX = 5;
+float posY = 5;
+float posZ = 5;
+
+float alpha = 0.7;
+float beta = 0.7;
+float radiusCamera = 30;
 
 
 void drawAxis() {
@@ -105,57 +111,6 @@ void drawBox(float length, float divisions) {
 
 }
 
-void drawPiramide(void) {
-	int sideSize = 1.0f;
-	int zero = 0.0f;
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	//Square
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	// X axis in red
-	glVertex3f(zero, 0.0f, sideSize);
-	glVertex3f(zero, zero, 0.0f);
-	glVertex3f(sideSize, zero,zero);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	// X axis in red
-	glVertex3f(sideSize, 0.0f, 0.0f);
-	glVertex3f(sideSize, zero, sideSize);
-	glVertex3f(zero, zero, sideSize);
-	glEnd();
-
-	float altura = 2.0f;
-	//Triangle cá
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(sideSize, 0.0f, sideSize);
-	glVertex3f(sideSize/2, altura, sideSize/2);
-	glVertex3f(zero, zero, sideSize);
-	glEnd();
-	//Triangle cá
-	glColor3f(1.0f, 1.0f, 0.5f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(sideSize, 0.0f, zero);
-	glVertex3f(sideSize / 2, altura, sideSize / 2);
-	glVertex3f(sideSize, zero, sideSize);
-	glEnd();
-	//Triangle esq
-	glColor3f(0.7f, 0.3f, 0.5f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(zero, 0.0f, sideSize);
-	glVertex3f(sideSize / 2, altura, sideSize / 2);
-	glVertex3f(zero, zero, zero);
-	glEnd();
-	//Triangle tras
-	glColor3f(0.7f, 0.4f, 0.2f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(zero, zero, zero);
-	glVertex3f(sideSize / 2, altura, sideSize / 2);
-	glVertex3f(sideSize, 0.0f, zero);
-	glEnd();
-
-}
 
 void changeSize(int w, int h) {
 
@@ -190,19 +145,20 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-	gluLookAt(5.0,5.0,5.0, 
-		      0.0,0.0,0.0,
-			  0.0f,1.0f,0.0f);
+	gluLookAt(radiusCamera * cos(beta) * sin(alpha), radiusCamera * sin(beta), radiusCamera * cos(beta) * cos(alpha),
+		0.0, 0.0, 0.0,
+		0.0f, 1.0f, 0.0f);
 
-// put the geometric transformations here
-	glTranslatef(transRigth, transUP, 0);
-	glRotatef(rotateRigth, 1, 0, 0);
-	glRotatef(rotateUP, 0, 1, 0);
+
 
 // put drawing instructions here
 	//glutWireTeapot(1);
 	//drawPiramide();
-	drawBox(sizeSquare, divisions);
+	//drawBox(sizeSquare, divisions);
+	
+	//drawSphere(4, 3, 3);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	drawPyramid(10, 20, 10, 20);
 	drawAxis();
 	// End of frame
 	glutSwapBuffers();
@@ -213,38 +169,26 @@ void renderScene(void) {
 
 // write function to process keyboard events
 
-void lerTeclas(unsigned char Key, int x, int y)
-{
-	printf("Leu tecla: %c\n", Key);
-	switch (Key)
+void processKeys(unsigned char c, int xx, int yy) {
+
+	// put code to process regular keys in here
+	switch (c)
 	{
-	case 'a': transRigth--; break;
-	case 's': transUP--; break;
-	case 'd':  transRigth++; break;
-	case 'w': transUP++; break;
+	case 'a': alpha += 0.01; break;
+	case 's': beta += 0.01; break;
+	case 'd': alpha -= 0.01; break;
+	case 'w': beta -= 0.01; break;
+	case 'q': radiusCamera += 0.1; break;
+	case 'e': radiusCamera -= 0.1; break;
 	};
-	printf("valores: %d  %d \n", transRigth, transUP);
-	glutPostRedisplay();	
+	glutPostRedisplay();
+
 }
 
 void lerTeclasEsp(int Key, int x, int y) {
-	printf("Leu tecla: %c\n", Key);
-	switch (Key)
-	{
-	case GLUT_KEY_LEFT: rotateRigth--; break;
-	case GLUT_KEY_RIGHT: rotateRigth++; break;
-	case GLUT_KEY_UP: rotateUP++; break;
-	case GLUT_KEY_DOWN: rotateUP--; break;
-	};
-	printf("valores: %d  %d \n", rotateRigth, rotateUP);
-	glutPostRedisplay();
-}
+	}
 
-void frato(int button, int state, int x, int y) {
-	transRigth = x/100;
-	transUP = y/100;
-	glutPostRedisplay();
-}
+
 
 
 int main(int argc, char **argv) {
@@ -262,9 +206,8 @@ int main(int argc, char **argv) {
 
 	
 // put here the registration of the keyboard callbacks
-	glutKeyboardFunc(lerTeclas);
+	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(lerTeclasEsp);
-	glutMouseFunc(frato);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);

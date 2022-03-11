@@ -189,7 +189,7 @@ OPENGL_gl_LIBRARY:STRING=opengl32
 OPENGL_glu_LIBRARY:STRING=glu32
 
 //Path to Toolkits folder
-TOOLKITS_FOLDER:PATH=C:/Users/Diogo/Desktop/Diogo/Trabalhos da escola/3ano2sem/CG/toolkits
+TOOLKITS_FOLDER:PATH=C:/Users/Diogo/Documents/GitHub/toolkits
 
 //Value Computed by CMake
 class2_BINARY_DIR:STATIC=C:/Users/Diogo/Documents/GitHub/srcDR/build

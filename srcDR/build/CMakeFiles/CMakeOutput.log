@@ -9,7 +9,7 @@ The output was:
 Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-Build started 3/7/2022 2:31:25 PM.
+Build started 3/11/2022 8:45:49 PM.
 Project "C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\3.22.2\CompilerIdC\CompilerIdC.vcxproj" on node 1 (default targets).
 PrepareForBuild:
   Creating directory "Debug\".
@@ -35,7 +35,7 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:01.43
+Time Elapsed 00:00:01.10
 
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -54,7 +54,7 @@ The output was:
 Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-Build started 3/7/2022 2:31:27 PM.
+Build started 3/11/2022 8:45:51 PM.
 Project "C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\3.22.2\CompilerIdCXX\CompilerIdCXX.vcxproj" on node 1 (default targets).
 PrepareForBuild:
   Creating directory "Debug\".
@@ -80,7 +80,7 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.79
+Time Elapsed 00:00:00.75
 
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -92,28 +92,28 @@ The CXX compiler identification is MSVC, found in "C:/Users/Diogo/Documents/GitH
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Diogo/Documents/GitHub/srcDR/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_edc3a.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=17.0 /v:m && Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_b1ff8.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=17.0 /v:m && Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Microsoft (R) C/C++ Optimizing Compiler Version 19.30.30709 for x86
   CMakeCCompilerABI.c
   Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_edc3a.dir\Debug\\" /Fd"cmTC_edc3a.dir\Debug\vc143.pdb" /external:W3 /Gd /TC /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCCompilerABI.c"
-  cmTC_edc3a.vcxproj -> C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\CMakeTmp\Debug\cmTC_edc3a.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b1ff8.dir\Debug\\" /Fd"cmTC_b1ff8.dir\Debug\vc143.pdb" /external:W3 /Gd /TC /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCCompilerABI.c"
+  cmTC_b1ff8.vcxproj -> C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\CMakeTmp\Debug\cmTC_b1ff8.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Diogo/Documents/GitHub/srcDR/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_89cc7.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=17.0 /v:m && Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_e299b.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=17.0 /v:m && Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Microsoft (R) C/C++ Optimizing Compiler Version 19.30.30709 for x86
   CMakeCXXCompilerABI.cpp
   Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_89cc7.dir\Debug\\" /Fd"cmTC_89cc7.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
-  cmTC_89cc7.vcxproj -> C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\CMakeTmp\Debug\cmTC_89cc7.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e299b.dir\Debug\\" /Fd"cmTC_e299b.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_e299b.vcxproj -> C:\Users\Diogo\Documents\GitHub\srcDR\build\CMakeFiles\CMakeTmp\Debug\cmTC_e299b.exe
 
 
 
