@@ -8,6 +8,7 @@
 	<group> 
   		<models> 
 			<model file="test/test.3d" /> <!-- generator cone 1 2 4 3 cone.3d -->
+			<model file="test/test2.3d" /> <!-- generator cone 1 2 4 3 cone.3d -->
  		</models>
  	</group>
 </world>

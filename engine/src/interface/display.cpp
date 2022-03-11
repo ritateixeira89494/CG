@@ -103,7 +103,7 @@ void run(int argc, char *argv[]) {
     glutKeyboardFunc(parse_key);
 
     glEnable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     scene = new Scene(argv[1]);
 

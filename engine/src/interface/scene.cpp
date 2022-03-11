@@ -89,12 +89,16 @@ namespace interface {
 
         XMLElement *model = modelsNode->FirstChildElement("model");
 
-        const char* modelPath = model->Attribute("file");
-        cout << modelPath << endl;
+        while (model != nullptr) {
 
-        auto *m = new Model(modelPath);
+            const char *modelPath = model->Attribute("file");
+            cout << modelPath << endl;
 
-        models.push_back(m);
+            auto *m = new Model(modelPath);
+
+            models.push_back(m);
+            model = model->NextSiblingElement();
+        }
     }
 
     Scene::Scene(vector<Model *> m) {
