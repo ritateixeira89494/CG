@@ -48,7 +48,10 @@ namespace interface {
         models = {};
         XMLDocument doc;
 
-        if (doc.LoadFile(path) == 0); // TODO: handle error here;
+        if (doc.LoadFile(path) != tinyxml2::XML_SUCCESS) {
+            cerr << "Something went wrong with the xml file!" << endl;
+            throw; // TODO: handle error here;
+        }
 
         set_position(0, 0, 0);
         set_rotation(0);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 
 #include "model.h"
 #include "triangle.h"
@@ -13,6 +14,7 @@ namespace model {
     int Model::load_model(char *path) {
         FILE *f = fopen(path, "r");
         if(!f){
+            cerr << "Invalid model path!" << endl;
             return -1;
         }
 
