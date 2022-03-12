@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\Diogo\Documents\GitHub\srcDR\main.cpp">
+    <ClCompile Include="C:\Users\Rita\Source\Repos\Mapc1\CG2022\srcDR\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Diogo\Documents\GitHub\srcDR\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\Rita\Source\Repos\Mapc1\CG2022\srcDR\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{80D9079E-9D2E-329C-8C8E-89E9A899C32D}</UniqueIdentifier>
+      <UniqueIdentifier>{38CFEF52-2669-3A82-AFC8-07ED303944C9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

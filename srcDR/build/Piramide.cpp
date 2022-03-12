@@ -1,3 +1,6 @@
+#include <iostream>
+#include <string>
+#include <fstream>
 #include <GL/glut.h>
 
 
@@ -5,6 +8,10 @@
 #include <corecrt_math_defines.h>
 #include <math.h>
 
+
+using namespace std;
+
+ofstream piramide3d;
 
 
 void drawBasePyramid(float radius, int height, int slices, int stacks) {
@@ -21,8 +28,12 @@ void drawBasePyramid(float radius, int height, int slices, int stacks) {
 		// X axis in red
 		//Draw triangle in base
 		glVertex3f(zero, y, zero);
+		piramide3d << "(" << zero << "," << y << "," << zero << ");";
 		glVertex3f(radius * cos(currentRadius), y, radius * sin(currentRadius));
+		piramide3d << "(" << radius * cos(currentRadius) << "," << y << "," << radius * sin(currentRadius) << ");";
 		glVertex3f(radius * cos(proxRadius), y, radius * sin(proxRadius));
+		piramide3d << "(" << radius * cos(proxRadius) << "," << y << "," << radius * sin(proxRadius) << ")\n";
+
 
 	}
 	glEnd();
@@ -31,7 +42,11 @@ void drawBasePyramid(float radius, int height, int slices, int stacks) {
 	//    glutSwapBuffers();
 }
 
-void drawPyramid(float radius, float height, int slices, float stacks) {
+void drawPyramid(float radius, float height, int slices, float stacks, string nameFile) {
+
+	piramide3d.open(nameFile + ".txt");
+	//piramide3d << "piramide.3d\n";
+
 	drawBasePyramid(radius, height, slices, stacks);
 
 	float currentHeight = 0;
@@ -55,13 +70,19 @@ void drawPyramid(float radius, float height, int slices, float stacks) {
 			nextRadio = ((height - currentHeight - h) * radius) / height;
 			if (nextRadio < 0) nextRadio = 0;
 			glVertex3f(thisRadio * cos(proxRadius), currentHeight, thisRadio * sin(proxRadius)); //1
+			piramide3d << "(" << thisRadio * cos(proxRadius) << "," << currentHeight << "," << thisRadio * sin(proxRadius) << ");";
 			glVertex3f(thisRadio * cos(currentRadius), currentHeight, thisRadio * sin(currentRadius)); //2
+			piramide3d << "(" << thisRadio * cos(currentRadius) << "," << currentHeight << "," << thisRadio * sin(currentRadius) << ");";
 			glVertex3f(nextRadio * cos(proxRadius), currentHeight + h, nextRadio * sin(proxRadius)); //4
+			piramide3d << "(" << nextRadio * cos(proxRadius) << "," << currentHeight + h << "," << nextRadio * sin(proxRadius) << ")\n";
+
 
 			glVertex3f(nextRadio * cos(currentRadius), currentHeight + h, nextRadio * sin(currentRadius)); //3
+			piramide3d << "(" << nextRadio * cos(currentRadius) << "," << currentHeight + h << "," << nextRadio * sin(currentRadius) << ");";
 			glVertex3f(nextRadio * cos(proxRadius), currentHeight + h, nextRadio * sin(proxRadius)); //4
+			piramide3d << "(" << nextRadio * cos(proxRadius) << "," << currentHeight + h << "," << nextRadio * sin(proxRadius) << ");";
 			glVertex3f(thisRadio * cos(currentRadius), currentHeight, thisRadio * sin(currentRadius)); //2
-
+			piramide3d << "(" << thisRadio * cos(currentRadius) << "," << currentHeight << "," << thisRadio * sin(currentRadius) << ")\n";
 
 		}
 
@@ -70,4 +91,6 @@ void drawPyramid(float radius, float height, int slices, float stacks) {
 	glEnd();
 
 	glutPostRedisplay();
+
+	piramide3d.close();
 }

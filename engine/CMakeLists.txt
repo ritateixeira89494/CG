@@ -23,7 +23,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Find all libs
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-find_package(tinyxml2 REQUIRED)
 
 if (NOT OpenGL_FOUND)
     message(ERROR " OpenGL not found")
@@ -34,4 +33,4 @@ endif(NOT GLUT_FOUND)
 
 # Link libs to our program
 include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} tinyxml2)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})

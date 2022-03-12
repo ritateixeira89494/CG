@@ -7,9 +7,18 @@
 #include <stdio.h>
 #include <corecrt_math_defines.h>
 
+#include <iostream>
+#include <string>
+#include <fstream>
+
+
+using namespace std;
+
+ofstream sphere3d;
+
 
 //Draw square in ZX Axis, with y = higth of box.
-void drawSquareUpT(float xOr, float yOr, float side, float hight) {
+void drawSquareUpT(float xOr, float yOr, float side, float height) {
 	//glutWireCube(side);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -18,20 +27,26 @@ void drawSquareUpT(float xOr, float yOr, float side, float hight) {
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_TRIANGLES);
 	// X axis in red
-	glVertex3f(xOr + side, hight, yOr);
+	glVertex3f(xOr + side, height, yOr);
+	sphere3d << "(" << xOr + side << "," << height << "," << yOr << ");";
 
-	glVertex3f(xOr, hight, yOr);
-	glVertex3f(xOr, hight, yOr + side);
+	glVertex3f(xOr, height, yOr);
+	sphere3d << "(" << xOr << "," << height << "," << yOr << ");";
+	glVertex3f(xOr, height, yOr + side);
+	sphere3d << "(" << xOr << "," << height << "," << yOr + side << ")\n";
 
 	glEnd();
 
 	glColor3f(1.0f, 1.0f, 0.5f);
 	glBegin(GL_TRIANGLES);
 	// X axis in red
-	glVertex3f(xOr + side, hight, yOr + side);
+	glVertex3f(xOr + side, height, yOr + side);
+	sphere3d << "(" << xOr + side << "," << height << "," << yOr + side << ");";
 
-	glVertex3f(xOr + side, hight, yOr);
-	glVertex3f(xOr, hight, yOr + side);
+	glVertex3f(xOr + side, height, yOr);
+	sphere3d << "(" << xOr + side << "," << height << "," << yOr << ");";
+	glVertex3f(xOr, height, yOr + side);
+	sphere3d << "(" << xOr << "," << height << "," << yOr + side << ")\n";
 
 	glEnd();
 }
@@ -60,27 +75,39 @@ void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, floa
 
 	if (currentBeta > 0 || proxBeta > 0) {
 		glVertex3f(x3, y3, z3);
+		sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
 		glVertex3f(x1, y1, z1);
+		sphere3d << "(" << x1 << "," << y1 << "," << z1 << ");";
 		glVertex3f(x2, y2, z2);
+		sphere3d << "(" << x2 << "," << y2 << "," << z2 << ")\n";
 
 
 		// X axis in red
 		glVertex3f(x4, y4, z4);
+		sphere3d << "(" << x4 << "," << y4 << "," << z4 << ");";
 
 		glVertex3f(x3, y3, z3);
+		sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
 		glVertex3f(x2, y2, z2);
+		sphere3d << "(" << x2 << "," << y2 << "," << z2 << ")\n";
 	}
 	else {
 		glVertex3f(x3, y3, z3);
+		sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
 		glVertex3f(x2, y2, z2);
+		sphere3d << "(" << x2 << "," << y2 << "," << z2 << ");";
 		glVertex3f(x1, y1, z1);
+		sphere3d << "(" << x1 << "," << y1 << "," << z1 << ")\n";
 
 
 		// X axis in red
 		glVertex3f(x4, y4, z4);
+		sphere3d << "(" << x4 << "," << y4 << "," << z4 << ");";
 
 		glVertex3f(x2, y2, z2);
+		sphere3d << "(" << x2 << "," << y2 << "," << z2 << ");";
 		glVertex3f(x3, y3, z3);
+		sphere3d << "(" << x3 << "," << y3 << "," << z3 << ")\n";
 
 	}
 
@@ -106,13 +133,16 @@ void drawTopSphere(int radius, int slices, int stacks) {
 	}
 }
 
-void drawSphere(int radius, int slices, int stacks) {
+void drawSphere(int radius, int slices, int stacks, string filename) {
+	sphere3d.open(filename + ".txt");
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_TRIANGLES);
 
 	drawTopSphere(4, 10, 10);
 	glEnd();
 
+	sphere3d.close();
 }
 
 
