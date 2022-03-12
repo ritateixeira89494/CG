@@ -64,7 +64,7 @@ namespace interface {
         // Position coordinates
         XMLElement *positionElement = camera->FirstChildElement("position");
         coordinates positionCoord = getCoordinatesFromElement(positionElement);
-        set_camera_pos(positionCoord.x, positionCoord.x, positionCoord.z);
+        set_camera_pos(positionCoord.x, positionCoord.y, positionCoord.z);
 
         // LookAt coordinates
         XMLElement *lookAt = camera->FirstChildElement("lookAt");
