@@ -52,3 +52,5 @@
 *.idea/
 *.vscode/
 .vs/
+
+*cache*
