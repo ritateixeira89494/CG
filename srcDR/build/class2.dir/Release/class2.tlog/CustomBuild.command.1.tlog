@@ -1,6 +1,6 @@
-^C:\USERS\DIOGO\DOCUMENTS\GITHUB\SRCDR\CMAKELISTS.TXT
+^C:\USERS\RITA\SOURCE\REPOS\MAPC1\CG2022\SRCDR\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Diogo/Documents/GitHub/srcDR -BC:/Users/Diogo/Documents/GitHub/srcDR/build --check-stamp-file C:/Users/Diogo/Documents/GitHub/srcDR/build/CMakeFiles/generate.stamp
+D:\CMake\bin\cmake.exe -SC:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR -BC:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR/build --check-stamp-file C:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
