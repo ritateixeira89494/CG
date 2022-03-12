@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(engine)
+project(Engine VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -g)
 
 # Set output folders
@@ -26,11 +27,12 @@ find_package(GLUT REQUIRED)
 
 if (NOT OpenGL_FOUND)
     message(ERROR " OpenGL not found")
-endif(NOT OpenGL_FOUND)
+endif (NOT OpenGL_FOUND)
 if (NOT GLUT_FOUND)
     message(ERROR " Glut not found")
-endif(NOT GLUT_FOUND)
+endif (NOT GLUT_FOUND)
 
 # Link libs to our program
+target_include_directories(Engine PUBLIC include)
 include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})

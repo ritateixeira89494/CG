@@ -1,33 +1,33 @@
 #include <GL/glut.h>
 
-#include "display.h"
-#include "scene.h"
+#include "interface/display.h"
+#include "interface/scene.h"
 
 using namespace interface;
 
 Scene *scene;
 
 void placeAxis() {
-        glBegin(GL_LINES);
-        // X Axis in red
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f( 10.0f, 0.0f, 0.0f);
-        // Y Axis in Green
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 10.0f, 0.0f);
-        // Z Axis in Blue
-        glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 10.0f);
-        glEnd(); 
+    glBegin(GL_LINES);
+    // X Axis in red
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(10.0f, 0.0f, 0.0f);
+    // Y Axis in Green
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 10.0f, 0.0f);
+    // Z Axis in Blue
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 10.0f);
+    glEnd();
 }
 
 void change_size(int w, int h) {
-    if(h == 0)
+    if (h == 0)
         h = 1;
-    
+
     float ratio = w * 1.0f / h;
 
     glMatrixMode(GL_PROJECTION);
@@ -37,7 +37,7 @@ void change_size(int w, int h) {
     glViewport(0, 0, w, h);
 
     gluPerspective(scene->get_fov(), ratio, scene->get_near(), scene->get_far());
-    
+
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -51,9 +51,9 @@ void render() {
     tuple<GLfloat, GLfloat, GLfloat> up = scene->get_up();
 
     gluLookAt(
-        get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-        get<0>(cam_center),  get<1>(cam_center),  get<2>(cam_center),
-        get<0>(up),  get<1>(up),  get<2>(up)
+            get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+            get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+            get<0>(up), get<1>(up), get<2>(up)
     );
 
     glRotatef(scene->get_rotation(), 0, 1, 0);
@@ -65,7 +65,7 @@ void render() {
 }
 
 void parse_key(unsigned char key, int x, int y) {
-    switch(key) {
+    switch (key) {
         case 'a':
             scene->move_models(-0.1, 0, 0);
             break;
@@ -93,9 +93,9 @@ void parse_key(unsigned char key, int x, int y) {
 
 void run(int argc, char *argv[]) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
-    glutInitWindowPosition(100,100);
-    glutInitWindowSize(800,800);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition(100, 100);
+    glutInitWindowSize(800, 800);
     glutCreateWindow("CG2022 Engine");
 
     glutDisplayFunc(render);

@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "interface/Camera.h"
 
 namespace Camera {
     Camera::Camera() {

@@ -17,8 +17,8 @@ namespace Camera {
         GLfloat beta;
         GLfloat radio;
 
-        public:
-            Camera();
+    public:
+        Camera();
 
 
     };
