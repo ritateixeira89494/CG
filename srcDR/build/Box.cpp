@@ -220,7 +220,7 @@ void drawSquareYZ(float yOr, float zOr, float side, float x) {
 // Desenha um plano a partir dos pontos individuais. 
 // De cada ponto, sabe-se o lado de cada quadrado, logo é fácil desenhar o resto do quadrado.
 void drawPlane(float length, float divisions, string name) {
-	plane3d.open(name + ".3d.txt");
+	plane3d.open(name + ".txt");
 
 	float increment = length / divisions;
 	//Draw base and top
@@ -235,7 +235,7 @@ void drawPlane(float length, float divisions, string name) {
 
 
 void drawBox(float length, float divisions, string nameOfFile) {
-	box3d.open(nameOfFile + ".3d.txt");
+	box3d.open(nameOfFile + ".txt");
 
 	float increment = length / divisions;
 	for (float line = 0; line < length; line = line + increment) {
