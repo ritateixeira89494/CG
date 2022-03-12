@@ -1,3 +1,0 @@
-C:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR/build/CMakeFiles/class2.dir
-C:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/Rita/Source/Repos/Mapc1/CG2022/srcDR/build/CMakeFiles/ZERO_CHECK.dir

@@ -48,6 +48,7 @@
 # I don't know what this is but its in my folder
 *.fuse*
 
-# VSCode and CLion stuff
+# VSCode, VS and CLion stuff
 *.idea/
 *.vscode/
+.vs/
