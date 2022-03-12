@@ -136,9 +136,10 @@ void drawBox(float length, float divisions, string nameOfFile) {
     box3d.open(nameOfFile);
 
     float increment = length / divisions;
-    for (float line = 0; line < length; line = line + increment) {
-
-        for (float column = 0; column < length; column = column + increment) {
+   float line = 0;
+	float collumn = 0;
+	for (float divisionX = 0 ; divisionX < divisions; line = line + increment, divisionX++) {
+		for (float divisionY = 0, collumn = 0; divisionY < divisions; collumn = collumn + increment, divisionY++) {
             drawSquareUp(line, column, increment, length, 1); //1 -> Box, 0-> Plane
             drawSquareDown(line, column, increment, 1); //1 -> Box, 0-> Plane
             drawSquareXY(line, column, increment);
