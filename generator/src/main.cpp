@@ -9,17 +9,10 @@
 
 #include <stdio.h>
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-
-#include <GL/glut.h>
-
-#endif
-
 #include "Box.h"
 #include "Sphere.h"
 #include "Piramide.h"
+#include "Plane.h"
 
 using namespace std;
 
