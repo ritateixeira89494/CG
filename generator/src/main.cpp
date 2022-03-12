@@ -1,7 +1,6 @@
 
 #include <math.h>
 #include "main.h"
-#include "point.h"
 
 #include <iostream>
 #include <string>
@@ -18,52 +17,11 @@
 
 #endif
 
-#include "Box.cpp"
-#include "Sphere.cpp"
-#include "Piramide.cpp"
+#include "Box.h"
+#include "Sphere.h"
+#include "Piramide.h"
 
 using namespace std;
-
-int sizeSquare = 1;
-int divisions = 8;
-
-//Camara
-float posX = 5;
-float posY = 5;
-float posZ = 5;
-
-float alpha = 0.7;
-float beta = 0.7;
-float radiusCamera = 30;
-
-
-// Desenha um plano a partir dos pontos individuais.
-// De cada ponto, sabe-se o lado de cada quadrado, logo � f�cil desenhar o resto do quadrado.
-void drawPlaneXY(float length, float divisions) {
-    float increment = length / divisions;
-    printf("Increment original %f", increment);
-    //Draw base and top
-    for (float line = 0; line < length; line = line + increment) {
-        for (float collumn = 0; collumn < length; collumn = collumn + increment) {
-            drawSquareXY(line, collumn, increment);
-            drawSquareXY(line, collumn, increment, length);
-            printf("Um quadrado %f", increment);
-        }
-    }
-}
-
-// Desenha um plano a partir dos pontos individuais.
-// De cada ponto, sabe-se o lado de cada quadrado, logo � f�cil desenhar o resto do quadrado.
-void drawPlaneYZ(float length, float divisions) {
-    float increment = length / divisions;
-    //Draw base and top
-    for (float line = 0; line < length; line = line + increment) {
-        for (float collumn = 0; collumn < length; collumn = collumn + increment) {
-            drawSquareYZ(line, collumn, increment);
-            drawSquareYZ(line, collumn, increment, length);
-        }
-    }
-}
 
 //Esta fun��o ir� ignorar uppercase e lowercase
 bool iequals(const string &a, const string &b) {

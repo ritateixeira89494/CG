@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-//#include "Box.h"
+#include "Box.h"
 
 using namespace std;
 
@@ -139,7 +139,7 @@ void drawBox(float length, float divisions, string nameOfFile) {
    float line = 0;
 	float collumn = 0;
 	for (float divisionX = 0 ; divisionX < divisions; line = line + increment, divisionX++) {
-		for (float divisionY = 0, collumn = 0; divisionY < divisions; collumn = collumn + increment, divisionY++) {
+		for (float divisionY = 0, column = 0; divisionY < divisions; collumn = collumn + increment, divisionY++) {
             drawSquareUp(line, column, increment, length, 1); //1 -> Box, 0-> Plane
             drawSquareDown(line, column, increment, 1); //1 -> Box, 0-> Plane
             drawSquareXY(line, column, increment);

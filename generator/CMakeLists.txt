@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.21)
 
-project(generator)
+project(generator VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -g)
 
 # Set output folders
@@ -20,21 +21,5 @@ file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-if (NOT OpenGL_FOUND)
-	message(ERROR " OpenGL not found")
-endif(NOT OpenGL_FOUND)
-if (NOT GLUT_FOUND)
-	message(ERROR " Glut not found")
-endif(NOT GLUT_FOUND)
-
-# Link libs to our program
-include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
-
-
-
-
-
-
-
-
+#Link all libs
+target_include_directories(${PROJECT_NAME} PRIVATE include)

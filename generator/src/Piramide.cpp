@@ -4,8 +4,10 @@
 #include <GL/glut.h>
 
 
-#include <stdio.h>
-#include <math.h>
+#include <iostream>
+#include <cmath>
+
+#include "Piramide.h"
 
 
 using namespace std;

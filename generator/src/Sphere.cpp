@@ -9,7 +9,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cmath>
 
+#include "Sphere.h"
 
 using namespace std;
 
