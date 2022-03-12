@@ -112,7 +112,7 @@ void drawSphere(int radius, int slices, int stacks, string filename) {
 	sphere3d.open(filename);
 
 
-	drawTopSphere(4, 10, 10);
+	drawTopSphere(radius, slices, stacks);
 
 	sphere3d.close();
 }
