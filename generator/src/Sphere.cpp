@@ -12,33 +12,25 @@
 #include <cmath>
 
 #include "Sphere.h"
+#include "utils.h"
 
 using namespace std;
 
-ofstream sphere3d;
-
-
 //Draw square in ZX Axis, with y = higth of box.
-void drawSquareUpT(float xOr, float yOr, float side, float height) {
-	//glutWireCube(side);
+void drawSquareUpT(float xOr, float yOr, float edge, float height, ofstream *file) {
+	auto p1 = make_tuple(xOr + edge, height, yOr);
+	auto p2 = make_tuple(xOr, height, yOr);
+	auto p3 = make_tuple(xOr, height, yOr + edge);
 
-		//
-			// X axis in red
-		sphere3d << "(" << xOr + side << "," << height << "," << yOr << ");";
+	auto p4 = make_tuple(xOr + edge, height, yOr + edge);
+	auto p5 = make_tuple(xOr + edge, height, yOr);
+	auto p6 = make_tuple(xOr, height, yOr + edge);
 
-		sphere3d << "(" << xOr << "," << height << "," << yOr << ");";
-		sphere3d << "(" << xOr << "," << height << "," << yOr + side << ")\n";
+	write_triangle(p1, p2, p3, file);
+	write_triangle(p4, p5, p6, file);
+}
 
-
-			// X axis in red
-		sphere3d << "(" << xOr + side << "," << height << "," << yOr + side << ");";
-
-		sphere3d << "(" << xOr + side << "," << height << "," << yOr << ");";
-		sphere3d << "(" << xOr << "," << height << "," << yOr + side << ")\n";
-
-	}
-
-void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, float proxBeta, float  radius){
+void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, float proxBeta, float  radius, ofstream *file){
 	//Point 1
 	float x1 = radius * cos(currentBeta) * sin(currentalfa);
 	float y1 = radius * sin(currentBeta);
@@ -58,37 +50,36 @@ void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, floa
 	float y4 = radius * sin(proxBeta);
 	float z4 = radius * cos(proxBeta) * cos(proxAlfa);
 
-	// X axis in red
+	tuple<float, float, float> p1;
+	tuple<float, float, float> p2;
+	tuple<float, float, float> p3;
+	tuple<float, float, float> p4;
+	tuple<float, float, float> p5;
+	tuple<float, float, float> p6;
 
 	if (currentBeta > 0 || proxBeta > 0) {
-				sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
-				sphere3d << "(" << x1 << "," << y1 << "," << z1 << ");";
-				sphere3d << "(" << x2 << "," << y2 << "," << z2 << ")\n";
+		p1 = make_tuple(x3, y3, z3);
+		p2 = make_tuple(x1, y1, z1);
+		p3 = make_tuple(x2, y2, z2);
 
-
-		// X axis in red
-				sphere3d << "(" << x4 << "," << y4 << "," << z4 << ");";
-
-				sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
-				sphere3d << "(" << x2 << "," << y2 << "," << z2 << ")\n";
+		p4 = make_tuple(x4, y4, z4);
+		p5 = make_tuple(x3, y3, z3);
+		p6 = make_tuple(x2, y2, z2);
 	}
 	else {
-				sphere3d << "(" << x3 << "," << y3 << "," << z3 << ");";
-				sphere3d << "(" << x2 << "," << y2 << "," << z2 << ");";
-				sphere3d << "(" << x1 << "," << y1 << "," << z1 << ")\n";
+		p1 = make_tuple(x3, y3, z3);
+		p2 = make_tuple(x2, y2, z2);
+		p3 = make_tuple(x1, y1, z1);
 
-
-		// X axis in red
-				sphere3d << "(" << x4 << "," << y4 << "," << z4 << ");";
-
-				sphere3d << "(" << x2 << "," << y2 << "," << z2 << ");";
-				sphere3d << "(" << x3 << "," << y3 << "," << z3 << ")\n";
-
+		p4 = make_tuple(x4, y4, z4);
+		p5 = make_tuple(x2, y2, z2);
+		p6 = make_tuple(x3, y3, z3);
 	}
-
+	write_triangle(p1, p2, p3, file);
+	write_triangle(p4, p5, p6, file);
 }
 
-void drawTopSphere(int radius, int slices, int stacks) {
+void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
 	//Alfa = xOz plano
 	float incrementAlfa = 2 * M_PI / slices;
 	float currentalfa;
@@ -102,19 +93,20 @@ void drawTopSphere(int radius, int slices, int stacks) {
 
 	for (currentBeta = 0; currentBeta < (M_PI/2); currentBeta+= incrementBeta, proxBeta += incrementBeta) {
 		for (currentalfa = 0; currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
-			drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius);
-			drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius);
+			drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file);
+			drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file);
 		}
 	}
 }
 
 void drawSphere(int radius, int slices, int stacks, string filename) {
-	sphere3d.open(filename);
+	ofstream file;
+	file.open(filename);
 
 
-	drawTopSphere(radius, slices, stacks);
+	drawTopSphere(radius, slices, stacks, &file);
 
-	sphere3d.close();
+	file.close();
 }
 
 
