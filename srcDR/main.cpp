@@ -127,7 +127,7 @@ void renderScene(void) {
 	//drawBox(3, 4, "box");
 	//drawSphere(4, 3, 3, "sphere");
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//drawPyramid(2, 5, 4, 3, "piramide");
+	drawPyramid(2, 5, 4, 3, "piramide");
 	// End of frame
 	glutSwapBuffers();
 }
