@@ -8,8 +8,6 @@ using namespace model;
 
 namespace interface {
     class Scene {
-        vector<Model *> models;
-        tuple<GLfloat, GLfloat, GLfloat> position;
         tuple<GLfloat, GLfloat, GLfloat> camera_pos;
         tuple<GLfloat, GLfloat, GLfloat> camera_center;
         tuple<GLfloat, GLfloat, GLfloat> up;
@@ -17,6 +15,12 @@ namespace interface {
         GLfloat fov;
         GLfloat near;
         GLfloat far;
+
+        GLfloat alpha;
+        GLfloat beta;
+        GLfloat radio;
+        vector<Model *> models;
+        tuple<GLfloat, GLfloat, GLfloat> position;
 
         public:
             Scene();
