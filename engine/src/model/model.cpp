@@ -48,10 +48,10 @@ namespace model {
         triangles = {};
     }
 
-    Model::Model(char *path) {
+    Model::Model(const char *path) {
         n_triangles = 0;
         triangles = {};
 
-        load_model(path);
+        load_model(const_cast<char *>(path));
     }
 }
