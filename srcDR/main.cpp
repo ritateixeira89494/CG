@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 #include <stdio.h>
 #ifdef __APPLE__
@@ -16,6 +17,8 @@
 #include "build/Box.cpp"
 #include "build/sphere.cpp"
 #include "build/Piramide.cpp"
+
+using namespace std;
 
 int sizeSquare = 1;
 int divisions= 8;
@@ -120,7 +123,7 @@ void renderScene(void) {
 
 // put drawing instructions here
 	drawAxis();
-	drawPlane(2, 3, "plane");
+	//drawPlane(2, 3, "plane");
 	//drawBox(3, 4, "box");
 	//drawSphere(4, 3, 3, "sphere");
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -154,9 +157,20 @@ void lerTeclasEsp(int Key, int x, int y) {
 	}
 
 
+//Esta função irá ignorar uppercase e lowercase
+bool iequals(const string& a, const string& b)
+{
+	return std::equal(a.begin(), a.end(),
+		b.begin(), b.end(),
+		[](char a, char b) {
+			return tolower(a) == tolower(b);
+		});
+}
 
 
 int main(int argc, char** argv) {
+
+
 
 // init GLUT and the window
 	glutInit(&argc, argv);
@@ -180,6 +194,35 @@ int main(int argc, char** argv) {
 	
 // enter GLUT's main cycle
 	glutMainLoop();
+
+
+	if (iequals(argv[1], "Plane")) {
+		float len = stoi(argv[2]);
+		float div = stoi(argv[3]);
+		drawPlane(len, div, argv[4]);
+	}
+	else if (iequals(argv[1], "Box")) {
+		float units = stoi(argv[2]);
+		float grid = stoi(argv[3]);
+		drawBox(units, grid, argv[4]);
+	}
+	else if (iequals(argv[1], "Sphere")) {
+		float radius = stoi(argv[2]);
+		float slices = stoi(argv[3]);
+		float stacks = stoi(argv[4]);
+		drawSphere(radius, slices, stacks, argv[5]);
+	}
+	else if (iequals(argv[1], "Cone")) {
+		float radius = stoi(argv[2]);
+		float height = stoi(argv[3]);
+		float slices = stoi(argv[4]);
+		float stacks = stoi(argv[5]);
+		drawPyramid(radius, height, slices, stacks, argv[6]);
+	}
+
+	else {
+		cout << "Parâmetros incorretos";
+	}
 	
 	return 1;
 }
