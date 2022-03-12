@@ -1,55 +1,35 @@
 cmake_minimum_required(VERSION 3.5)
 
-# Project Name
-PROJECT(class2)
+project(generator)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -g)
 
-add_executable(${PROJECT_NAME} main.cpp)
+# Set output folders
+set(CMAKE_BINARY_DIR target)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 
-find_package(OpenGL REQUIRED)
-include_directories(${OpenGL_INCLUDE_DIRS})
-link_directories(${OpenGL_LIBRARY_DIRS})
-add_definitions(${OpenGL_DEFINITIONS})
+# Create output folders
+file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(MAKE_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
-if(NOT OPENGL_FOUND)
-    message(ERROR " OPENGL not found!")
-endif(NOT OPENGL_FOUND)
+# Find all source files and add them to the executable
+file(GLOB_RECURSE SOURCES src/*.cpp)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-if  (WIN32)
+if (NOT OpenGL_FOUND)
+	message(ERROR " OpenGL not found")
+endif(NOT OpenGL_FOUND)
+if (NOT GLUT_FOUND)
+	message(ERROR " Glut not found")
+endif(NOT GLUT_FOUND)
 
-	message(STATUS "Toolkits_DIR set to: " ${TOOLKITS_FOLDER})
-	set(TOOLKITS_FOLDER "" CACHE PATH "Path to Toolkits folder")
-	
-	if (NOT EXISTS "${TOOLKITS_FOLDER}/glut/GL/glut.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/glut/glut32.lib")
-		message(ERROR ": GLUT not found")
-	endif (NOT EXISTS "${TOOLKITS_FOLDER}/glut/GL/glut.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/glut/glut32.lib")	
-	
-	
-	include_directories(${TOOLKITS_FOLDER}/glut )
-	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} 
-										  ${TOOLKITS_FOLDER}/glut/glut32.lib)
-	
-	if (EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll" )
-		file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
-	endif(EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll" )	
-	
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-	
-else (WIN32) #Linux and Mac
-
-	set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} Wno-deprecated")
-	find_package(GLUT REQUIRED)
-	include_directories(${GLUT_INCLUDE_DIR})
-	link_directories(${GLUT_LIBRARY_DIRS})
-	add_definitions(${GLUT_DEFINITIONS})
-	
-	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
-	if(NOT GLUT_FOUND)
-	   message(ERROR ": GLUT not found!")
-	endif(NOT GLUT_FOUND)
-	
-endif(WIN32)
+# Link libs to our program
+include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 
 
 
