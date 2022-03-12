@@ -134,7 +134,7 @@ void drawTopSphere(int radius, int slices, int stacks) {
 }
 
 void drawSphere(int radius, int slices, int stacks, string filename) {
-	sphere3d.open(filename + ".3d.txt");
+	sphere3d.open(filename + ".txt");
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_TRIANGLES);

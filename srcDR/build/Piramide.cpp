@@ -44,7 +44,7 @@ void drawBasePyramid(float radius, int height, int slices, int stacks) {
 
 void drawPyramid(float radius, float height, int slices, float stacks, string nameFile) {
 
-	piramide3d.open(nameFile + ".3d.txt");
+	piramide3d.open(nameFile + ".txt");
 	//piramide3d << "piramide.3d\n";
 
 	drawBasePyramid(radius, height, slices, stacks);
