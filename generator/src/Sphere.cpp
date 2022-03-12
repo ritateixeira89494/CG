@@ -104,7 +104,7 @@ void drawSphere(int radius, int slices, int stacks, string filename) {
 	file.open(filename);
 
 
-	drawTopSphere(radius, slices, stacks, &file);
+	drawTopSphere(radius, slices, stacks/2, &file);
 
 	file.close();
 }
