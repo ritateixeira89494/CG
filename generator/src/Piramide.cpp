@@ -1,21 +1,13 @@
-#include <iostream>
 #include <string>
 #include <fstream>
-#include <GL/glut.h>
-
-
-#include <iostream>
 #include <cmath>
 
 #include "Piramide.h"
-
+#include "utils.h"
 
 using namespace std;
 
-ofstream piramide3d;
-
-
-void drawBasePyramid(float radius, int height, int slices, int stacks) {
+void drawBasePyramid(float radius, int height, int slices, int stacks, ofstream *file) {
     float currentRadius;
     float zero = 0.0f;
     float alfa = 2 * M_PI / slices;
@@ -24,23 +16,22 @@ void drawBasePyramid(float radius, int height, int slices, int stacks) {
 
 
     for (currentRadius = 0; currentRadius < 2 * M_PI; currentRadius += alfa, proxRadius += alfa) {
-        // X axis in red
         //Draw triangle in base
-        piramide3d << "(" << zero << "," << y << "," << zero << ");";
-        piramide3d << "(" << radius * cos(currentRadius) << "," << y << "," << radius * sin(currentRadius) << ");";
-        piramide3d << "(" << radius * cos(proxRadius) << "," << y << "," << radius * sin(proxRadius) << ")\n";
+        auto p1 = make_tuple(0.0f, y, 0.0f);
+        auto p2 = make_tuple(radius * cos(currentRadius), y, radius * sin(currentRadius));
+        auto p3 = make_tuple(radius * cos(proxRadius), y, radius * sin(proxRadius));
 
-
+        write_triangle(p1, p2, p3, file);
     }
 
 }
 
 void drawPyramid(float radius, float height, int slices, float stacks, string nameFile) {
 
-    piramide3d.open(nameFile);
-    //piramide3d << "piramide.3d\n";
+    ofstream file;
+    file.open(nameFile);
 
-    drawBasePyramid(radius, height, slices, stacks);
+    drawBasePyramid(radius, height, slices, stacks, &file);
 
     float currentHeight = 0;
     float h = height / stacks;
@@ -49,35 +40,29 @@ void drawPyramid(float radius, float height, int slices, float stacks, string na
     float zero = 0.0f;
     float alfa = (2 * M_PI) / slices;
     float proxRadius = alfa;
-    //printf("Altura incrementa: %f", h);
 
-    float thisRadio;
-    float nextRadio;
+    float thisRadius;
+    float nextRadius;
 
     for (currentRadius = 0; currentRadius < 2 * M_PI; currentRadius += alfa, proxRadius += alfa) {
         for (currentHeight = 0; currentHeight < height; currentHeight += h) {
 
-            thisRadio = ((height - currentHeight) * radius) / height;
-            nextRadio = ((height - currentHeight - h) * radius) / height;
-            if (nextRadio < 0) nextRadio = 0;
-            piramide3d << "(" << thisRadio * cos(proxRadius) << "," << currentHeight << ","
-                       << thisRadio * sin(proxRadius) << ");";
-            piramide3d << "(" << thisRadio * cos(currentRadius) << "," << currentHeight << ","
-                       << thisRadio * sin(currentRadius) << ");";
-            piramide3d << "(" << nextRadio * cos(proxRadius) << "," << currentHeight + h << ","
-                       << nextRadio * sin(proxRadius) << ")\n";
+            thisRadius = ((height - currentHeight) * radius) / height;
+            nextRadius = ((height - currentHeight - h) * radius) / height;
+            if (nextRadius < 0) nextRadius = 0;
 
+            auto p1 = make_tuple(thisRadius * cos(proxRadius), currentHeight, thisRadius * sin(proxRadius));
+            auto p2 = make_tuple(thisRadius * cos(currentRadius), currentHeight, thisRadius * sin(currentRadius));
+            auto p3 = make_tuple(nextRadius * cos(proxRadius), currentHeight + h, nextRadius * sin(proxRadius));
 
-            piramide3d << "(" << nextRadio * cos(currentRadius) << "," << currentHeight + h << ","
-                       << nextRadio * sin(currentRadius) << ");";
-            piramide3d << "(" << nextRadio * cos(proxRadius) << "," << currentHeight + h << ","
-                       << nextRadio * sin(proxRadius) << ");";
-            piramide3d << "(" << thisRadio * cos(currentRadius) << "," << currentHeight << ","
-                       << thisRadio * sin(currentRadius) << ")\n";
+            auto p4 = make_tuple(nextRadius * cos(currentRadius), currentHeight + h, nextRadius * sin(currentRadius));
+            auto p5 = make_tuple(nextRadius * cos(proxRadius), currentHeight + h, nextRadius * sin(proxRadius));
+            auto p6 = make_tuple(thisRadius * cos(currentRadius), currentHeight, thisRadius * sin(currentRadius));
 
+            write_triangle(p1, p2, p3, &file);
+            write_triangle(p4, p5, p6, &file);
         }
-
     }
 
-    piramide3d.close();
+    file.close();
 }
