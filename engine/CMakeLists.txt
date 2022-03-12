@@ -33,6 +33,6 @@ if (NOT GLUT_FOUND)
 endif (NOT GLUT_FOUND)
 
 # Link libs to our program
-target_include_directories(Engine PRIVATE include)
+target_include_directories(Engine PUBLIC include)
 include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
