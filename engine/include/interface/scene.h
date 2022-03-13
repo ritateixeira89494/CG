@@ -60,7 +60,7 @@ namespace interface {
         Scene();
 
         /**
-            @brief Reads an xml file and loads all it's settings and models
+            @brief Reads an xml file and loads all its settings and models
 
             @param path Path to the xml file
         */
