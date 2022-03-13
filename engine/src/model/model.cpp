@@ -21,8 +21,6 @@ namespace model {
         GLfloat point1[3];
         GLfloat point2[3];
         GLfloat point3[3];
-
-        int mem = n_triangles * 9;
         while (
                 fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n",
                        &point1[0], &point1[1], &point1[2],
