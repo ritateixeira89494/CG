@@ -14,6 +14,7 @@ using namespace interface;
 Scene *scene;
 
 bool model_mode = true;
+bool axis = true;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -64,7 +65,8 @@ void render() {
             get<0>(up), get<1>(up), get<2>(up)
     );
 
-    placeAxis();
+    if(axis)
+        placeAxis();
 
     auto m_rotation_alpha = scene->get_model_rotation_alpha();
     auto m_rotation_beta = scene->get_model_rotation_beta();
@@ -159,6 +161,9 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case '\r':
             model_mode = !model_mode;
+            break;
+        case 'e':
+            axis = !axis;
             break;
         case 'q':
             std::cout << "Goodbye!!" << std::endl;
