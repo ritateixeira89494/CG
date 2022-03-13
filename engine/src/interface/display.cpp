@@ -62,11 +62,15 @@ void render() {
 
     placeAxis();
 
-    float m_rotation_alpha = scene->get_model_rotation_alpha();
-    float m_rotation_beta = scene->get_model_rotation_beta();
+    auto m_rotation_alpha = scene->get_model_rotation_alpha();
+    auto m_rotation_beta = scene->get_model_rotation_beta();
 
+    auto position = scene->get_position();
+
+    glTranslatef(get<0>(position), get<1>(position), get<2>(position));
     glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);
     glRotatef(radian2degree(m_rotation_beta), 1, 0, 0);
+    glTranslatef(-get<0>(position), -get<1>(position), -get<2>(position));
 
     scene->render_models();
 
