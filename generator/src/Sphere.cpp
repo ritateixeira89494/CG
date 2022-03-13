@@ -29,7 +29,11 @@ void drawSquareUpT(float xOr, float yOr, float edge, float height, ofstream *fil
 	write_triangle(p1, p2, p3, file);
 	write_triangle(p4, p5, p6, file);
 }
-
+/*!
+    In this function we describe the points of the parallelograms.
+    We need the alfas and betas of the four points, but the radius is the same because it is a sphere. 
+    Also, we start by calculating each point, and then we write them to files.
+*/
 void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, float proxBeta, float  radius, ofstream *file){
 	//Point 1
 	float x1 = radius * cos(currentBeta) * sin(currentalfa);
@@ -78,7 +82,10 @@ void drawFaceSphere(float currentalfa, float  proxAlfa, float  currentBeta, floa
 	write_triangle(p1, p2, p3, file);
 	write_triangle(p4, p5, p6, file);
 }
-
+/*!
+    In this function we describe all points, in both alfa and beta coordinates.
+	Also, we divide each level of the sphere in parallelograms.
+*/
 void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
 	//Alfa = xOz plano
 	float incrementAlfa = 2 * M_PI / slices;
@@ -98,7 +105,9 @@ void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
 		}
 	}
 }
-
+/*!
+    In this function we open and close the necessary file, and call the function that describes the sphere.
+*/
 void drawSphere(int radius, int slices, int stacks, string filename) {
 	ofstream file;
 	file.open(filename);
