@@ -6,7 +6,10 @@
 #include "utils.h"
 
 using namespace std;
-
+/*!
+    Here we describe the points that are compose the base of the pyramid. 
+    We use polar coordinates, and write to the file that is open in piramide3d.
+*/
 void drawBasePyramid(float radius, int height, int slices, int stacks, ofstream *file) {
     float currentRadius;
     float zero = 0.0f;
