@@ -9,7 +9,15 @@
 
 using namespace std;
 
-//Draw square in XY Axis, with z = 0.
+/*!
+  In the following functions we draw each face of the box. 
+  We choose this method because it's easier to debug and to analyse strange behaviours. 
+  In each function we write to the file, that is open in plane3d or box3d, depending on what function was called.
+
+    The xOr (original x), yOr or zOr describe where the square should start, the blue point in the first figure of the report.
+    
+  In this function we draw a square in XY Axis, with z = 0.
+*/
 void drawSquareXY(float xOr, float yOr, float edge, ofstream *file) {
     auto p1 = make_tuple(xOr, yOr, 0.0f);
     auto p2 = make_tuple(xOr, yOr + edge, 0.0f);
@@ -23,7 +31,9 @@ void drawSquareXY(float xOr, float yOr, float edge, ofstream *file) {
     write_triangle(p4, p5, p6, file);
 }
 
-//Draw square in XY Axis, with z = 0.
+/*!
+  Draw square in XY Axis, with z != 0.
+*/
 void drawSquareXY(float xOr, float yOr, float edge, float z, ofstream *file) {
     auto p1 = make_tuple(xOr, yOr, z);
     auto p2 = make_tuple(xOr + edge, yOr + edge, z);
@@ -37,7 +47,9 @@ void drawSquareXY(float xOr, float yOr, float edge, float z, ofstream *file) {
     write_triangle(p4, p5, p6, file);
 }
 
-//Draw square in YZ Axis, with x = 0.
+/*!
+    Draw square in YZ Axis, with x = 0.
+*/
 void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file) {
     auto p1 = make_tuple(0.0f, yOr + edge, zOr);
     auto p2 = make_tuple(0.0f, yOr, zOr);
@@ -51,7 +63,9 @@ void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file) {
     write_triangle(p4, p5, p6, file);
 }
 
-//Draw square in YZ Axis, with x = length of square.
+/*!
+    Draw square in YZ Axis, with x = length of square.
+*/
 void drawSquareYZ(float yOr, float zOr, float edge, float x, ofstream *file) {
     auto p1 = make_tuple(x, yOr, zOr);
     auto p2 = make_tuple(x, yOr, zOr + edge);
