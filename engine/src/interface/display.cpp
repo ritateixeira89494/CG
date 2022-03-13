@@ -64,6 +64,20 @@ void render() {
     glutSwapBuffers();
 }
 
+void parse_spec_key(int key, int x, int y)  {
+    switch(key) {
+        case GLUT_KEY_LEFT:
+            scene->rotate_camera(0.4);
+            break;
+        case GLUT_KEY_RIGHT:
+            scene->rotate_camera(-0.4);
+            break;
+        default:
+            return;
+    }
+    glutPostRedisplay();
+}
+
 void parse_key(unsigned char key, int x, int y) {
     switch (key) {
         case 'a':
@@ -77,12 +91,6 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case 's':
             scene->move_models(0, 0, 0.1);
-            break;
-        case 'q':
-            scene->rotate_models(0.4);
-            break;
-        case 'e':
-            scene->rotate_models(-0.4);
             break;
         default:
             return;
@@ -101,6 +109,7 @@ void run(int argc, char *argv[]) {
     glutDisplayFunc(render);
     glutReshapeFunc(change_size);
     glutKeyboardFunc(parse_key);
+    glutSpecialFunc(parse_spec_key);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
