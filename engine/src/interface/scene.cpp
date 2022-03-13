@@ -1,3 +1,9 @@
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 #include <iostream>
 #include <cmath>
 #include "interface/scene.h"
@@ -124,9 +130,9 @@ namespace interface {
         for (Model *model: models) {
             vector<Triangle *> triangles = model->get_triangles();
             for (Triangle *tri: triangles) {
-                tuple<GLfloat, GLfloat, GLfloat> p1 = tri->get_p1();
-                tuple<GLfloat, GLfloat, GLfloat> p2 = tri->get_p2();
-                tuple<GLfloat, GLfloat, GLfloat> p3 = tri->get_p3();
+                tuple<float, float, float> p1 = tri->get_p1();
+                tuple<float, float, float> p2 = tri->get_p2();
+                tuple<float, float, float> p3 = tri->get_p3();
 
                 glVertex3f(get<0>(p1) + get<0>(position), get<1>(p1) + get<1>(position), get<2>(p1) + get<2>(position));
                 glVertex3f(get<0>(p2) + get<0>(position), get<1>(p2) + get<1>(position), get<2>(p2) + get<2>(position));
@@ -136,18 +142,18 @@ namespace interface {
         glEnd();
     }
 
-    void Scene::move_models(GLfloat x, GLfloat y, GLfloat z) {
+    void Scene::move_models(float x, float y, float z) {
         get<0>(position) += x;
         get<1>(position) += y;
         get<2>(position) += z;
     }
 
-    void Scene::rotate_models(GLfloat angle_alpha, GLfloat angle_beta) {
+    void Scene::rotate_models(float angle_alpha, float angle_beta) {
         m_rotation_alpha += angle_alpha;
         m_rotation_beta += angle_beta;
     }
 
-    void Scene::rotate_camera(GLfloat angle_alpha, GLfloat angle_beta) {
+    void Scene::rotate_camera(float angle_alpha, float angle_beta) {
         alpha += angle_alpha;
         beta  += angle_beta;
 
@@ -157,25 +163,25 @@ namespace interface {
             beta = 0.01;
     }
 
-    void Scene::zoom(GLfloat zoom) {
+    void Scene::zoom(float zoom) {
         radius += zoom;
         if(radius < 0.1)
             radius = 0.1;
     }
 
-    tuple<GLfloat, GLfloat, GLfloat> Scene::get_position() {
+    tuple<float, float, float> Scene::get_position() {
         return position;
     }
 
-    void Scene::set_position(GLfloat x, GLfloat y, GLfloat z) {
+    void Scene::set_position(float x, float y, float z) {
         position = make_tuple(x, y, z);
     }
 
-    tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_pos() {
+    tuple<float, float, float> Scene::get_camera_pos() {
         return spherical2cartesian(radius, alpha, beta);
     }
 
-    void Scene::set_camera_pos(GLfloat x, GLfloat y, GLfloat z) {
+    void Scene::set_camera_pos(float x, float y, float z) {
         auto coords = cartesian2spherical(x,y,z);
 
         radius = get<0>(coords);
@@ -183,51 +189,51 @@ namespace interface {
         beta = get<2>(coords);
     }
 
-    tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_center() {
+    tuple<float, float, float> Scene::get_camera_center() {
         return camera_center;
     }
 
-    void Scene::set_camera_center(GLfloat x, GLfloat y, GLfloat z) {
+    void Scene::set_camera_center(float x, float y, float z) {
         camera_center = make_tuple(x,y,z);
     } 
 
-    tuple<GLfloat, GLfloat, GLfloat> Scene::get_up() {
+    tuple<float, float, float> Scene::get_up() {
         return up;
     }
 
-    void Scene::set_up(GLfloat x, GLfloat y, GLfloat z) {
+    void Scene::set_up(float x, float y, float z) {
         up = make_tuple(x, y, z);
     }
 
-    GLfloat Scene::get_fov() {
+    float Scene::get_fov() {
         return fov;
     }
 
-    void Scene::set_fov(GLfloat fov2) {
+    void Scene::set_fov(float fov2) {
         fov = fov2;
     }
 
-    GLfloat Scene::get_near() {
+    float Scene::get_near() {
         return near;
     }
 
-    void Scene::set_near(GLfloat near2) {
+    void Scene::set_near(float near2) {
         near = near2;
     }
 
-    GLfloat Scene::get_far() {
+    float Scene::get_far() {
         return far;
     }
 
-    void Scene::set_far(GLfloat far2) {
+    void Scene::set_far(float far2) {
         far = far2;
     }
 
-    GLfloat Scene::get_model_rotation_alpha() {
+    float Scene::get_model_rotation_alpha() {
         return m_rotation_alpha;
     }
 
-    GLfloat Scene::get_model_rotation_beta() {
+    float Scene::get_model_rotation_beta() {
         return m_rotation_beta;
     }
 }

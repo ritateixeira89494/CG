@@ -2,7 +2,6 @@
 #define __MODEL_H__
 
 #include "triangle.h"
-#include <GL/glut.h>
 #include <vector>
 
 using namespace std;

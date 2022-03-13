@@ -18,9 +18,9 @@ namespace model {
             return -1;
         }
 
-        GLfloat point1[3];
-        GLfloat point2[3];
-        GLfloat point3[3];
+        float point1[3];
+        float point2[3];
+        float point3[3];
         while (
                 fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n",
                        &point1[0], &point1[1], &point1[2],

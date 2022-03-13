@@ -1,6 +1,10 @@
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
-#include <iostream>
+#endif
 
+#include <iostream>
 #include "interface/display.h"
 #include "interface/scene.h"
 #include "utils/coords.h"
