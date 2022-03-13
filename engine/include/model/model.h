@@ -11,13 +11,37 @@ using namespace triangle;
 namespace model {
     class Model {
     private:
+        /// Number of triangles in the model
         int n_triangles;
+        /// List of triangles
         vector<Triangle *> triangles;
     public:
-        Model();                    // Initializes an empty model
-        explicit Model(const char *path);          // Initializes and loads a ".3d" model
-        int get_n_triangles();      // Returns the number of triangles
+        /// Initializes an empty model
+        Model();                      
+        /**
+         * @brief Initializes and loads a ".3d" model
+         * 
+         * @param path File path
+         */
+        explicit Model(const char *path);  
+        /**
+         * @brief Get the number of triangles
+         * 
+         * @return int number of triangles
+         */
+        int get_n_triangles(); 
+        /**
+         * @brief Loads a model from a ".3d" file
+         * 
+         * @param path File path
+         * @return int Number of triangles loaded
+         */
         int load_model(char *path); // Loads the model from a ".3d" file
+        /**
+         * @brief Get the triangle list
+         * 
+         * @return vector<Triangle *> List of triangles of the model
+         */
         vector<Triangle *> get_triangles();
     };
 }
