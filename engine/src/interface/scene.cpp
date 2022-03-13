@@ -126,7 +126,6 @@ namespace interface {
 
     void Scene::render_models() {
         glBegin(GL_TRIANGLES);
-        glColor3f(1, 1, 1);
         for (Model *model: models) {
             vector<Triangle *> triangles = model->get_triangles();
             for (Triangle *tri: triangles) {
@@ -134,9 +133,9 @@ namespace interface {
                 tuple<float, float, float> p2 = tri->get_p2();
                 tuple<float, float, float> p3 = tri->get_p3();
 
-                glVertex3f(get<0>(p1) + get<0>(position), get<1>(p1) + get<1>(position), get<2>(p1) + get<2>(position));
-                glVertex3f(get<0>(p2) + get<0>(position), get<1>(p2) + get<1>(position), get<2>(p2) + get<2>(position));
-                glVertex3f(get<0>(p3) + get<0>(position), get<1>(p3) + get<1>(position), get<2>(p3) + get<2>(position));
+                glVertex3f((get<0>(p1)*scale) + get<0>(position), (get<1>(p1)*scale) + get<1>(position), (get<2>(p1)*scale) + get<2>(position));
+                glVertex3f((get<0>(p2)*scale) + get<0>(position), (get<1>(p2)*scale) + get<1>(position), (get<2>(p2)*scale) + get<2>(position));
+                glVertex3f((get<0>(p3)*scale) + get<0>(position), (get<1>(p3)*scale) + get<1>(position), (get<2>(p3)*scale) + get<2>(position));
             }
         }
         glEnd();
@@ -167,6 +166,12 @@ namespace interface {
             beta = 3.14;
         else if(beta < 0.01)
             beta = 0.01;
+    }
+
+    void Scene::change_scale(float val) {
+        scale += val;
+        if(scale < 0.1)
+            scale = 0.1;
     }
 
     void Scene::zoom(float zoom) {
@@ -248,5 +253,9 @@ namespace interface {
 
     float Scene::get_model_rotation_beta() {
         return m_rotation_beta;
+    }
+
+    float Scene::get_scale() {
+        return scale;
     }
 }

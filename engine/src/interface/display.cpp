@@ -71,6 +71,12 @@ void render() {
 
     auto position = scene->get_position();
 
+    if(model_mode)
+        glColor3f(1,1,1);
+    else
+        glColor3f(0.36,0.8,0.89); // #5CCCE2
+    
+    auto scale = scene->get_scale();
     glTranslatef(get<0>(position), get<1>(position), get<2>(position));
     glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);
     glRotatef(radian2degree(m_rotation_beta), 1, 0, 0);
@@ -81,7 +87,7 @@ void render() {
     glutSwapBuffers();
 }
 
-void parse_spec_key(int key, int x, int y)  {
+void parse_spec_key(int key, int x, int y) {
     switch(key) {
         case GLUT_KEY_LEFT:
             if(model_mode)
@@ -140,10 +146,16 @@ void parse_key(unsigned char key, int x, int y) {
                 scene->move_camera(0, 0, 0.1);
             break;
         case '+':
-            scene->zoom(-0.1);
+            if(model_mode)
+                scene->change_scale(0.1);
+            else
+                scene->zoom(-0.1);
             break;
         case '-':
-            scene->zoom(0.1);
+            if(model_mode)
+                scene->change_scale(-0.1);
+            else
+                scene->zoom(0.1);
             break;
         case '\r':
             model_mode = !model_mode;

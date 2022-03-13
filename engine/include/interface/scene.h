@@ -21,25 +21,27 @@ namespace interface {
          */
         tuple<float, float, float> up;
         /// Camera field of view
-        float fov;
+        float fov = 60;
         /// Distance to the near plane. Objects closer than this plane will get discarded
-        float near;
+        float near = 1;
         /// Distance to the far plane. Objects farther than this plane whill get discarded
-        float far;
+        float far = 1000;
         /// Camera horizontal rotation
-        float alpha;
+        float alpha = 0;
         // Camera vertical rotation
-        float beta;
+        float beta = 0;
         /// Camera radius to the @link camera_center @endlink 
-        float radius;
+        float radius = 1;
         /// List of models loaded into the scene
         vector<Model *> models;
         /// Translation vector applied to all models
         tuple<float, float, float> position;
         /// Horizontal rotation applied to all models
-        float m_rotation_alpha;
+        float m_rotation_alpha = 0;
         /// Vertical rotation applied to all models
-        float m_rotation_beta;
+        float m_rotation_beta = 0;
+        /// Model scale;
+        float scale = 1;
 
     public:
         /**
@@ -98,6 +100,13 @@ namespace interface {
             @param angle Angle in which to rotate the models
         */
         void rotate_camera(float angle_alpha, float angle_beta);
+
+        /**
+         * @brief Changes the model scale
+         * 
+         * @param val Value to add to the scale
+         */
+        void change_scale(float val);
 
         /**
          * @brief Changes the camera zoom. In other words it adds the zoom value to the camera radius 
@@ -250,6 +259,13 @@ namespace interface {
          * @return float Vertical rotation applied to all models
          */
         float get_model_rotation_beta();
+        
+        /**
+         * @brief Get the model scale
+         * 
+         * @return float Model scale
+         */
+        float get_scale();
     };
 } // namespace interface
 
