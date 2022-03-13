@@ -39,7 +39,7 @@ void drawSquareXY(float xOr, float yOr, float edge, float z, ofstream *file) {
     auto p2 = make_tuple(xOr + edge, yOr + edge, z);
     auto p3 = make_tuple(xOr, yOr + edge, z);
 
-    auto p4 = make_tuple(xOr, yOr + edge, z);
+    auto p4 = make_tuple(xOr, yOr, z);
     auto p5 = make_tuple(xOr + edge, yOr, z);
     auto p6 = make_tuple(xOr + edge, yOr + edge, z);
 
@@ -55,8 +55,8 @@ void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file) {
     auto p2 = make_tuple(0.0f, yOr, zOr);
     auto p3 = make_tuple(0.0f, yOr, zOr + edge);
 
-    auto p4 = make_tuple(0.0f, yOr + edge, zOr);
-    auto p5 = make_tuple(0.0f, yOr, zOr);
+    auto p4 = make_tuple(0.0f, yOr + edge, zOr + edge);
+    auto p5 = make_tuple(0.0f, yOr + edge, zOr);
     auto p6 = make_tuple(0.0f, yOr, zOr + edge);
 
     write_triangle(p1, p2, p3, file);
@@ -67,7 +67,7 @@ void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file) {
     Draw square in YZ Axis, with x = length of square.
 */
 void drawSquareYZ(float yOr, float zOr, float edge, float x, ofstream *file) {
-    auto p1 = make_tuple(x, yOr, zOr);
+    auto p1 = make_tuple(x, yOr + edge, zOr);
     auto p2 = make_tuple(x, yOr, zOr + edge);
     auto p3 = make_tuple(x, yOr, zOr);
 
