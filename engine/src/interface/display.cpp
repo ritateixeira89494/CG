@@ -1,11 +1,15 @@
 #include <GL/glut.h>
+#include <iostream>
 
 #include "interface/display.h"
 #include "interface/scene.h"
+#include "utils/coords.h"
 
 using namespace interface;
 
 Scene *scene;
+
+bool model_rotate = false;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -56,8 +60,13 @@ void render() {
             get<0>(up), get<1>(up), get<2>(up)
     );
 
-    glRotatef(scene->get_rotation(), 0, 1, 0);
     placeAxis();
+
+    float m_rotation_alpha = scene->get_model_rotation_alpha();
+    float m_rotation_beta = scene->get_model_rotation_beta();
+
+    glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);
+    glRotatef(radian2degree(m_rotation_beta), 1, 0, 0);
 
     scene->render_models();
 
@@ -67,10 +76,28 @@ void render() {
 void parse_spec_key(int key, int x, int y)  {
     switch(key) {
         case GLUT_KEY_LEFT:
-            scene->rotate_camera(0.4);
+            if(model_rotate)
+                scene->rotate_models(-0.1, 0);
+            else
+                scene->rotate_camera(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
-            scene->rotate_camera(-0.4);
+            if(model_rotate)
+                scene->rotate_models(0.1, 0);
+            else
+                scene->rotate_camera(0.1, 0);
+            break;
+        case GLUT_KEY_UP:
+            if(model_rotate)
+                scene->rotate_models(0, -0.1);
+            else
+                scene->rotate_camera(0, -0.1);
+            break;
+        case GLUT_KEY_DOWN:
+            if(model_rotate)
+                scene->rotate_models(0, 0.1);
+            else
+                scene->rotate_camera(0, 0.1);
             break;
         default:
             return;
@@ -91,6 +118,19 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case 's':
             scene->move_models(0, 0, 0.1);
+            break;
+        case '+':
+            scene->zoom(-0.1);
+            break;
+        case '-':
+            scene->zoom(0.1);
+            break;
+        case '\r':
+            model_rotate = !model_rotate;
+            break;
+        case 'q':
+            std::cout << "Goodbye!!" << std::endl;
+            exit(0);
             break;
         default:
             return;

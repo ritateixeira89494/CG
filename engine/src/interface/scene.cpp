@@ -1,6 +1,8 @@
 #include <iostream>
+#include <cmath>
 #include "interface/scene.h"
 #include "tinyxml2/tinyxml2.h"
+#include "utils/coords.h"
 
 using namespace tinyxml2;
 
@@ -10,7 +12,6 @@ namespace interface {
         set_position(0, 0, 0);
         set_camera_pos(15, 10, 15);
         set_up(0, 1, 0);
-        set_rotation(0);
         set_fov(60);
         set_near(1);
         set_far(1000);
@@ -54,7 +55,6 @@ namespace interface {
         }
 
         set_position(0, 0, 0);
-        set_rotation(0);
 
         XMLElement *world = doc.FirstChildElement();
 
@@ -109,7 +109,6 @@ namespace interface {
         set_position(0, 0, 0);
         set_camera_pos(15, 10, 15);
         set_up(0, 1, 0);
-        set_rotation(0);
         set_fov(60);
         set_near(1);
         set_far(1000);
@@ -143,8 +142,25 @@ namespace interface {
         get<2>(position) += z;
     }
 
-    void Scene::rotate_camera(GLfloat angle) {
-        rotation += angle;
+    void Scene::rotate_models(GLfloat angle_alpha, GLfloat angle_beta) {
+        m_rotation_alpha += angle_alpha;
+        m_rotation_beta += angle_beta;
+    }
+
+    void Scene::rotate_camera(GLfloat angle_alpha, GLfloat angle_beta) {
+        alpha += angle_alpha;
+        beta  += angle_beta;
+
+        if(beta > 3.14)
+            beta = 3.14;
+        else if(beta < 0.01)
+            beta = 0.01;
+    }
+
+    void Scene::zoom(GLfloat zoom) {
+        radius += zoom;
+        if(radius < 0.1)
+            radius = 0.1;
     }
 
     tuple<GLfloat, GLfloat, GLfloat> Scene::get_position() {
@@ -155,20 +171,16 @@ namespace interface {
         position = make_tuple(x, y, z);
     }
 
-    GLfloat Scene::get_rotation() {
-        return rotation;
-    }
-
-    void Scene::set_rotation(GLfloat angle) {
-        rotation = angle;
-    }
-
     tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_pos() {
-        return camera_pos;
+        return spherical2cartesian(radius, alpha, beta);
     }
 
     void Scene::set_camera_pos(GLfloat x, GLfloat y, GLfloat z) {
-        camera_pos = make_tuple(x, y, z);
+        auto coords = cartesian2spherical(x,y,z);
+
+        radius = get<0>(coords);
+        alpha = get<1>(coords);
+        beta = get<2>(coords);
     }
 
     tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_center() {
@@ -209,5 +221,13 @@ namespace interface {
 
     void Scene::set_far(GLfloat far2) {
         far = far2;
+    }
+
+    GLfloat Scene::get_model_rotation_alpha() {
+        return m_rotation_alpha;
+    }
+
+    GLfloat Scene::get_model_rotation_beta() {
+        return m_rotation_beta;
     }
 }

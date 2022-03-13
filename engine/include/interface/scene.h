@@ -8,8 +8,6 @@ using namespace model;
 
 namespace interface {
     class Scene {
-        /// Camera position
-        tuple<GLfloat, GLfloat, GLfloat> camera_pos;
         /**
          * @brief Camera center
          * 
@@ -22,36 +20,26 @@ namespace interface {
          * This vector specifies which direction is up
          */
         tuple<GLfloat, GLfloat, GLfloat> up;
-        /// Camera rotation angle
-        GLfloat rotation;
         /// Camera field of view
         GLfloat fov;
         /// Distance to the near plane. Objects closer than this plane will get discarded
         GLfloat near;
         /// Distance to the far plane. Objects farther than this plane whill get discarded
         GLfloat far;
-        /**
-         * @brief Camera horizontal rotation
-         * 
-         * @note Unimplemented yet
-         */
+        /// Camera horizontal rotation
         GLfloat alpha;
-        /**
-         * @brief Camera vertical rotation 
-         * 
-         * @note Unimplemented yet
-         */
+        // Camera vertical rotation
         GLfloat beta;
-        /**
-         * @brief Camera radius to the @link camera_center @endlink 
-         * 
-         * @note Unimplemented yet
-         */
+        /// Camera radius to the @link camera_center @endlink 
         GLfloat radius;
         /// List of models loaded into the scene
         vector<Model *> models;
         /// Translation vector applied to all models
         tuple<GLfloat, GLfloat, GLfloat> position;
+        /// Horizontal rotation applied to all models
+        GLfloat m_rotation_alpha;
+        /// Vertical rotation applied to all models
+        GLfloat m_rotation_beta;
 
     public:
         /**
@@ -88,11 +76,26 @@ namespace interface {
         void move_models(GLfloat x, GLfloat y, GLfloat z);
 
         /**
+         * @brief Rotate all models by the specified angles 
+         * 
+         * @param angle_alpha Horizontal rotation to apply
+         * @param angle_beta Vertical rotation to apply
+         */
+        void rotate_models(GLfloat angle_alpha, GLfloat angle_beta);
+
+        /**
             @brief Rotates the models in the specified angle
 
             @param angle Angle in which to rotate the models
         */
-        void rotate_camera(GLfloat angle);
+        void rotate_camera(GLfloat angle_alpha, GLfloat angle_beta);
+
+        /**
+         * @brief Changes the camera zoom. In other words it adds the zoom value to the camera radius 
+         * 
+         * @param zoom Zoom amount
+         */
+        void zoom(GLfloat zoom);
 
         /**
          * @brief Get the translation vector applied to all the models
@@ -122,17 +125,19 @@ namespace interface {
         GLfloat get_rotation();
 
         /**
-         * @brief Set the rotation angle to apply to the camera
+         * @brief Set the rotation angle to apply to the models
          * 
-         * @note This is not like @link rotate_camera @endlink where it adds the rotation angle to
+         * @note This is not like @link rotate_models @endlink where it adds the rotation angle to
          *       all previous rotations. This will instead @b overwrite all previous rotations
          * 
-         * @param angle Rotation angle to set the camera at
+         * @param angle Rotation angle to set the models at
          */
         void set_rotation(GLfloat angle);
 
         /**
          * @brief Get the camera position
+         * 
+         * @note This returns the coordinates in cartesian
          * 
          * @return tuple<GLfloat, GLfloat, GLfloat> (x,y,z) coordinates of the camera
          */
@@ -140,6 +145,8 @@ namespace interface {
 
         /**
          * @brief Set the camera position coordinates
+         * 
+         * @note The coordinates of the arguments are in cartesian
          * 
          * @param x x coordinate of the camera
          * @param y y coordinate of the camera
@@ -220,6 +227,20 @@ namespace interface {
          * @param far2 Far value to set to the camera
          */
         void set_far(GLfloat far2);
+
+        /**
+         * @brief Get the model horizontal rotation
+         * 
+         * @return GLfloat Horizontal rotation applied to all models
+         */
+        GLfloat get_model_rotation_alpha();
+
+        /**
+         * @brief Get the model rotation vertical rotation
+         * 
+         * @return GLfloat Vertical rotation applied to all models
+         */
+        GLfloat get_model_rotation_beta();
     };
 } // namespace interface
 
