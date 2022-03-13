@@ -13,7 +13,7 @@ using namespace interface;
 
 Scene *scene;
 
-bool model_rotate = false;
+bool model_mode = true;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -84,25 +84,25 @@ void render() {
 void parse_spec_key(int key, int x, int y)  {
     switch(key) {
         case GLUT_KEY_LEFT:
-            if(model_rotate)
+            if(model_mode)
                 scene->rotate_models(-0.1, 0);
             else
                 scene->rotate_camera(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
-            if(model_rotate)
+            if(model_mode)
                 scene->rotate_models(0.1, 0);
             else
                 scene->rotate_camera(0.1, 0);
             break;
         case GLUT_KEY_UP:
-            if(model_rotate)
+            if(model_mode)
                 scene->rotate_models(0, -0.1);
             else
                 scene->rotate_camera(0, -0.1);
             break;
         case GLUT_KEY_DOWN:
-            if(model_rotate)
+            if(model_mode)
                 scene->rotate_models(0, 0.1);
             else
                 scene->rotate_camera(0, 0.1);
@@ -116,16 +116,28 @@ void parse_spec_key(int key, int x, int y)  {
 void parse_key(unsigned char key, int x, int y) {
     switch (key) {
         case 'a':
-            scene->move_models(-0.1, 0, 0);
+            if(model_mode)
+                scene->move_models(-0.1, 0, 0);
+            else
+                scene->move_camera(-0.1, 0, 0);
             break;
         case 'd':
-            scene->move_models(0.1, 0, 0);
+            if(model_mode)
+                scene->move_models(0.1, 0, 0);
+            else
+                scene->move_camera(0.1, 0, 0);
             break;
         case 'w':
-            scene->move_models(0, 0, -0.1);
+            if(model_mode)
+                scene->move_models(0, 0, -0.1);
+            else
+                scene->move_camera(0, 0, -0.1);
             break;
         case 's':
-            scene->move_models(0, 0, 0.1);
+            if(model_mode)
+                scene->move_models(0, 0, 0.1);
+            else
+                scene->move_camera(0, 0, 0.1);
             break;
         case '+':
             scene->zoom(-0.1);
@@ -134,7 +146,7 @@ void parse_key(unsigned char key, int x, int y) {
             scene->zoom(0.1);
             break;
         case '\r':
-            model_rotate = !model_rotate;
+            model_mode = !model_mode;
             break;
         case 'q':
             std::cout << "Goodbye!!" << std::endl;

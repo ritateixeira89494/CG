@@ -153,6 +153,12 @@ namespace interface {
         m_rotation_beta += angle_beta;
     }
 
+    void Scene::move_camera(float x, float y, float z) {
+        get<0>(camera_center) += x;
+        get<1>(camera_center) += y;
+        get<2>(camera_center) += z;
+    }
+
     void Scene::rotate_camera(float angle_alpha, float angle_beta) {
         alpha += angle_alpha;
         beta  += angle_beta;
@@ -178,7 +184,14 @@ namespace interface {
     }
 
     tuple<float, float, float> Scene::get_camera_pos() {
-        return spherical2cartesian(radius, alpha, beta);
+        auto pos = spherical2cartesian(radius, alpha, beta) ;
+        auto cam_center = get_camera_center();
+        
+        get<0>(pos) += get<0>(cam_center);
+        get<1>(pos) += get<1>(cam_center);
+        get<2>(pos) += get<2>(cam_center);
+
+        return pos;
     }
 
     void Scene::set_camera_pos(float x, float y, float z) {

@@ -84,6 +84,15 @@ namespace interface {
         void rotate_models(float angle_alpha, float angle_beta);
 
         /**
+         * @brief Moves the camera in the vector direction
+         * 
+         * @param x x coordinate of the vector
+         * @param y y coordinate of the vector
+         * @param z z coordinate of the vector
+         */
+        void move_camera(float x, float y, float z);
+
+        /**
             @brief Rotates the models in the specified angle
 
             @param angle Angle in which to rotate the models
