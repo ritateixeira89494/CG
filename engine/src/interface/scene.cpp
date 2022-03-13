@@ -143,7 +143,7 @@ namespace interface {
         get<2>(position) += z;
     }
 
-    void Scene::rotate_models(GLfloat angle) {
+    void Scene::rotate_camera(GLfloat angle) {
         rotation += angle;
     }
 
@@ -170,6 +170,14 @@ namespace interface {
     void Scene::set_camera_pos(GLfloat x, GLfloat y, GLfloat z) {
         camera_pos = make_tuple(x, y, z);
     }
+
+    tuple<GLfloat, GLfloat, GLfloat> Scene::get_camera_center() {
+        return camera_center;
+    }
+
+    void Scene::set_camera_center(GLfloat x, GLfloat y, GLfloat z) {
+        camera_center = make_tuple(x,y,z);
+    } 
 
     tuple<GLfloat, GLfloat, GLfloat> Scene::get_up() {
         return up;
