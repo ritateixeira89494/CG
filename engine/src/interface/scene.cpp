@@ -49,7 +49,6 @@ namespace interface {
 
     }
 
-
     // TODO: Code this function
     Scene::Scene(char *path) {
         models = {};

@@ -7,7 +7,7 @@
     </camera>
     <group>
         <models>
-            <model file="test/xml/box.3d"/> <!-- generator cone 1 2 4 3 cone.3d -->
+            <model file="test/xml/phase1/box.3d"/> <!-- generator cone 1 2 4 3 cone.3d -->
         </models>
     </group>
 </world>

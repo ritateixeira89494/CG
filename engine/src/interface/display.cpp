@@ -1,9 +1,13 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+
 #include <GL/glut.h>
+
 #endif
 
+#include "model/transforms/Transform.h"
+#include "model/transforms/Translate.h"
 #include <iostream>
 #include "interface/display.h"
 #include "interface/scene.h"
@@ -65,7 +69,7 @@ void render() {
             get<0>(up), get<1>(up), get<2>(up)
     );
 
-    if(axis)
+    if (axis)
         placeAxis();
 
     auto m_rotation_alpha = scene.get_model_rotation_alpha();
@@ -73,11 +77,24 @@ void render() {
 
     auto position = scene.get_position();
 
-    if(model_mode)
-        glColor3f(1,1,1);
+    if (model_mode)
+        glColor3f(1, 1, 1);
     else
-        glColor3f(0.36,0.8,0.89); // #5CCCE2
-    
+        glColor3f(0.36, 0.8, 0.89); // #5CCCE2
+
+    // Apply transformations here
+    // group1 -> transform1, models1, group2
+    // group2 -> transform1, models1, group3
+    Translate translate = Translate(6, 1, 1);
+
+    vector<Transform*> trs;
+    trs.push_back(&translate);
+
+    for (const auto& transf: trs) {
+        transf->apply();
+    }
+
+    // Default changeable transformations
     auto scale = scene.get_scale();
     glTranslatef(get<0>(position), get<1>(position), get<2>(position));
     glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);
@@ -90,27 +107,27 @@ void render() {
 }
 
 void parse_spec_key(int key, int x, int y) {
-    switch(key) {
+    switch (key) {
         case GLUT_KEY_LEFT:
-            if(model_mode)
+            if (model_mode)
                 scene.rotate_models(-0.1, 0);
             else
                 scene.rotate_camera(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
-            if(model_mode)
+            if (model_mode)
                 scene.rotate_models(0.1, 0);
             else
                 scene.rotate_camera(0.1, 0);
             break;
         case GLUT_KEY_UP:
-            if(model_mode)
+            if (model_mode)
                 scene.rotate_models(0, -0.1);
             else
                 scene.rotate_camera(0, -0.1);
             break;
         case GLUT_KEY_DOWN:
-            if(model_mode)
+            if (model_mode)
                 scene.rotate_models(0, 0.1);
             else
                 scene.rotate_camera(0, 0.1);
@@ -124,37 +141,37 @@ void parse_spec_key(int key, int x, int y) {
 void parse_key(unsigned char key, int x, int y) {
     switch (key) {
         case 'a':
-            if(model_mode)
+            if (model_mode)
                 scene.move_models(-0.1, 0, 0);
             else
                 scene.move_camera(-0.1, 0, 0);
             break;
         case 'd':
-            if(model_mode)
+            if (model_mode)
                 scene.move_models(0.1, 0, 0);
             else
                 scene.move_camera(0.1, 0, 0);
             break;
         case 'w':
-            if(model_mode)
+            if (model_mode)
                 scene.move_models(0, 0, -0.1);
             else
                 scene.move_camera(0, 0, -0.1);
             break;
         case 's':
-            if(model_mode)
+            if (model_mode)
                 scene.move_models(0, 0, 0.1);
             else
                 scene.move_camera(0, 0, 0.1);
             break;
         case '+':
-            if(model_mode)
+            if (model_mode)
                 scene.change_scale(0.1);
             else
                 scene.zoom(-0.1);
             break;
         case '-':
-            if(model_mode)
+            if (model_mode)
                 scene.change_scale(-0.1);
             else
                 scene.zoom(0.1);

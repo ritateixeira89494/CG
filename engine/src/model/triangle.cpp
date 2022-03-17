@@ -7,9 +7,9 @@ using namespace std;
 
 namespace triangle {
     Triangle::Triangle(
-        tuple<float, float, float> point1, 
-        tuple<float, float, float> point2,
-        tuple<float, float, float> point3
+            tuple<float, float, float> point1,
+            tuple<float, float, float> point2,
+            tuple<float, float, float> point3
     ) {
         p1 = make_tuple(get<0>(point1), get<1>(point1), get<2>(point1));
         p2 = make_tuple(get<0>(point2), get<1>(point2), get<2>(point3));
