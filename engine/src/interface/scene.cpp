@@ -103,14 +103,14 @@ namespace interface {
             const char *modelPath = model->Attribute("file");
             cout << modelPath << endl;
 
-            auto *m = new Model(modelPath);
+            auto m = Model(modelPath);
 
             models.push_back(m);
             model = model->NextSiblingElement();
         }
     }
 
-    Scene::Scene(vector<Model *> m) {
+    Scene::Scene(vector<Model> m) {
         models = {};
         set_position(0, 0, 0);
         set_camera_pos(15, 10, 15);
@@ -119,19 +119,19 @@ namespace interface {
         set_near(1);
         set_far(1000);
 
-        for (Model *model: m) {
+        for (Model model: m) {
             models.push_back(model);
         }
     }
 
     void Scene::render_models() {
         glBegin(GL_TRIANGLES);
-        for (Model *model: models) {
-            vector<Triangle *> triangles = model->get_triangles();
-            for (Triangle *tri: triangles) {
-                tuple<float, float, float> p1 = tri->get_p1();
-                tuple<float, float, float> p2 = tri->get_p2();
-                tuple<float, float, float> p3 = tri->get_p3();
+        for (Model model: models) {
+            vector<Triangle> triangles = model.get_triangles();
+            for (Triangle tri: triangles) {
+                tuple<float, float, float> p1 = tri.get_p1();
+                tuple<float, float, float> p2 = tri.get_p2();
+                tuple<float, float, float> p3 = tri.get_p3();
 
                 glVertex3f((get<0>(p1)*scale) + get<0>(position), (get<1>(p1)*scale) + get<1>(position), (get<2>(p1)*scale) + get<2>(position));
                 glVertex3f((get<0>(p2)*scale) + get<0>(position), (get<1>(p2)*scale) + get<1>(position), (get<2>(p2)*scale) + get<2>(position));

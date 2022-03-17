@@ -13,7 +13,7 @@ namespace model {
         /// Number of triangles in the model
         int n_triangles;
         /// List of triangles
-        vector<Triangle *> triangles;
+        vector<Triangle> triangles;
     public:
         /// Initializes an empty model
         Model();                      
@@ -41,7 +41,7 @@ namespace model {
          * 
          * @return vector<Triangle *> List of triangles of the model
          */
-        vector<Triangle *> get_triangles();
+        vector<Triangle> get_triangles();
     };
 }
 

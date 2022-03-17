@@ -11,7 +11,7 @@
 
 using namespace interface;
 
-Scene *scene;
+Scene scene;
 
 bool model_mode = true;
 bool axis = true;
@@ -45,7 +45,7 @@ void change_size(int w, int h) {
 
     glViewport(0, 0, w, h);
 
-    gluPerspective(scene->get_fov(), ratio, scene->get_near(), scene->get_far());
+    gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
 
     glMatrixMode(GL_MODELVIEW);
 }
@@ -55,9 +55,9 @@ void render() {
 
     glLoadIdentity();
 
-    tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene->get_camera_pos();
-    tuple<GLfloat, GLfloat, GLfloat> cam_center = scene->get_camera_center();
-    tuple<GLfloat, GLfloat, GLfloat> up = scene->get_up();
+    tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
+    tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
+    tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
 
     gluLookAt(
             get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
@@ -68,23 +68,23 @@ void render() {
     if(axis)
         placeAxis();
 
-    auto m_rotation_alpha = scene->get_model_rotation_alpha();
-    auto m_rotation_beta = scene->get_model_rotation_beta();
+    auto m_rotation_alpha = scene.get_model_rotation_alpha();
+    auto m_rotation_beta = scene.get_model_rotation_beta();
 
-    auto position = scene->get_position();
+    auto position = scene.get_position();
 
     if(model_mode)
         glColor3f(1,1,1);
     else
         glColor3f(0.36,0.8,0.89); // #5CCCE2
     
-    auto scale = scene->get_scale();
+    auto scale = scene.get_scale();
     glTranslatef(get<0>(position), get<1>(position), get<2>(position));
     glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);
     glRotatef(radian2degree(m_rotation_beta), 1, 0, 0);
     glTranslatef(-get<0>(position), -get<1>(position), -get<2>(position));
 
-    scene->render_models();
+    scene.render_models();
 
     glutSwapBuffers();
 }
@@ -93,27 +93,27 @@ void parse_spec_key(int key, int x, int y) {
     switch(key) {
         case GLUT_KEY_LEFT:
             if(model_mode)
-                scene->rotate_models(-0.1, 0);
+                scene.rotate_models(-0.1, 0);
             else
-                scene->rotate_camera(-0.1, 0);
+                scene.rotate_camera(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
             if(model_mode)
-                scene->rotate_models(0.1, 0);
+                scene.rotate_models(0.1, 0);
             else
-                scene->rotate_camera(0.1, 0);
+                scene.rotate_camera(0.1, 0);
             break;
         case GLUT_KEY_UP:
             if(model_mode)
-                scene->rotate_models(0, -0.1);
+                scene.rotate_models(0, -0.1);
             else
-                scene->rotate_camera(0, -0.1);
+                scene.rotate_camera(0, -0.1);
             break;
         case GLUT_KEY_DOWN:
             if(model_mode)
-                scene->rotate_models(0, 0.1);
+                scene.rotate_models(0, 0.1);
             else
-                scene->rotate_camera(0, 0.1);
+                scene.rotate_camera(0, 0.1);
             break;
         default:
             return;
@@ -125,39 +125,39 @@ void parse_key(unsigned char key, int x, int y) {
     switch (key) {
         case 'a':
             if(model_mode)
-                scene->move_models(-0.1, 0, 0);
+                scene.move_models(-0.1, 0, 0);
             else
-                scene->move_camera(-0.1, 0, 0);
+                scene.move_camera(-0.1, 0, 0);
             break;
         case 'd':
             if(model_mode)
-                scene->move_models(0.1, 0, 0);
+                scene.move_models(0.1, 0, 0);
             else
-                scene->move_camera(0.1, 0, 0);
+                scene.move_camera(0.1, 0, 0);
             break;
         case 'w':
             if(model_mode)
-                scene->move_models(0, 0, -0.1);
+                scene.move_models(0, 0, -0.1);
             else
-                scene->move_camera(0, 0, -0.1);
+                scene.move_camera(0, 0, -0.1);
             break;
         case 's':
             if(model_mode)
-                scene->move_models(0, 0, 0.1);
+                scene.move_models(0, 0, 0.1);
             else
-                scene->move_camera(0, 0, 0.1);
+                scene.move_camera(0, 0, 0.1);
             break;
         case '+':
             if(model_mode)
-                scene->change_scale(0.1);
+                scene.change_scale(0.1);
             else
-                scene->zoom(-0.1);
+                scene.zoom(-0.1);
             break;
         case '-':
             if(model_mode)
-                scene->change_scale(-0.1);
+                scene.change_scale(-0.1);
             else
-                scene->zoom(0.1);
+                scene.zoom(0.1);
             break;
         case '\r':
             model_mode = !model_mode;
@@ -192,7 +192,7 @@ void run(int argc, char *argv[]) {
     glEnable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT, GL_LINE);
 
-    scene = new Scene(argv[1]);
+    scene = Scene(argv[1]);
 
     glutMainLoop();
 }

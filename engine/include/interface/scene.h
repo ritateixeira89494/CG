@@ -33,7 +33,7 @@ namespace interface {
         /// Camera radius to the @link camera_center @endlink 
         float radius = 1;
         /// List of models loaded into the scene
-        vector<Model *> models;
+        vector<Model> models;
         /// Translation vector applied to all models
         tuple<float, float, float> position;
         /// Horizontal rotation applied to all models
@@ -61,7 +61,7 @@ namespace interface {
 
             @param models List of models to add to the scene
         */
-        explicit Scene(vector<Model *> models);
+        explicit Scene(vector<Model> models);
 
         /**
             @brief Renders all models of the scene
