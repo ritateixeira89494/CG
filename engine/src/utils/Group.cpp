@@ -6,11 +6,11 @@
 
 using namespace std;
 
-Group::Group(XMLNode *group) {
+Group::Group(XMLElement *group) {
     XMLElement *transformsNode = group->FirstChildElement("transform");
     if (transformsNode != nullptr) this->transforms = getTransforms(transformsNode);
 
-    XMLElement *modelsNode;
+    XMLElement *modelsNode = group->FirstChildElement("models");
     // Check if the group has models
     if ((modelsNode = group->FirstChildElement("models")) != nullptr) {
         this->models = getModels(modelsNode);

@@ -26,7 +26,7 @@ class Group {
         static vector<Model *> getModels(XMLNode *modelsNode);
 
     public:
-        Group(XMLNode *group);
+        Group(XMLElement *group);
 
         void render();
 

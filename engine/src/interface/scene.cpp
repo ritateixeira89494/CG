@@ -91,14 +91,15 @@ namespace interface {
 
         cout << "Projection parameters: fov=" << fov << " near=" << near << " far=" << far << endl;
 
-        // Models
+        // Groups
 
-        XMLNode *groupNode = world->FirstChildElement("group")->FirstChild();
+        XMLElement *groupElement = world->FirstChildElement("group");
         // Single Group
         // TODO: Do this to multiple
 
         this->groups = {};
-        this->groups.emplace_back(groupNode);
+        auto g = Group(groupElement);
+        this->groups.push_back(g);
     }
 
     void Scene::render_models() {
