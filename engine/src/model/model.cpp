@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 #include "model/model.h"
@@ -29,11 +29,11 @@ namespace model {
                        &point3[0], &point3[1], &point3[2]
                 ) != EOF
                 ) {
-            triangles.push_back(Triangle(
+            triangles.emplace_back(
                     point1[0], point1[1], point1[2],
                     point2[0], point2[1], point2[2],
                     point3[0], point3[1], point3[2]
-            ));
+            );
         }
 
         return n_triangles;

@@ -9,46 +9,49 @@ using namespace triangle;
 
 namespace model {
     class Model {
-    private:
-        /// Number of triangles in the model
-        int n_triangles;
-        /// List of triangles
-        vector<Triangle> triangles;
-    public:
-        /// Initializes an empty model
-        Model();                      
-        /**
-         * @brief Initializes and loads a ".3d" model
-         * 
-         * @param path File path
-         */
-        explicit Model(const char *path);  
-        /**
-         * @brief Get the number of triangles
-         * 
-         * @return int number of triangles
-         */
-        int get_n_triangles(); 
-        /**
-         * @brief Loads a model from a ".3d" file
-         * 
-         * @param path File path
-         * @return int Number of triangles loaded
-         */
-        int load_model(char *path); // Loads the model from a ".3d" file
-        /**
-         * @brief Get the triangle list
-         * 
-         * @return vector<Triangle *> List of triangles of the model
-         */
-        vector<Triangle> get_triangles();
+        private:
+            /// Number of triangles in the model
+            int n_triangles;
+            /// List of triangles
+            vector<Triangle> triangles;
+        public:
+            /// Initializes an empty model
+            Model();
+
+            /**
+             * @brief Initializes and loads a ".3d" model
+             *
+             * @param path File path
+             */
+            explicit Model(const char *path);
+
+            /**
+             * @brief Get the number of triangles
+             *
+             * @return int number of triangles
+             */
+            int get_n_triangles();
+
+            /**
+             * @brief Loads a model from a ".3d" file
+             *
+             * @param path File path
+             * @return int Number of triangles loaded
+             */
+            int load_model(char *path); // Loads the model from a ".3d" file
+            /**
+             * @brief Get the triangle list
+             *
+             * @return vector<Triangle *> List of triangles of the model
+             */
+            vector<Triangle> get_triangles();
 
 
-        /**
-         * TODO: Document this
-         */
-        void render();
+            /**
+             * TODO: Document this
+             */
+            void render();
     };
 }
 
-#endif // __IO_H__
+#endif // __MODEL_H__
