@@ -115,9 +115,7 @@ void Group::render() {
         model->render();
     }
 
-    /*
-
-     */
+    // TODO: Handle subgroups here
 
     glPopMatrix();
 }

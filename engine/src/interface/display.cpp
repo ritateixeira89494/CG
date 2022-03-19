@@ -85,14 +85,6 @@ void render() {
     // Apply transforms here
     // group1 -> transform1, models1, group2
     // group2 -> transform1, models1, group3
-    Translate translate = Translate(6, 1, 1);
-
-    vector<Transform*> trs;
-    trs.push_back(&translate);
-
-    for (const auto& transf: trs) {
-        transf->apply();
-    }
 
     // Default changeable transforms
     auto scale = scene.get_scale();
