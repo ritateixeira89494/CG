@@ -78,21 +78,9 @@ void render() {
     auto position = scene.get_position();
 
     if (model_mode)
-        glColor3f(1, 1, 1);
+        glColor3f(1, 1, 1); // #FFFFFF
     else
         glColor3f(0.36, 0.8, 0.89); // #5CCCE2
-
-    // Apply transforms here
-    // group1 -> transform1, models1, group2
-    // group2 -> transform1, models1, group3
-    Translate translate = Translate(6, 1, 1);
-
-    vector<Transform*> trs;
-    trs.push_back(&translate);
-
-    for (const auto& transf: trs) {
-        transf->apply();
-    }
 
     // Default changeable transforms
     auto scale = scene.get_scale();

@@ -75,12 +75,12 @@ namespace interface {
         // LookAt coordinates
         XMLElement *lookAt = camera->FirstChildElement("lookAt");
         Coord lookAtCoord = getCoordinatesFromElement(lookAt);
-        set_camera_center(lookAtCoord->x, lookAtCoord->x, lookAtCoord->x); //TODO: Function call missing
+        set_camera_center(lookAtCoord->x, lookAtCoord->y, lookAtCoord->z); //TODO: Function call missing
 
         // Up coordinates
         XMLElement *upElement = camera->FirstChildElement("up");
         Coord upCoord = getCoordinatesFromElement(upElement);
-        set_up(upCoord->x, upCoord->x, upCoord->x);
+        set_up(upCoord->x, upCoord->y, upCoord->z);
 
         // Projection parameters
         XMLElement *projection = camera->FirstChildElement("projection");
@@ -93,12 +93,12 @@ namespace interface {
 
         // Models
 
-        XMLNode *groupNode = world->FirstChildElement("group")->FirstChild();
+        XMLElement *groupNode = world->FirstChildElement("group");
         // Single Group
         // TODO: Do this to multiple
 
         this->groups = {};
-        this->groups.emplace_back(groupNode);
+        this->groups.emplace_back(Group(groupNode));
     }
 
     void Scene::render_models() {
