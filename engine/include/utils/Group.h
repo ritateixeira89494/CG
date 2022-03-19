@@ -20,8 +20,7 @@ class Group {
 
         static vector<Transform *> getTransforms(XMLNode *transformsNode);
 
-
-        static vector<Group *> getSubGroups(XMLNode *mainGroup);
+        static vector<Group *> getSubGroups(XMLElement *mainGroup);
 
         static vector<Model *> getModels(XMLNode *modelsNode);
 

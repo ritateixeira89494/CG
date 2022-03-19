@@ -15,9 +15,8 @@ Group::Group(XMLElement *group) {
     if ((modelsNode = group->FirstChildElement("models")) != nullptr) {
         this->models = getModels(modelsNode);
 
-    } else { // If the group has no models it has subgroups
-        this->subGroups = getSubGroups(group);
     }
+    this->subGroups = getSubGroups(group->FirstChildElement("group"));
 }
 
 typedef struct coordinates {
@@ -97,8 +96,18 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
     return currentModels;
 }
 
-vector<Group *> Group::getSubGroups(XMLNode *mainGroup) {
+vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
     vector<Group *> currentSubGroups = *new vector<Group *>;
+
+    while (firstGroup != nullptr) {
+        cout << "Group read" << endl;
+
+        auto g = new Group(firstGroup);
+
+        currentSubGroups.push_back(g);
+        firstGroup = firstGroup->NextSiblingElement();
+    }
+
 
     return currentSubGroups;
 }
@@ -116,6 +125,9 @@ void Group::render() {
     }
 
     // TODO: Handle subgroups here
+    for (const auto subgroup: subGroups) {
+        subgroup->render();
+    }
 
     glPopMatrix();
 }
