@@ -35,6 +35,7 @@ namespace model {
                     point3[0], point3[1], point3[2]
             ));
         }
+        n_triangles = triangles.size();
 
         return n_triangles;
     }
@@ -56,7 +57,6 @@ namespace model {
     }
 
     void Model::render() {
-
         glBegin(GL_TRIANGLES);
         for (Triangle tri: triangles) {
             tuple<float, float, float> p1 = tri.get_p1();
