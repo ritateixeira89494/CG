@@ -14,13 +14,22 @@ class Group {
 
     private:
         // group1 -> transform1, models1, group2
-        vector<Transform> transformations;
-        vector<Model> models;
-        vector<Group> subGroups;
+        vector<Transform *> transforms;
+        vector<Model *> models;
+        vector<Group *> subGroups;
 
+        static vector<Transform *> getTransforms(XMLNode *transformsNode);
+
+
+        static vector<Group *> getSubGroups(XMLNode *mainGroup);
+
+        static vector<Model *> getModels(XMLNode *modelsNode);
 
     public:
         Group(XMLNode *group);
+
+        void render();
+
 };
 
 

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../model/model.h"
+#include "utils/Group.h"
 
 using namespace model;
 
@@ -33,7 +34,7 @@ namespace interface {
         /// Camera radius to the @link camera_center @endlink 
         float radius = 1;
         /// List of models loaded into the scene
-        vector<Model> models;
+        vector<Group> groups;
         /// Translation vector applied to all models
         tuple<float, float, float> position;
         /// Horizontal rotation applied to all models
@@ -56,16 +57,9 @@ namespace interface {
         */
         explicit Scene(char *path);
 
-        /**
-            @brief Creates a new scene with the list of passed as models
-
-            @param models List of models to add to the scene
-        */
-        explicit Scene(vector<Model> models);
-
-        /**
-            @brief Renders all models of the scene
-        */
+            /**
+                @brief Renders all models of the scene
+            */
         void render_models();
 
         /**

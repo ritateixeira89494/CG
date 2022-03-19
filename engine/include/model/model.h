@@ -42,6 +42,12 @@ namespace model {
          * @return vector<Triangle *> List of triangles of the model
          */
         vector<Triangle> get_triangles();
+
+
+        /**
+         * TODO: Document this
+         */
+        void render();
     };
 }
 

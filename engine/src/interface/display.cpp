@@ -82,7 +82,7 @@ void render() {
     else
         glColor3f(0.36, 0.8, 0.89); // #5CCCE2
 
-    // Apply transformations here
+    // Apply transforms here
     // group1 -> transform1, models1, group2
     // group2 -> transform1, models1, group3
     Translate translate = Translate(6, 1, 1);
@@ -94,7 +94,7 @@ void render() {
         transf->apply();
     }
 
-    // Default changeable transformations
+    // Default changeable transforms
     auto scale = scene.get_scale();
     glTranslatef(get<0>(position), get<1>(position), get<2>(position));
     glRotatef(radian2degree(m_rotation_alpha), 0, 1, 0);

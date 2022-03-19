@@ -3,6 +3,7 @@
 
 #include "model/model.h"
 #include "model/triangle.h"
+#include "GL/glut.h"
 
 using namespace std;
 
@@ -52,5 +53,20 @@ namespace model {
         triangles = {};
 
         load_model(const_cast<char *>(path));
+    }
+
+    void Model::render() {
+
+        glBegin(GL_TRIANGLES);
+        for (Triangle tri: triangles) {
+            tuple<float, float, float> p1 = tri.get_p1();
+            tuple<float, float, float> p2 = tri.get_p2();
+            tuple<float, float, float> p3 = tri.get_p3();
+
+            glVertex3f(get<0>(p1), get<1>(p1), get<2>(p1));
+            glVertex3f(get<0>(p2), get<1>(p2), get<2>(p2));
+            glVertex3f(get<0>(p3), get<1>(p3), get<2>(p3));
+        }
+        glEnd();
     }
 }
