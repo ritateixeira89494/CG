@@ -13,22 +13,68 @@ using namespace model;
 class Group {
 
     private:
-        // group1 -> transform1, models1, group2
+
+        /**
+         * Vector of the transforms of the group.
+         */
         vector<Transform *> transforms;
+
+        /**
+         * Vector of the models of the group.
+         */
         vector<Model *> models;
+
+        /**
+         * Vector of the subgroups of the group.
+         */
         vector<Group *> subGroups;
 
+        /**
+         * @brief Gets the transforms of the transforms node.
+         *
+         * @param transformsNode the transforms node.
+         * @return vector with all transforms of the node.
+         */
         static vector<Transform *> getTransforms(XMLNode *transformsNode);
 
-        static vector<Group *> getSubGroups(XMLElement *mainGroup);
-
+        /**
+         * @brief Gets the models of the models node.
+         *
+         * @param modelsNode the models node.
+         * @return vector with all models of the node.
+         */
         static vector<Model *> getModels(XMLNode *modelsNode);
 
-    public:
-        Group(XMLElement *group);
+        /**
+         * @brief Gets the first group and all its siblings groups.
+         *
+         * @param firstGroup the first group element.
+         * @return vector with all groups of the element.
+         */
+        static vector<Group *> getSubGroups(XMLElement *firstGroup);
 
+
+    public:
+
+        /**
+         * @brief Constructs the main group with the group element.
+         *
+         * @param group the group element.
+         */
+        explicit Group(XMLElement *group);
+
+        /**
+         * Renders all transforms, models and subgroups.
+         */
         void render();
 
+        /**
+         * @brief Gets the first group and all its siblings groups.
+         *
+         * @param firstGroup the first group element.
+         * @return vector with all groups of the element.
+         */
+        static vector<Group *> getGroups(XMLElement *firstGroup);
 };
 
 

@@ -3,13 +3,17 @@
 
 #include "model/transforms/Transform.h"
 
-class Rotate : Transform {
+class Rotate : public Transform {
     public:
         Rotate(float angle, float x, float y, float z);
 
         void apply() override;
 
     private:
+
+        /**
+         * The angle of the rotate.
+         */
         float angle;
 };
 

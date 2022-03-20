@@ -3,7 +3,7 @@
 
 #include "Transform.h"
 
-class Scale : Transform {
+class Scale : public Transform {
     public:
         Scale(float x, float y, float z);
 

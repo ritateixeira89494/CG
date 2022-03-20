@@ -48,7 +48,8 @@ namespace model {
 
 
             /**
-             * TODO: Document this
+             * @brief Renders a model.
+             *
              */
             void render();
     };

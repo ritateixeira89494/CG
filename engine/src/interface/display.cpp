@@ -173,7 +173,6 @@ void parse_key(unsigned char key, int x, int y) {
         case 'q':
             std::cout << "Goodbye!!" << std::endl;
             exit(0);
-            break;
         default:
             return;
     }

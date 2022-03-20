@@ -4,11 +4,33 @@
 class Transform {
 
     protected:
+        /*
+         * x value of a transform.
+         */
         float x;
+
+        /*
+         * y value of a transform.
+         */
         float z;
+
+        /*
+         * z value of a transform.
+         */
         float y;
-    public:
+
+        /**
+         * Constructs a Transform.
+         * @param x
+         * @param y
+         * @param z
+         */
         Transform(float x, float y, float z);
+
+    public:
+        /**
+         * Apply the transform.
+         */
         virtual void apply() = 0;
 };
 

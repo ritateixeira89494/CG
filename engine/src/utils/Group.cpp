@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include "GL/glut.h"
+#include "model/transforms/Rotate.h"
+#include "model/transforms/Scale.h"
 
 using namespace std;
 
@@ -10,13 +12,17 @@ Group::Group(XMLElement *group) {
     XMLElement *transformsNode = group->FirstChildElement("transform");
     if (transformsNode != nullptr) this->transforms = getTransforms(transformsNode);
 
-    XMLElement *modelsNode = group->FirstChildElement("models");
+    XMLElement *modelsNode;
     // Check if the group has models
     if ((modelsNode = group->FirstChildElement("models")) != nullptr) {
         this->models = getModels(modelsNode);
 
     }
     this->subGroups = getSubGroups(group->FirstChildElement("group"));
+}
+
+vector<Group *> Group::getGroups(XMLElement *firstGroup) {
+    return getSubGroups(firstGroup);
 }
 
 typedef struct coordinates {
@@ -46,7 +52,7 @@ Coord getCoordinatesFromElement(XMLElement *element) {
 }
 
 vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
-    vector<Transform *> currentTransforms = *new vector<Transform *>;
+    vector<Transform *> currentTransforms = {};
 
     XMLElement *transform = transformsNode->FirstChildElement();
 
@@ -61,14 +67,19 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
             t = translate;
             // TODO: Initialize Translate
         } else if (strcmp(name, "rotate") == 0) {
+            auto coords = getCoordinatesFromElement(transform);
+            auto rotate = new Rotate(transform->FloatAttribute("angle"), coords->x, coords->y, coords->z);
+            t = rotate;
             // TODO: Initialize Rotate
         } else if (strcmp(name, "scale") == 0) {
+            auto coords = getCoordinatesFromElement(transform);
+            auto scale = new Scale(coords->x, coords->y, coords->z);
+            t = scale;
             // TODO: Initialize Scale
         } else {
             cout << "Invalid transform name!" << endl;
             return currentTransforms;
         }
-
 
         currentTransforms.push_back(t);
         transform = transform->NextSiblingElement();
@@ -79,12 +90,11 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
 
 
 vector<Model *> Group::getModels(XMLNode *modelsNode) {
-    vector<Model *> currentModels = *new vector<Model *>;
+    vector<Model *> currentModels = {};
 
     XMLElement *model = modelsNode->FirstChildElement("model");
 
     while (model != nullptr) {
-
         const char *modelPath = model->Attribute("file");
         cout << modelPath << endl;
 
@@ -97,7 +107,7 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
-    vector<Group *> currentSubGroups = *new vector<Group *>;
+    vector<Group *> currentSubGroups = {};
 
     while (firstGroup != nullptr) {
         cout << "Group read" << endl;
@@ -120,11 +130,9 @@ void Group::render() {
     }
 
     for (const auto model: models) {
-        cout << model->get_n_triangles() << endl;
         model->render();
     }
 
-    // TODO: Handle subgroups here
     for (const auto subgroup: subGroups) {
         subgroup->render();
     }
