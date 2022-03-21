@@ -1,7 +1,7 @@
 <world>
     <camera>
-        <position x="0" y="150" z="150"/>
-        <lookAt x="30" y="0" z="0"/>
+        <position x="52" y="0" z="164"/>
+        <lookAt x="52" y="0" z="0"/>
         <up x="0" y="1" z="0"/>
         <projection fov="60" near="1" far="1000"/>
     </camera>
