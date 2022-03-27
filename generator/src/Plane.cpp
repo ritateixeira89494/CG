@@ -6,14 +6,14 @@
 using namespace std;
 
 //Draw square in ZX Axis, with y = 0.
-void drawSquareDown(float xOr, float yOr, float edge, ofstream *file) {
-    auto p1 = make_tuple(xOr, 0.0f, yOr + edge);
-    auto p2 = make_tuple(xOr, 0.0f, yOr);
-    auto p3 = make_tuple(xOr + edge, 0.0f, yOr);
+void drawSquareDown(float xOr, float yOr, float edge, ofstream *file, float origin) {
+    auto p1 = make_tuple(xOr, -origin, yOr + edge);
+    auto p2 = make_tuple(xOr, -origin, yOr);
+    auto p3 = make_tuple(xOr + edge, -origin, yOr);
 
-    auto p4 = make_tuple(xOr, 0.0f, yOr + edge);
-    auto p5 = make_tuple(xOr + edge, 0.0f, yOr);
-    auto p6 = make_tuple(xOr + edge, 0.0f, yOr + edge);
+    auto p4 = make_tuple(xOr, -origin, yOr + edge);
+    auto p5 = make_tuple(xOr + edge, -origin, yOr);
+    auto p6 = make_tuple(xOr + edge, -origin, yOr + edge);
     
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);

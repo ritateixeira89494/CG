@@ -10,7 +10,7 @@ using namespace std;
   So, they need to be public, and in this file.
 */
 void drawSquareUp(float xOr, float yOr, float side, float height, ofstream *file);
-void drawSquareDown(float xOr, float yOr, float edge, ofstream *file);
+void drawSquareDown(float xOr, float yOr, float edge, ofstream *file, float origin);
 
 /*!
     Draw a plane from individual points, line by line.
