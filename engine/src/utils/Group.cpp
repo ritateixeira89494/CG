@@ -97,12 +97,24 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
         const char *modelPath = model->Attribute("file");
         cout << modelPath << endl;
 
+        const XMLElement *texture = model->FirstChildElement("texture");
+
+        if (texture); // TODO: Pass texture path to model.
+
+        const XMLElement *colorElement = model->FirstChildElement("color");
+
         auto m = new Model(modelPath);
+
 
         currentModels.push_back(m);
         model = model->NextSiblingElement();
     }
     return currentModels;
+}
+
+Color Group::getColor(XMLElement *color) {
+    if (!color) return {};
+
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {

@@ -53,6 +53,7 @@ class Group {
          */
         static vector<Group *> getSubGroups(XMLElement *firstGroup);
 
+        Color getColor(XMLElement *color);
 
     public:
 
@@ -75,6 +76,7 @@ class Group {
          * @return vector with all groups of the element.
          */
         static vector<Group *> getGroups(XMLElement *firstGroup);
+
 };
 
 

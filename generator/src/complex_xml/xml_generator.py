@@ -64,8 +64,8 @@ get_camera_element(camera)
 
 transforms1 = [
     ('translate', [('x', '1'), ('y', '0'), ('z', '0')]),
-    # ('rotate', [('angle', '0'), ('x', '0'), ('y', '0'), ('y', '0')]),
-    # ('scale', [('x', '0'), ('y', '0'), ('y', '0')]),
+    # ('rotate', [('angle', '0'), ('x', '0'), ('y', '0'), ('z', '0')]),
+    # ('scale', [('x', '0'), ('y', '0'), ('z', '0')]),
 ]
 
 models1 = [
@@ -82,22 +82,27 @@ def draw_layer(group, size):
     :return: None
     """
     g = group
+    t = []
     for _ in range(size):
+        outer_group = get_group_element(g, t, [])
+
         t = [
             ('translate', [('x', '0'), ('y', '0'), ('z', '2')]),
         ]
-        outer_group = get_group_element(g, t, [])
 
         inner_group = outer_group
-        for _ in range(size):
-            t = [
-                ('translate', [('x', '2'), ('y', '0'), ('z', '0')]),
-            ]
 
+        # First model without translate
+        tr = []
+
+        for _ in range(size):
             m = ['box.3d']
 
-            gr = get_group_element(inner_group, t, m)
-            inner_group = gr
+            inner_group = get_group_element(inner_group, tr, m)
+
+            tr = [
+                ('translate', [('x', '2'), ('y', '0'), ('z', '0')]),
+            ]
 
         g = outer_group
 
@@ -108,13 +113,20 @@ def draw_pyramid(group, size: int):
     :return:
     """
     layer = group
-    for i in reversed(range(size)):
+    for i in reversed(range(size + 1)[1:]):
         draw_layer(layer, i)
         layer = get_group_element(layer, [
             ('translate', [('x', '0'), ('y', '2'), ('z', '0')])], [])
 
 
-draw_pyramid(world, 10)
+def draw_4_pyramid(group, size: int):
+    gr = group
+    for i in range(4):
+        gr = get_group_element(gr, [('rotate', [('angle', '90'), ('x', '0'), ('y', '1'), ('z', '0')])], [])
+        draw_pyramid(gr, size)
+
+
+draw_4_pyramid(world, 10)
 
 tree = Tree.ElementTree(world)
 

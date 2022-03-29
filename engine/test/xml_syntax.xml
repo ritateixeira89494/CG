@@ -24,7 +24,7 @@
             <scale X=2 Y=2 Z=2 />
         </transform>
         <models> <!-- can contain multiple 'model' items.
-                    Each model requires a file. Texture and color are optional -->
+                    Each model requires a file. Color and color are optional -->
             <model file=”sphere.3d” >
             <!-- it texture is not specified then the model is rendered with color only-->
             <texture file="earth.jpg"/>

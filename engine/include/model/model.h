@@ -2,6 +2,7 @@
 #define __MODEL_H__
 
 #include "triangle.h"
+#include "model/Color.h"
 #include <vector>
 
 using namespace std;
@@ -14,8 +15,14 @@ namespace model {
             int n_triangles;
             /// List of triangles
             vector<Triangle> triangles;
+
+            string texture_path;
+
+            Color color;
+
         public:
             /// Initializes an empty model
+
             Model();
 
             /**
@@ -24,6 +31,8 @@ namespace model {
              * @param path File path
              */
             explicit Model(const char *path);
+
+            Model(const char *path, const string &texture_path, const Color color);
 
             /**
              * @brief Get the number of triangles

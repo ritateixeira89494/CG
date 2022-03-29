@@ -46,13 +46,16 @@ namespace model {
 
     Model::Model() {
         n_triangles = 0;
+        color = Color();
+        texture_path = "";
         triangles = {};
     }
 
     Model::Model(const char *path) {
         n_triangles = 0;
         triangles = {};
-
+        color = Color();
+        texture_path = "";
         load_model(const_cast<char *>(path));
     }
 
@@ -68,5 +71,10 @@ namespace model {
             glVertex3f(get<0>(p3), get<1>(p3), get<2>(p3));
         }
         glEnd();
+    }
+
+    Model::Model(const char *path, const string &texture_path, const Color color) : Model(path) {
+        this->texture_path = texture_path;
+        this->color = color;
     }
 }
