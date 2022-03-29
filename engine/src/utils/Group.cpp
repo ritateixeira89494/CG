@@ -10,15 +10,14 @@ using namespace std;
 
 Group::Group(XMLElement *group) {
     XMLElement *transformsNode = group->FirstChildElement("transform");
-    if (transformsNode != nullptr) this->transforms = getTransforms(transformsNode);
+    if (transformsNode != nullptr) this->transforms = getTransforms(transformsNode); // Single transform item
 
     XMLElement *modelsNode;
     // Check if the group has models
-    if ((modelsNode = group->FirstChildElement("models")) != nullptr) {
-        this->models = getModels(modelsNode);
+    if ((modelsNode = group->FirstChildElement("models")) != nullptr)
+        this->models = getModels(modelsNode); // Single models item
 
-    }
-    this->subGroups = getSubGroups(group->FirstChildElement("group"));
+    this->subGroups = getSubGroups(group->FirstChildElement("group")); // First child group if any
 }
 
 vector<Group *> Group::getGroups(XMLElement *firstGroup) {
@@ -110,7 +109,7 @@ vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
     vector<Group *> currentSubGroups = {};
 
     while (firstGroup != nullptr) {
-        cout << "Group read" << endl;
+        // cout << "Group read" << endl;
 
         auto g = new Group(firstGroup);
 

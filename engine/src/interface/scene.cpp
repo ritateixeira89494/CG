@@ -85,9 +85,16 @@ namespace interface {
         // Projection parameters
         XMLElement *projection = camera->FirstChildElement("projection");
 
-        projection->QueryAttribute("fov", &fov);
-        projection->QueryAttribute("near", &near);
-        projection->QueryAttribute("far", &far);
+        if (projection) {
+            projection->QueryAttribute("fov", &fov);
+            projection->QueryAttribute("near", &near);
+            projection->QueryAttribute("far", &far);
+
+        } else { // Default values for projection
+            fov = 60;
+            near = 1;
+            far = 1000;
+        }
 
         cout << "Projection parameters: fov=" << fov << " near=" << near << " far=" << far << endl;
 
