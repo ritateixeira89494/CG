@@ -37,7 +37,7 @@ void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin
 
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
-    write_triangle(p7, p8, p9, file);
+    write_triangle(p8, p7, p9, file);
     write_triangle(p10, p11, p12, file);
 }
 
@@ -73,12 +73,12 @@ void drawBox(float length, float divisions, string nameOfFile) {
     file.open(nameOfFile);
 
     float increment = length / divisions;
-	for (float divisionX = 0, line = 0, column = 0; divisionX < divisions; line = line + increment, divisionX++) {
-		for (float divisionY = 0, column = 0; divisionY < divisions; column = column + increment, divisionY++) {
+    for (float divisionX = 0, line = -length/2, column = -length / 2; divisionX < divisions; line = line + increment, divisionX++) {
+        for (float divisionY = 0, column =- length / 2; divisionY < divisions; column = column + increment, divisionY++) {
             drawSquareUp(line, column, increment, length/2, &file); //1 -> Box, 0-> Plane
-            drawSquareDown(line, column, increment, &file); //1 -> Box, 0-> Plane
+            drawSquareDown(line, column, increment, &file, length/2); //1 -> Box, 0-> Plane
             drawSquareXY(line, column, increment, &file, length/2);
-            drawSquareYZ(line, column, increment, &file, length/2);
+          drawSquareYZ(line, column, increment, &file, length/2);
         }
     }
 }
