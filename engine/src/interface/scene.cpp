@@ -219,4 +219,11 @@ namespace interface {
     float Scene::get_scale() {
         return scale;
     }
+
+    float Scene::get_radius() {
+        return radius;
+    }
+    void Scene::set_radius(float rad) {
+        radius = rad;
+    }
 }

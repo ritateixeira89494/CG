@@ -260,6 +260,18 @@ namespace interface {
              * @return float Model scale
              */
             float get_scale();
+            /**
+             * @brief Get the camera zoom
+             * 
+             * @return float camera zoom
+             */
+            float get_radius();
+            /**
+             * @brief Set the camera zoom
+             * 
+             * @param float camera zoom
+             */
+            void set_radius(float radius);
     };
 } // namespace interface
 
