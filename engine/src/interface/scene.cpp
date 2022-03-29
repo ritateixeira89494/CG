@@ -109,10 +109,9 @@ namespace interface {
         }
     }
 
-    void Scene::move_models(float x, float y, float z) {
-        get<0>(position) += x;
-        get<1>(position) += y;
-        get<2>(position) += z;
+    void Scene::move_models(float angle) {
+        get<0>(position) += 0.1 * sin(alpha + angle);
+        get<2>(position) += 0.1 * cos(alpha + angle);
     }
 
     void Scene::rotate_models(float angle_alpha, float angle_beta) {
@@ -120,10 +119,9 @@ namespace interface {
         m_rotation_beta += angle_beta;
     }
 
-    void Scene::move_camera(float x, float y, float z) {
-        get<0>(camera_center) += x;
-        get<1>(camera_center) += y;
-        get<2>(camera_center) += z;
+    void Scene::move_camera(float angle) {
+        get<0>(camera_center) += 0.1 * sin(alpha + angle);
+        get<2>(camera_center) += 0.1 * cos(alpha + angle);
     }
 
     void Scene::rotate_camera(float angle_alpha, float angle_beta) {

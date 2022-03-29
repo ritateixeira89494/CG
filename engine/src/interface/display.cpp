@@ -12,6 +12,7 @@
 #include "interface/display.h"
 #include "interface/scene.h"
 #include "utils/coords.h"
+#include <math.h>
 
 using namespace interface;
 
@@ -186,30 +187,30 @@ void parse_key(unsigned char key, int x, int y) {
         case 'A':
         case 'a':
             if (model_mode)
-                scene.move_models(-0.1, 0, 0);
+                scene.move_models(-M_PI/2);
             else
-                scene.move_camera(-0.1, 0, 0);
+                scene.move_camera(-M_PI/2);
             break;
         case 'D':
         case 'd':
             if (model_mode)
-                scene.move_models(0.1, 0, 0);
+                scene.move_models(M_PI/2);
             else
-                scene.move_camera(0.1, 0, 0);
+                scene.move_camera(M_PI/2);
             break;
         case 'W':
         case 'w':
             if (model_mode)
-                scene.move_models(0, 0, -0.1);
+                scene.move_models(M_PI);
             else
-                scene.move_camera(0, 0, -0.1);
+                scene.move_camera(M_PI);
             break;
         case 'S':
         case 's':
             if (model_mode)
-                scene.move_models(0, 0, 0.1);
+                scene.move_models(0);
             else
-                scene.move_camera(0, 0, 0.1);
+                scene.move_camera(0);
             break;
         case '+':
             if (model_mode)

@@ -65,11 +65,9 @@ namespace interface {
             /**
                 @brief Applies to all models, the vector passed as the argument
 
-                @param x x coordinate of the vector
-                @param y y coordinate of the vector
-                @param z z coordinate of the vector
+                @param angle Angle to move the object in relation to the camera
             */
-            void move_models(float x, float y, float z);
+            void move_models(float angle);
 
             /**
              * @brief Rotate all models by the specified angles
@@ -82,11 +80,9 @@ namespace interface {
             /**
              * @brief Moves the camera in the vector direction
              *
-             * @param x x coordinate of the vector
-             * @param y y coordinate of the vector
-             * @param z z coordinate of the vector
+             * @param angle Angle to move the camera in relation to its focused point
              */
-            void move_camera(float x, float y, float z);
+            void move_camera(float angle);
 
             /**
                 @brief Rotates the models in the specified angle
