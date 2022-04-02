@@ -91,15 +91,15 @@ void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
 	float incrementAlfa = 2 * M_PI / slices;
 	float currentalfa;
 	float zero = 0.0f;
-	float proxAlfa = incrementAlfa;
+	float proxAlfa;
 	
 	//Beta = Mexer no y
 	float incrementBeta =  M_PI / (2 * stacks);
 	float currentBeta;
-	float proxBeta= incrementBeta;
+	float proxBeta;
 
-	for (currentBeta = 0; currentBeta < (M_PI/2); currentBeta+= incrementBeta, proxBeta += incrementBeta) {
-		for (currentalfa = 0; currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
+	for (currentBeta = 0, proxBeta = incrementBeta; currentBeta < (M_PI/2); currentBeta+= incrementBeta, proxBeta += incrementBeta) {
+		for (currentalfa = 0, proxAlfa = incrementAlfa; currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
 			drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file);
 			drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file);
 		}
