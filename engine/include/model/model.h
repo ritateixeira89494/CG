@@ -4,6 +4,7 @@
 #include "triangle.h"
 #include "model/Color.h"
 #include <vector>
+#include <string>
 
 using namespace std;
 using namespace triangle;
