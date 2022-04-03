@@ -6,6 +6,9 @@ world = Tree.Element('world')
 
 camera = Tree.SubElement(world, "camera")
 
+cubo = ['/home/banderas/CG2022/engine/test/xml/3d/boxPi.3d']
+sphere = ['/home/banderas/CG2022/engine/test/xml/3d/sphere1_10_10.3d']
+cone = ['/home/banderas/CG2022/engine/test/xml/3d/cone1_2_10_4.3d']
 
 # Camera stuff
 def get_camera_element(element):
@@ -70,7 +73,7 @@ transforms1 = [
 
 models1 = [
     # 'plane.3d',
-    'box.3d'
+    cubo
 ]
 
 
@@ -96,7 +99,7 @@ def draw_layer(group, size):
         tr = []
 
         for _ in range(size):
-            m = ['box.3d']
+            m = cubo
 
             inner_group = get_group_element(inner_group, tr, m)
 
@@ -126,8 +129,40 @@ def draw_4_pyramid(group, size: int):
         draw_pyramid(gr, size)
 
 
+def draw_ovni(piramid_complete):
+    piramid_side = [('translate', [('x', '20'), ('y', '20'), ('z', '20')]),
+                    ('scale', [('x', '0.2'), ('y', '0.2'), ('z', '0.2')])]
+    world = get_group_element(piramid_complete, piramid_side, [])
+    group_elem = Tree.SubElement(world, 'group')
+    # Sphere part
+    sphereUpSize = [
+        ('translate', [('x', '0'), ('y', '4'), ('z', '0')]),
+        ('scale', [('x', '5'), ('y', '5'), ('z', '5')]),
+    ]
+    get_group_element(world, sphereUpSize, sphere)
+    #Two cones part
+    transform_elem = Tree.SubElement(group_elem, 'transform')
+    coneOvniScale = [
+        ('scale', [('x', '11'), ('y', '3'), ('z', '11')])]
+
+    ovni = get_group_element(world, coneOvniScale, cone)
+    rotate = [('rotate', [('angle', '180'), ('x', '1'), ('y', '0'), ('z', '1')])]
+    get_group_element(ovni, rotate, cone)
+    # One cone part
+    coneOutOvniScale = [
+        ('translate', [('x', '0'), ('y', '-32'), ('z', '0')]),
+        ('scale', [('x', '8'), ('y', '15'), ('z', '8')])]
+    posCone = get_group_element(group_elem, coneOutOvniScale, cone)
+    #Cube part
+    cuboTranslate = [('translate', [('x', '0'), ('y', '-40'), ('z', '0')]),
+                     ('scale', [('x', '8'), ('y', '8'), ('z', '8')])
+        ]
+    get_group_element(group_elem, cuboTranslate, cubo)
+
+
 draw_4_pyramid(world, 10)
 
+draw_ovni(world)
 tree = Tree.ElementTree(world)
 
 tree.write('generated.xml')
