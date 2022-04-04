@@ -2,7 +2,7 @@
 #define __MODEL_H__
 
 #include "triangle.h"
-#include "model/Color.h"
+#include "model/LightingColors.h"
 #include <vector>
 #include <string>
 
@@ -12,14 +12,17 @@ using namespace triangle;
 namespace model {
     class Model {
         private:
-            /// Number of triangles in the model
+
+/// Number of triangles in the model
             int n_triangles;
             /// List of triangles
             vector<Triangle> triangles;
 
             string texture_path;
 
-            Color color;
+            LightingColors lightingColors;
+
+            tuple<float, float, float> color;
 
         public:
             /// Initializes an empty model
@@ -33,7 +36,21 @@ namespace model {
              */
             explicit Model(const char *path);
 
-            Model(const char *path, const string &texture_path, const Color color);
+            /**
+             * @brief Initializes and loads a "3d" model with color.
+             *
+             * @param path File path
+             *
+             * @param path
+             * @param color
+             */
+            Model(const char *path, tuple<float, float, float> color);
+
+
+            /*
+             * // TODO: Document this constructor
+             */
+            Model(const char *path, const string &texture_path, LightingColors color);
 
             /**
              * @brief Get the number of triangles

@@ -46,7 +46,7 @@ namespace model {
 
     Model::Model() {
         n_triangles = 0;
-        color = Color();
+        lightingColors = LightingColors();
         texture_path = "";
         triangles = {};
     }
@@ -54,12 +54,24 @@ namespace model {
     Model::Model(const char *path) {
         n_triangles = 0;
         triangles = {};
-        color = Color();
+        lightingColors = LightingColors();
         texture_path = "";
+        color = {1.0, 1.0, 1.0};
+        load_model(const_cast<char *>(path));
+    }
+
+    Model::Model(const char *path, tuple<float, float, float> color) {
+        n_triangles = 0;
+        triangles = {};
+        lightingColors = LightingColors();
+        texture_path = "";
+        this->color = color;
         load_model(const_cast<char *>(path));
     }
 
     void Model::render() {
+        glColor3f(get<0>(color), get<1>(color), get<2>(color));
+
         glBegin(GL_TRIANGLES);
         for (Triangle tri: triangles) {
             tuple<float, float, float> p1 = tri.get_p1();
@@ -71,10 +83,13 @@ namespace model {
             glVertex3f(get<0>(p3), get<1>(p3), get<2>(p3));
         }
         glEnd();
+
+        glColor3f(0.0, 0.0, 0.0);
     }
 
-    Model::Model(const char *path, const string &texture_path, const Color color) : Model(path) {
+    Model::Model(const char *path, const string &texture_path, const LightingColors lightingColor) : Model(path) {
         this->texture_path = texture_path;
-        this->color = color;
+        this->lightingColors = lightingColor;
     }
+
 }

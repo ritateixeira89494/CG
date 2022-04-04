@@ -53,7 +53,7 @@ class Group {
          */
         static vector<Group *> getSubGroups(XMLElement *firstGroup);
 
-        Color getColor(XMLElement *color);
+        LightingColors getColor(XMLElement *color);
 
     public:
 
