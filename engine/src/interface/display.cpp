@@ -2,6 +2,7 @@
 #include <GLUT/glut.h>
 #else
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 
 #endif
@@ -270,6 +271,9 @@ void run(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT, GL_FILL);
+
+
+    glewInit();
 
     scene = Scene(argv[1]);
 

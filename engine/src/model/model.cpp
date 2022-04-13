@@ -3,21 +3,32 @@
 
 #include "model/model.h"
 #include "model/triangle.h"
-#include "GL/glut.h"
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+
+#include <GL/glew.h>
+#include <GL/glut.h>
+
+#endif
 
 using namespace std;
 
 namespace model {
-    int Model::get_n_triangles() {
+    long Model::get_n_triangles() const {
         return n_triangles;
     }
 
-    int Model::load_model(char *path) {
+    long Model::load_model(char *path) {
         FILE *f = fopen(path, "r");
         if (!f) {
             cerr << "Invalid model path!" << endl;
             return -1;
         }
+
+        glGenBuffers(1, vbo_buffer); // Initialize vbo buffer
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[0]);
 
         float point1[3];
         float point2[3];
@@ -29,18 +40,36 @@ namespace model {
                        &point3[0], &point3[1], &point3[2]
                 ) != EOF
                 ) {
-            triangles.emplace_back(
+
+            triangles.push_back(point1[0]);
+            triangles.push_back(point1[1]);
+            triangles.push_back(point1[2]);
+
+            triangles.push_back(point2[0]);
+            triangles.push_back(point2[1]);
+            triangles.push_back(point2[2]);
+
+            triangles.push_back(point3[0]);
+            triangles.push_back(point3[1]);
+            triangles.push_back(point3[2]);
+
+            /*
+            triangles.push_back(
                     point1[0], point1[1], point1[2],
                     point2[0], point2[1], point2[2],
                     point3[0], point3[1], point3[2]
             );
+            */
         }
-        n_triangles = triangles.size();
+        n_triangles = (long) (triangles.size() / 3);
+
+        glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr) (triangles.size() * sizeof(float)), triangles.data(),
+                     GL_STATIC_DRAW);
 
         return n_triangles;
     }
 
-    vector<Triangle> Model::get_triangles() {
+    vector<float> Model::get_triangles() {
         return triangles;
     }
 
@@ -72,19 +101,15 @@ namespace model {
     void Model::render() {
         glColor3f(get<0>(color), get<1>(color), get<2>(color));
 
-        glBegin(GL_TRIANGLES);
-        for (Triangle tri: triangles) {
-            tuple<float, float, float> p1 = tri.get_p1();
-            tuple<float, float, float> p2 = tri.get_p2();
-            tuple<float, float, float> p3 = tri.get_p3();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[0]);
 
-            glVertex3f(get<0>(p1), get<1>(p1), get<2>(p1));
-            glVertex3f(get<0>(p2), get<1>(p2), get<2>(p2));
-            glVertex3f(get<0>(p3), get<1>(p3), get<2>(p3));
-        }
-        glEnd();
+        glVertexPointer(3, GL_FLOAT, 0, nullptr);
+
+        glDrawArrays(GL_TRIANGLES, 0, triangles.size());
 
         glColor3f(0.0, 0.0, 0.0);
+
+        cout << "Finishing rendering!" << endl;
     }
 
     Model::Model(const char *path, const string &texture_path, const LightingColors lightingColor) : Model(path) {

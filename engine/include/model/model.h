@@ -14,9 +14,11 @@ namespace model {
         private:
 
 /// Number of triangles in the model
-            int n_triangles;
+            long n_triangles;
             /// List of triangles
-            vector<Triangle> triangles;
+            vector<float> triangles;
+
+            unsigned int vbo_buffer[1] = {0};
 
             string texture_path;
 
@@ -57,21 +59,21 @@ namespace model {
              *
              * @return int number of triangles
              */
-            int get_n_triangles();
+            long get_n_triangles() const;
 
             /**
              * @brief Loads a model from a ".3d" file
              *
              * @param path File path
-             * @return int Number of triangles loaded
+             * @return Number of triangles loaded
              */
-            int load_model(char *path); // Loads the model from a ".3d" file
+            long load_model(char *path); // Loads the model from a ".3d" file
             /**
              * @brief Get the triangle list
              *
-             * @return vector<Triangle *> List of triangles of the model
+             * @return vector<float> Vertex array of the model
              */
-            vector<Triangle> get_triangles();
+            vector<float> get_triangles();
 
 
             /**

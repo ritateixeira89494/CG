@@ -34,7 +34,7 @@
             <!--  can contain multiple 'model' items.
                                 Each model requires a file. Texture and color are optional  -->
             <model file="sphere.3d">
-                <!--  it texture is not specified then the model is rendered with color only -->
+                <!--  its texture is not specified then the model is rendered with color only -->
                 <texture file="earth.jpg"/>
                 <!--  if color is not specified, use the values below as default  -->
                 <color>
