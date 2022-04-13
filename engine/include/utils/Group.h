@@ -65,9 +65,11 @@ class Group {
         explicit Group(XMLElement *group);
 
         /**
-         * Renders all transforms, models and subgroups.
+         * @brief Renders all transforms, models and subgroups.
+         * 
+         * @param cam_mode bool telling if camera mode is active or not
          */
-        void render();
+        void render(bool cam_mode);
 
         /**
          * @brief Gets the first group and all its siblings groups.

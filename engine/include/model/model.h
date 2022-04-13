@@ -79,8 +79,9 @@ namespace model {
             /**
              * @brief Renders a model.
              *
+             * @param cam_mode bool telling if camera mode is active or not 
              */
-            void render();
+            void render(bool cam_mode);
     };
 }
 

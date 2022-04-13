@@ -145,7 +145,7 @@ vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
     return currentSubGroups;
 }
 
-void Group::render() {
+void Group::render(bool cam_mode) {
     glPushMatrix();
 
     for (const auto transform: transforms) {
@@ -153,11 +153,11 @@ void Group::render() {
     }
 
     for (const auto model: models) {
-        model->render();
+        model->render(cam_mode);
     }
 
     for (const auto subgroup: subGroups) {
-        subgroup->render();
+        subgroup->render(cam_mode);
     }
 
     glPopMatrix();

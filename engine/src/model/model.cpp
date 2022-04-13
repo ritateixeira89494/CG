@@ -52,14 +52,6 @@ namespace model {
             triangles.push_back(point3[0]);
             triangles.push_back(point3[1]);
             triangles.push_back(point3[2]);
-
-            /*
-            triangles.push_back(
-                    point1[0], point1[1], point1[2],
-                    point2[0], point2[1], point2[2],
-                    point3[0], point3[1], point3[2]
-            );
-            */
         }
         n_triangles = (long) (triangles.size() / 3);
 
@@ -98,18 +90,15 @@ namespace model {
         load_model(const_cast<char *>(path));
     }
 
-    void Model::render() {
-        glColor3f(get<0>(color), get<1>(color), get<2>(color));
+    void Model::render(bool cam_mode) {
+        if (!cam_mode)
+            glColor3f(get<0>(color), get<1>(color), get<2>(color));
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[0]);
 
         glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
         glDrawArrays(GL_TRIANGLES, 0, triangles.size());
-
-        glColor3f(0.0, 0.0, 0.0);
-
-        cout << "Finishing rendering!" << endl;
     }
 
     Model::Model(const char *path, const string &texture_path, const LightingColors lightingColor) : Model(path) {
