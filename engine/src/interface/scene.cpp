@@ -103,6 +103,18 @@ namespace interface {
         this->groups = Group::getGroups(groupElement);
     }
 
+    Perspective Scene::get_perspective() {
+        auto cam_pos = get_camera_pos();
+        auto cam_center = get_camera_center();
+        auto up = get_up();
+
+        return Perspective(
+                    get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+                    get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                    get<0>(up), get<1>(up), get<2>(up)
+                );
+    }
+
     void Scene::render_models() {
         for (auto group: groups) {
             group->render();

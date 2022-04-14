@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include <vector>
+#include "interface/perspective.h"
 #include "../model/model.h"
 #include "utils/Group.h"
 
@@ -25,11 +26,11 @@ namespace interface {
             float fov = 60;
             /// Distance to the near plane. Objects closer than this plane will get discarded
             float near = 1;
-            /// Distance to the far plane. Objects farther than this plane whill get discarded
+            /// Distance to the far plane. Objects farther than this plane will get discarded
             float far = 1000;
             /// Camera horizontal rotation
             float alpha = 0;
-            // Camera vertical rotation
+            /// Camera vertical rotation
             float beta = 0;
             /// Camera radius to the @link camera_center @endlink
             float radius = 1;
@@ -56,6 +57,12 @@ namespace interface {
                 @param path Path to the xml file
             */
             explicit Scene(char *path);
+
+            /**
+             * @brief Returns a perspective object
+             * @return Perspective object calculated from spherical coordinates
+             */
+            Perspective get_perspective();
 
             /**
                 @brief Renders all models of the scene
