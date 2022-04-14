@@ -131,12 +131,14 @@ namespace interface {
         m_rotation_beta += angle_beta;
     }
 
-    void Scene::move_camera(float angle) {
+    Perspective Scene::move_camera(float angle) {
         get<0>(camera_center) += 0.1 * sin(alpha + angle);
         get<2>(camera_center) += 0.1 * cos(alpha + angle);
+
+        return get_perspective();
     }
 
-    void Scene::rotate_camera(float angle_alpha, float angle_beta) {
+    Perspective Scene::rotate_camera(float angle_alpha, float angle_beta) {
         alpha += angle_alpha;
         beta += angle_beta;
 
@@ -144,6 +146,8 @@ namespace interface {
             beta = 3.14;
         else if (beta < 0.01)
             beta = 0.01;
+
+        return get_perspective();
     }
 
     void Scene::change_scale(float val) {
@@ -152,10 +156,12 @@ namespace interface {
             scale = 0.1;
     }
 
-    void Scene::zoom(float zoom) {
+    Perspective Scene::zoom(float zoom) {
         radius += zoom;
         if (radius < 0.1)
             radius = 0.1;
+
+        return get_perspective();
     }
 
     tuple<float, float, float> Scene::get_position() {

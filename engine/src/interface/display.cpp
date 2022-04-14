@@ -28,12 +28,16 @@ int multiview = 1;
 int width = 800;
 int height = 800;
 
+// Normal perspective that the user can move.
+// It is initialized like this because the compiler complains if we don't initialize it.
+// This value is never used and is replaced right after the scene is loaded.
+Perspective normal = Perspective(1,1,1);
+
 vector<Perspective *> perspectives = {
+        &normal,
         new Perspective(10, 0, 0),
         new Perspective(0, 10, 0.01),
-        new Perspective(0,0,10),
-        new Perspective(10,10,7),
-        new Perspective(-3,2,4)
+        new Perspective(0,0,10)
 };
 
 View *view = new View(perspectives[0]);
@@ -192,25 +196,25 @@ void parse_spec_key(int key, int x, int y) {
             if (model_mode)
                 scene.rotate_models(-0.1, 0);
             else
-                scene.rotate_camera(-0.1, 0);
+                normal = scene.rotate_camera(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
             if (model_mode)
                 scene.rotate_models(0.1, 0);
             else
-                scene.rotate_camera(0.1, 0);
+                normal = scene.rotate_camera(0.1, 0);
             break;
         case GLUT_KEY_UP:
             if (model_mode)
                 scene.rotate_models(0, -0.1);
             else
-                scene.rotate_camera(0, -0.1);
+                normal = scene.rotate_camera(0, -0.1);
             break;
         case GLUT_KEY_DOWN:
             if (model_mode)
                 scene.rotate_models(0, 0.1);
             else
-                scene.rotate_camera(0, 0.1);
+                normal = scene.rotate_camera(0, 0.1);
             break;
         default:
             return;
@@ -225,40 +229,40 @@ void parse_key(unsigned char key, int x, int y) {
             if (model_mode)
                 scene.move_models(-M_PI/2);
             else
-                scene.move_camera(-M_PI/2);
+                normal = scene.move_camera(-M_PI/2);
             break;
         case 'D':
         case 'd':
             if (model_mode)
                 scene.move_models(M_PI/2);
             else
-                scene.move_camera(M_PI/2);
+                normal = scene.move_camera(M_PI/2);
             break;
         case 'W':
         case 'w':
             if (model_mode)
                 scene.move_models(M_PI);
             else
-                scene.move_camera(M_PI);
+                normal = scene.move_camera(M_PI);
             break;
         case 'S':
         case 's':
             if (model_mode)
                 scene.move_models(0);
             else
-                scene.move_camera(0);
+                normal = scene.move_camera(0);
             break;
         case '+':
             if (model_mode)
                 scene.change_scale(0.1);
             else
-                scene.zoom(-0.1);
+                normal = scene.zoom(-0.1);
             break;
         case '-':
             if (model_mode)
                 scene.change_scale(-0.1);
             else
-                scene.zoom(0.1);
+                normal = scene.zoom(0.1);
             break;
         case '\r':
             model_mode = !model_mode;
@@ -289,10 +293,6 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case '4':
             multiview = 4;
-            update_perspectives();
-            break;
-        case '5':
-            multiview = 5;
             update_perspectives();
             break;
         default:
@@ -329,6 +329,8 @@ void run(int argc, char *argv[]) {
     glPolygonMode(GL_FRONT, GL_LINE);
 
     scene = Scene(argv[1]);
+
+    normal = scene.get_perspective();
 
     //init_test();
     glutMainLoop();

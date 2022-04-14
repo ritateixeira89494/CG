@@ -88,15 +88,17 @@ namespace interface {
              * @brief Moves the camera in the vector direction
              *
              * @param angle Angle to move the camera in relation to its focused point
+             * @return The updated perspective
              */
-            void move_camera(float angle);
+            Perspective move_camera(float angle);
 
             /**
-                @brief Rotates the models in the specified angle
-
-                @param angle Angle in which to rotate the models
+             * @brief Rotates the models in the specified angle
+             *
+             * @param angle Angle in which to rotate the models
+             * @return The updated perspective
             */
-            void rotate_camera(float angle_alpha, float angle_beta);
+            Perspective rotate_camera(float angle_alpha, float angle_beta);
 
             /**
              * @brief Changes the model scale
@@ -109,8 +111,9 @@ namespace interface {
              * @brief Changes the camera zoom. In other words it adds the zoom value to the camera radius
              *
              * @param zoom Zoom amount
+             * @return The updated perspective
              */
-            void zoom(float zoom);
+            Perspective zoom(float zoom);
 
             /**
              * @brief Get the translation vector applied to all the models
