@@ -302,16 +302,6 @@ void parse_key(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-void init_test() {
-    auto s = scene.get_camera_center();
-    Perspective *p = new Perspective(get<0>(s), get<1>(s), get<2>(s));
-    View *v = new View(perspectives[2]);
-    View *v1 = new View(perspectives[0]);
-    View *v2 = new View(perspectives[1]);
-    View *t_view = new View(0.8f, v, v1);
-    view = new View(0.3, t_view, v2);
-}
-
 void run(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -332,6 +322,5 @@ void run(int argc, char *argv[]) {
 
     normal = scene.get_perspective();
 
-    //init_test();
     glutMainLoop();
 }
