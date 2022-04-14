@@ -10,15 +10,24 @@ using namespace std;
 template <typename T>
 
 /**
- * @brief Splits the vector in half
+ * @brief Splits the vector in two based on the parity of the indices
  * @tparam T Generic type
- * @return pair with both halves of the original vector
+ * @return pair with both vectors (Evens on the left, Odds on the right)
  */
 tuple<vector<T>,vector<T>> split_vector(vector<T> original) {
-    size_t half = ceil(original.size() * 1.0f / 2);
+    int f_half = ceil(original.size() * 1.0f / 2);
+    int s_half = original.size() - f_half;
 
-    vector<T> first(original.begin(), original.begin() + half);
-    vector<T> second(original.begin() + half, original.end());
+    vector<T> first = {};
+    vector<T> second = {};
+
+    for(int i = 0; i < f_half; i++) {
+        first.push_back(original[2*i]);
+    }
+
+    for(int i = 0; i < s_half; i++) {
+        second.push_back(original[(2*i)+1]);
+    }
 
     return make_tuple(first, second);
 }
