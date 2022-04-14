@@ -24,6 +24,7 @@ Scene scene;
 bool model_mode = true;
 bool axis = true;
 int multiview = 1;
+bool sel_mode = false;
 
 int width = 800;
 int height = 800;
@@ -40,7 +41,9 @@ vector<Perspective *> perspectives = {
         new Perspective(0,0,10)
 };
 
-View *view = new View(perspectives[0]);
+View *view = new View;
+
+View selected;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -183,11 +186,45 @@ void render() {
     glClearColor(1,1,1,1); // Set a white background in the entire window
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the bit buffer and the color buffer with the color set above
 
+    View *v;
     // Render views
-    render_rec(*view, 0, 0, width, height, true);
+    if(sel_mode) {
+        v = &selected;
+    } else {
+        v = view;
+    }
+    render_rec(*v, 0, 0, width, height, true);
 
     // Display buffer
     glutSwapBuffers();
+}
+
+Perspective *get_selected_perspective(View *v, int start_x, int start_y, int w, int h, bool horizontal, int x, int y) {
+    int division_point;
+
+    if(v->get_perpective() == nullptr) {
+        if(horizontal) {
+            int new_w = w*v->get_div();
+            division_point = start_x + new_w;
+
+            if(x < division_point) {
+                return get_selected_perspective(*v->get_left(), start_x, start_y, new_w, h, !horizontal, x, y);
+            } else {
+                return get_selected_perspective(*v->get_right(), start_x + new_w, start_y, new_w, h, !horizontal, x, y);
+            }
+        } else {
+            int new_h = h*v->get_div();
+            division_point = start_y + new_h;
+
+            if(y < division_point) {
+                return get_selected_perspective(*v->get_left(), start_x, start_y, w, new_h, !horizontal, x, y);
+            } else {
+                return get_selected_perspective(*v->get_right(), start_x, start_y + new_h, w, new_h, !horizontal, x, y);
+            }
+        }
+    } else {
+        return v->get_perpective();
+    }
 }
 
 void parse_spec_key(int key, int x, int y) {
@@ -280,25 +317,44 @@ void parse_key(unsigned char key, int x, int y) {
             std::cout << "Goodbye!!" << std::endl;
             exit(0);
         case '1':
-            multiview = 1;
-            update_perspectives();
+            if(!sel_mode) {
+                multiview = 1;
+                update_perspectives();
+            }
             break;
         case '2':
-            multiview = 2;
-            update_perspectives();
+            if(!sel_mode) {
+                multiview = 2;
+                update_perspectives();
+            }
             break;
         case '3':
-            multiview = 3;
-            update_perspectives();
+            if(!sel_mode) {
+                multiview = 3;
+                update_perspectives();
+            }
             break;
         case '4':
-            multiview = 4;
-            update_perspectives();
+            if(!sel_mode) {
+                multiview = 4;
+                update_perspectives();
+            }
             break;
         default:
             return;
     }
 
+    glutPostRedisplay();
+}
+
+void onMouseClick(int key, int state, int x, int y) {
+    if(key == GLUT_LEFT_BUTTON && state == GLUT_DOWN && multiview != 1) {
+        sel_mode = !sel_mode;
+        if(sel_mode) {
+            Perspective *sel = get_selected_perspective(view, 0, 0, width, height, true, x, height-y);
+            selected.set_perspective(sel);
+        }
+    }
     glutPostRedisplay();
 }
 
@@ -313,6 +369,7 @@ void run(int argc, char *argv[]) {
     glutReshapeFunc(change_size);
     glutKeyboardFunc(parse_key);
     glutSpecialFunc(parse_spec_key);
+    glutMouseFunc(onMouseClick);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -321,6 +378,7 @@ void run(int argc, char *argv[]) {
     scene = Scene(argv[1]);
 
     normal = scene.get_perspective();
+    update_perspectives();
 
     glutMainLoop();
 }
