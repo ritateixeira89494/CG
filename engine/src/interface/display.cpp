@@ -27,7 +27,6 @@ int multiview = 1;
 
 int width = 800;
 int height = 800;
-float ratio = width * 1.0f / height;
 
 vector<Perspective *> perspectives = {
         new Perspective(10, 0, 0),
@@ -62,16 +61,6 @@ void change_size(int w, int h) {
 
     width = w;
     height = h;
-    ratio = w * 1.0f / h;
-
-
-    glMatrixMode(GL_PROJECTION);
-
-    glLoadIdentity();
-
-    gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
-
-    glMatrixMode(GL_MODELVIEW);
 }
 
 void update_perspectives_rec(vector<Perspective *> ps, View **v) {
@@ -147,21 +136,32 @@ void render_rec(View v, int start_x, int start_y, int w, int h, bool horizontal)
             new_w = floor(w * v.get_div());
             render_rec(**v.get_left(), start_x, start_y, new_w, new_h, !horizontal);
             render_rec(**v.get_right(), start_x + new_w, start_y, w-new_w, new_h, !horizontal);
-            } else {
+        } else {
             new_h = floor(h * v.get_div());
             render_rec(**v.get_left(), start_x, start_y, new_w, new_h, !horizontal);
             render_rec(**v.get_right(), start_x, start_y + new_h, new_w, h-new_h, !horizontal);
         }
     } else {
-        float ratio = (float) w / h;
-        glViewport(start_x, start_y, w, h);
+        // Set black background for the view, but a little smaller
+        // so that we get a white border
+        glEnable(GL_SCISSOR_TEST);
+            glScissor(start_x+1,start_y+1,w-2,h-2);
+            glClearColor(0,0,0,1);
+            glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_SCISSOR_TEST);
+
+        // Get the view's aspect ratio
+        float ratio = (w-2.0f) / (h-2.0f);
+        // Set the perspective, to keep the proper aspect ratio
         glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
+            glLoadIdentity();
+            gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
         glMatrixMode(GL_MODELVIEW);
 
+        glViewport(start_x+1, start_y+1, w-2, h-2); // Set the viewport to the same size we set for the black background
         glLoadIdentity();
 
+        // Set the camera according to the perspective
         Perspective p = *v.get_perpective();
         auto cam_pos = p.get_cam_pos();
         auto cam_center = p.get_cam_center();
@@ -171,73 +171,18 @@ void render_rec(View v, int start_x, int start_y, int w, int h, bool horizontal)
                         get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
                                 get<0>(up), get<1>(up), get<2>(up)
         );
-        render_normal();
+        render_normal(); // Render the scene
     }
 }
 
 void render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(1,1,1,1); // Set a white background in the entire window
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the bit buffer and the color buffer with the color set above
 
-    /*if(multiview) {
-        glViewport(0,0,width/2, height/2);
-
-        glLoadIdentity();
-        scene.set_radius(scene.get_radius()/2);
-        tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
-        tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
-        tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
-        scene.set_radius(scene.get_radius()*2);
-        gluLookAt(
-            get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-            get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-            get<0>(up), get<1>(up), get<2>(up)
-        );
-        render_normal();
-
-        glViewport(width/2,0,width/2, height/2);
-        glLoadIdentity();
-        gluLookAt(
-            0, 10, 0.01,
-            0, 0,  0,
-            0, 1, 0
-        );
-        render_normal();
-
-        glViewport(0,height/2,width/2, height/2);
-        glLoadIdentity();
-        gluLookAt(
-            10, 0, 0,
-            0,  0, 0,
-            0,  1, 0 
-        );
-        render_normal();
-
-        glViewport(width/2,height/2,width/2, height/2);
-        glLoadIdentity();
-        gluLookAt(
-            0, 0, 10,
-            0, 0,  0,
-            0, 1,  0
-        );
-        render_normal();
-    } else {
-        glViewport(0,0,width, height);
-        glLoadIdentity();
-        tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
-        tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
-        tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
-
-        gluLookAt(
-            get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-            get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-            get<0>(up), get<1>(up), get<2>(up)
-        );
-        render_normal();
-    }
-     */
-
+    // Render views
     render_rec(*view, 0, 0, width, height, true);
 
+    // Display buffer
     glutSwapBuffers();
 }
 
