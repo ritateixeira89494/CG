@@ -8,11 +8,11 @@
 
 #include "model/transforms/Transform.h"
 #include "model/transforms/Translate.h"
-#include <iostream>
 #include "interface/display.h"
 #include "interface/scene.h"
 #include "utils/coords.h"
-#include <math.h>
+#include <cmath>
+#include <iostream>
 
 using namespace interface;
 
@@ -24,7 +24,7 @@ bool multiview = true;
 
 int width = 800;
 int height = 800;
-float ratio = width * 1.0f / height;
+float aspect_ratio = width * 1.0f / height;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -49,14 +49,14 @@ void change_size(int w, int h) {
 
     width = w;
     height = h;
-    ratio = w * 1.0f / h;
+    aspect_ratio = w * 1.0f / h;
 
 
     glMatrixMode(GL_PROJECTION);
 
     glLoadIdentity();
 
-    gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
+    gluPerspective(scene.get_fov(), aspect_ratio, scene.get_near(), scene.get_far());
 
     glMatrixMode(GL_MODELVIEW);
 }
