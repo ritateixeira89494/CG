@@ -25,6 +25,7 @@ bool model_mode = true;
 bool axis = true;
 int multiview = 1;
 bool sel_mode = false;
+int dclick = 0;
 
 int width = 800;
 int height = 800;
@@ -227,6 +228,53 @@ Perspective *get_selected_perspective(View *v, int start_x, int start_y, int w, 
     }
 }
 
+View *get_selected_view(View *v, int *start_x, int *start_y, int *w, int *h, bool *horizontal, int x, int y) {
+    if(v->get_perpective() == nullptr) {
+        if(*horizontal) {
+            float new_w = (*w) * v->get_div();
+            int division_point = *start_x + new_w;
+
+            if(
+                    division_point - 10 < x && x < division_point + 10
+                    && *start_y < y && y < *start_y + *h
+            ) {
+                return v;
+            } else if(x < division_point) {
+                *horizontal = !(*horizontal);
+                *w = new_w;
+                return get_selected_view(*v->get_left(), start_x, start_y, w, h, horizontal, x, y);
+            } else {
+                *horizontal = !(*horizontal);
+                *start_x = *start_x + new_w;
+                *w = *w - new_w;
+                return get_selected_view(*v->get_right(), start_x, start_y, w, h, horizontal, x, y);
+            }
+        } else {
+            float new_h = (*h) * v->get_div();
+            int division_point = *start_y + new_h;
+
+            if(
+                    division_point - 3 < y && y < division_point + 3
+                    && *start_x < x && x < *start_x + (*w)
+                    ) {
+                return v;
+            } else if(y < division_point) {
+                *horizontal = !(*horizontal);
+                *h = new_h;
+                return get_selected_view(*v->get_left(), start_x, start_y, w, h, horizontal, x, y);
+            } else {
+                *horizontal = !(*horizontal);
+                *start_y = *start_y + new_h;
+                *h = *h - new_h;
+                return get_selected_view(*v->get_right(), start_x, start_y, w, h, horizontal, x, y);
+            }
+        }
+    }
+    else {
+        return nullptr;
+    }
+}
+
 void parse_spec_key(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
@@ -347,13 +395,69 @@ void parse_key(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
+int ticket = 0;
+
+void reset_dclick(int x) {
+    if (x == ticket)
+        dclick = 0;
+}
+
+// TODO: Improve code quality
+
+int start_x, start_y;
+bool tracking = false;
+View *ve;
+bool horizontal = true;
+int w = width;
+int h = height;
+
 void onMouseClick(int key, int state, int x, int y) {
     if(key == GLUT_LEFT_BUTTON && state == GLUT_DOWN && multiview != 1) {
-        sel_mode = !sel_mode;
-        if(sel_mode) {
-            Perspective *sel = get_selected_perspective(view, 0, 0, width, height, true, x, height-y);
-            selected.set_perspective(sel);
+        dclick++;
+        if(dclick == 1) {
+            glutTimerFunc(1000, reset_dclick, ticket++);
+        } else if(dclick == 2) {
+            sel_mode = !sel_mode;
+            if(sel_mode) {
+                Perspective *sel = get_selected_perspective(view, 0, 0, width, height, true, x, height-y);
+                selected.set_perspective(sel);
+            }
+            dclick = 0;
         }
+    } else if(key == GLUT_RIGHT_BUTTON){
+        if(state == GLUT_DOWN) {
+            horizontal = true;
+            w = width;
+            h = height;
+            start_x = 0;
+            start_y = 0;
+            ve = get_selected_view(view, &start_x, &start_y, &w, &h, &horizontal, x,height-y);
+            if(ve != nullptr)
+                tracking = true;
+        } else if(state == GLUT_UP) {
+            tracking = false;
+        }
+
+    }
+    glutPostRedisplay();
+}
+
+void on_mouse_motion(int x, int y) {
+    int delta_x, delta_y;
+    if(!tracking)
+        return;
+
+    float lol = (float) (x - start_x) / (float) w;
+    float yay = (float) (height - y - start_y) / (float) h;
+
+    if(tracking) {
+        float new_div;
+        if(horizontal) {
+            new_div = lol;
+        } else {
+            new_div = yay;
+        }
+        ve->set_div(new_div);
     }
     glutPostRedisplay();
 }
@@ -370,6 +474,7 @@ void run(int argc, char *argv[]) {
     glutKeyboardFunc(parse_key);
     glutSpecialFunc(parse_spec_key);
     glutMouseFunc(onMouseClick);
+    glutMotionFunc(on_mouse_motion);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
