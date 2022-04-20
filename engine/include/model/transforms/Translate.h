@@ -13,7 +13,7 @@ class Translate : public Transform {
     /// Specifies if this translation is dynamic or static
     bool dynamic;
     /// Full time length of the translation
-    float full_time;
+    seconds full_time;
     /// Current time length of the translation
     milliseconds curr_time;
     /// Last clock cycle. Used to calculate time passed since last iteration. (Or for tweening)
@@ -45,14 +45,14 @@ class Translate : public Transform {
          * @param full_time animation length
          * @param ctrl_points vector with all control points
          */
-        Translate(float full_time, bool align, vector<float *> ctrl_points);
+        Translate(int full_time, bool align, vector<float *> ctrl_points);
 
         /**
          * @brief Construct a dynamic animation with no control points
          * 
          * @param full_time animation length
          */
-        Translate(float full_time, bool align);
+        Translate(int full_time, bool align);
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
 

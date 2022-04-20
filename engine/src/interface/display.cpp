@@ -254,6 +254,7 @@ void run(int argc, char *argv[]) {
     glutCreateWindow("CG2022 Engine");
 
     glutDisplayFunc(render);
+    glutIdleFunc(render);
     glutReshapeFunc(change_size);
     glutKeyboardFunc(parse_key);
     glutSpecialFunc(parse_spec_key);

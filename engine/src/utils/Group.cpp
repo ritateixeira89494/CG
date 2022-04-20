@@ -6,6 +6,9 @@
 #include "model/transforms/Rotate.h"
 #include "model/transforms/Scale.h"
 
+//TODO Change this
+#include <stdlib.h>
+
 using namespace std;
 
 Group::Group(XMLElement *group) {
@@ -62,7 +65,31 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
         cout << name << endl;
         if (strcmp(name, "translate") == 0) {
             auto coords = getCoordinatesFromElement(transform);
-            auto translate = new Translate(coords->x, coords->y, coords->z);
+            int time;
+            Translate *translate;
+            if(transform->QueryIntAttribute("time", &time) != XML_SUCCESS) {
+                translate = new Translate(coords->x, coords->y, coords->z);
+            } else {
+                bool align;
+                transform->QueryBoolAttribute("align", &align);
+                vector<float *> points = {};
+                XMLElement *lol = transform->FirstChildElement();
+                while(lol != nullptr) {
+                    float x, y, z;
+                    lol->QueryFloatAttribute("x", &x);
+                    lol->QueryFloatAttribute("y", &y);
+                    lol->QueryFloatAttribute("z", &z);
+
+                    float *t = (float *) malloc(sizeof(float) * 3);
+                    t[0] = x;
+                    t[1] = y;
+                    t[2] = z;
+
+                    points.push_back(t);
+                    lol = lol->NextSiblingElement();
+                }
+                translate = new Translate(time, align, points);
+            }
             t = translate;
             // TODO: Initialize Translate
         } else if (strcmp(name, "rotate") == 0) {
