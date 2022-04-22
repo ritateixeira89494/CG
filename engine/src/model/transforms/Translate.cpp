@@ -21,24 +21,26 @@ Translate::Translate(float x, float y, float z) : Transform(x, y, z) {
     draw = false;
 }
 
-Translate::Translate(int time, bool alignment, vector<float *> points) : Transform(0,0,0) {
+Translate::Translate(int time, bool alignment, bool d, int segments, vector<float *> points) : Transform(0,0,0) {
     dynamic = true;
     full_time   = seconds{time};
     curr_time   = milliseconds{0};
     start_clock = system_clock::time_point::min();
     align       = alignment;
     ctrl_points = points;
-    draw = true;
+    draw = d;
+    curve_segments = segments;
 }
 
-Translate::Translate(int time, bool alignment) : Transform(0,0,0) {
+Translate::Translate(int time, bool alignment, bool d, int segments) : Transform(0,0,0) {
     dynamic = true;
     full_time   = seconds{time};
     curr_time   = milliseconds{0};
     start_clock = system_clock::time_point::min();
     align       = alignment;
     ctrl_points = {};
-    draw = true;
+    draw = d;
+    curve_segments = segments;
 }
 
 void Translate::get_catmull_rom_point(float t, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv) {
@@ -80,7 +82,7 @@ void Translate::get_global_catmull_rom_point(float gt, float *pos, float *deriv)
     get_catmull_rom_point(t, ctrl_points[indices[0]], ctrl_points[indices[1]], ctrl_points[indices[2]], ctrl_points[indices[3]], pos, deriv);
 }
 
-void Translate::draw_curve(int detail) {
+void Translate::draw_curve() {
     if(!dynamic || !draw) { // Check if this is a static translate or if the draw flag is disabled
         return;
     }
@@ -89,8 +91,8 @@ void Translate::draw_curve(int detail) {
     float deriv[4];
 
     glBegin(GL_LINE_LOOP);
-    for(int i = 0; i < detail; i++) {
-        float t = (i*1.0f)/ detail;
+    for(int i = 0; i < curve_segments; i++) {
+        float t = (i*1.0f) / curve_segments;
         get_global_catmull_rom_point(t, pos, deriv);
         glVertex3f(pos[0],pos[1],pos[2]);
     }

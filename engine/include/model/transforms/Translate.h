@@ -29,6 +29,9 @@ class Translate : public Transform {
         vector<float *> ctrl_points;
         /// Specifies whether to draw or not the Catmull-Rom curve
         bool draw;
+        /// Number of segments to divide the curve when drawing it
+        /// @note This does @b not affect translation itself
+        int curve_segments;
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
         /**
@@ -69,14 +72,14 @@ class Translate : public Transform {
          * @param full_time animation length
          * @param ctrl_points vector with all control points
          */
-        Translate(int full_time, bool align, vector<float *> ctrl_points);
+        Translate(int full_time, bool align, bool draw, int curve_segments, vector<float *> ctrl_points);
 
         /**
          * @brief Construct a dynamic animation with no control points
          * 
          * @param full_time animation length
          */
-        Translate(int full_time, bool align);
+        Translate(int full_time, bool align, bool draw, int curve_segments);
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,7 +88,7 @@ class Translate : public Transform {
          * 
          * @param detail Number of segments in which to divide the curve
          */
-        void draw_curve(int detail);
+        void draw_curve();
 
         /**
          * @brief Update and apply the transformation

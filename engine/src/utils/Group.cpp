@@ -62,6 +62,15 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
     } else {
         bool align;
         translateNode->QueryBoolAttribute("align", &align);
+        int segments;
+        if(translateNode->QueryIntAttribute("segments", &segments) != XML_SUCCESS) {
+            segments = 200;
+        }
+        bool draw;
+        if(translateNode->QueryBoolAttribute("draw", &draw) != XML_SUCCESS) {
+            draw = false;
+        }
+
         vector<float *> points = {};
         XMLElement *lol = translateNode->FirstChildElement();
         while(lol != nullptr) {
@@ -76,7 +85,7 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
             points.push_back(t);
             lol = lol->NextSiblingElement();
         }
-        return new Translate(time, align, points);
+        return new Translate(time, align, draw, segments, points);
     }
 }
 
@@ -175,7 +184,7 @@ void Group::render() {
     for (const auto transform: transforms) {
         Translate *translate = dynamic_cast<Translate *>(transform);
         if(translate != nullptr) {
-            translate->draw_curve(200);
+            translate->draw_curve();
         }
         transform->apply();
     }
