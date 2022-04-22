@@ -12,7 +12,13 @@ using namespace std;
 using namespace std::chrono;
 
 Translate::Translate(float x, float y, float z) : Transform(x, y, z) {
-
+    dynamic = false;
+    full_time = seconds{0};
+    curr_time = milliseconds{0};
+    start_clock = system_clock::time_point::min();
+    align = false;
+    ctrl_points = {};
+    draw = false;
 }
 
 Translate::Translate(int time, bool alignment, vector<float *> points) : Transform(0,0,0) {
@@ -22,6 +28,7 @@ Translate::Translate(int time, bool alignment, vector<float *> points) : Transfo
     start_clock = system_clock::time_point::min();
     align       = alignment;
     ctrl_points = points;
+    draw = true;
 }
 
 Translate::Translate(int time, bool alignment) : Transform(0,0,0) {
@@ -31,9 +38,8 @@ Translate::Translate(int time, bool alignment) : Transform(0,0,0) {
     start_clock = system_clock::time_point::min();
     align       = alignment;
     ctrl_points = {};
+    draw = true;
 }
-
-void placeholder() {}
 
 void Translate::get_catmull_rom_point(float t, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv) {
     float catmull_rom_matrix[4][4] = {
@@ -58,10 +64,10 @@ void Translate::get_catmull_rom_point(float t, float *p0, float *p1, float *p2, 
     }
 }
 
-void Translate::get_global_catmull_rom_point(float *pos, float *deriv) {
+void Translate::get_global_catmull_rom_point(float gt, float *pos, float *deriv) {
     int n_points = ctrl_points.size();
 
-    float t = (curr_time.count() * 1.0f / (full_time.count()*1000)) * n_points;
+    float t = gt * n_points;
     int index = floor(t);
     t = t - index;
 
@@ -72,6 +78,23 @@ void Translate::get_global_catmull_rom_point(float *pos, float *deriv) {
     indices[3] = (indices[2]+1) % n_points;
 
     get_catmull_rom_point(t, ctrl_points[indices[0]], ctrl_points[indices[1]], ctrl_points[indices[2]], ctrl_points[indices[3]], pos, deriv);
+}
+
+void Translate::draw_curve(int detail) {
+    if(!dynamic || !draw) { // Check if this is a static translate or if the draw flag is disabled
+        return;
+    }
+
+    float pos[4];
+    float deriv[4];
+
+    glBegin(GL_LINE_LOOP);
+    for(int i = 0; i < detail; i++) {
+        float t = (i*1.0f)/ detail;
+        get_global_catmull_rom_point(t, pos, deriv);
+        glVertex3f(pos[0],pos[1],pos[2]);
+    }
+    glEnd();
 }
 
 void Translate::apply() {
@@ -87,7 +110,9 @@ void Translate::apply() {
         float pos[4];
         float deriv[4];
 
-        get_global_catmull_rom_point(pos, deriv);
+        float gt = (curr_time.count() / (full_time.count()*1000.0f));       
+
+        get_global_catmull_rom_point(gt, pos, deriv);
 
         glTranslatef(pos[0], pos[1], pos[2]);
 
@@ -120,4 +145,11 @@ void Translate::apply() {
             curr_time -= full_time;
         }
     }
+}
+
+void Translate::set_dynamic(bool d) {
+    dynamic = d;
+}
+bool Translate::get_dynamic() {
+    return dynamic;
 }

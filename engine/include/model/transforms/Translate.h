@@ -27,6 +27,8 @@ class Translate : public Transform {
         bool align;
         /// Control points used to calculate the curve
         vector<float *> ctrl_points;
+        /// Specifies whether to draw or not the Catmull-Rom curve
+        bool draw;
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
         /**
@@ -42,13 +44,13 @@ class Translate : public Transform {
          */
         void get_catmull_rom_point(float time, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv);
         /**
-         * @brief Returns the position and derivative at the current time.
-         * @note This function uses the system clock to get the current time 
+         * @brief Returns the position and derivative at the given time.
          * 
+         * @param gt Time
          * @param pos Position array in which to store the position
          * @param deriv Derivative array in which to store the derivative of the position
          */
-        void get_global_catmull_rom_point(float *pos, float *deriv);
+        void get_global_catmull_rom_point(float gt, float *pos, float *deriv);
 
     public:
 // Constructors ///////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +79,13 @@ class Translate : public Transform {
         Translate(int full_time, bool align);
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * @brief Draw the Catmull-Rom curve
+         * 
+         * @param detail Number of segments in which to divide the curve
+         */
+        void draw_curve(int detail);
 
         /**
          * @brief Update and apply the transformation
@@ -167,6 +176,18 @@ class Translate : public Transform {
          * @return vector<tuple<float,float,float>> vector with all control points of this translation
          */
         vector<float *> get_ctrl_points();
+
+        /**
+         * @brief Set the draw flag
+         */
+        void set_draw(bool draw);
+        /**
+         * @brief Get the draw flag
+         * 
+         * @return true The Catmull-Rom curve is to be drawn
+         * @return false The Catmull-Rom curve should not be drawn
+         */
+        bool get_draw();
 };
 
 

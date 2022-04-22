@@ -173,6 +173,10 @@ void Group::render() {
     glPushMatrix();
 
     for (const auto transform: transforms) {
+        Translate *translate = dynamic_cast<Translate *>(transform);
+        if(translate != nullptr) {
+            translate->draw_curve(200);
+        }
         transform->apply();
     }
 
