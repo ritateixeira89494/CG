@@ -10,24 +10,44 @@ using namespace std;
 using namespace std::chrono;
 
 class Translate : public Transform {
-    /// Specifies if this translation is dynamic or static
-    bool dynamic;
-    /// Full time length of the translation
-    seconds full_time;
-    /// Current time length of the translation
-    milliseconds curr_time;
-    /// Last clock cycle. Used to calculate time passed since last iteration. (Or for tweening)
-    /// @note setting this clock to std::chrono::system_clock::time_point::min(), tells the object the animation is at the beginning.
-    system_clock::time_point start_clock;
-    /// Last Y used to calculate the direction of the object
-    float last_y[3] = { 0, 1, 0 };
-    /// Model alignment with the curve
-    bool align;
-    /// Control points used to calculate the curve
-    vector<float *> ctrl_points;
-
     private:
+// Variables //////////////////////////////////////////////////////////////////////////////////////
+        /// Specifies if this translation is dynamic or static
+        bool dynamic;
+        /// Full time length of the translation
+        seconds full_time;
+        /// Current time length of the translation
+        milliseconds curr_time;
+        /// Last clock cycle. Used to calculate time passed since last iteration. (Or for tweening)
+        /// @note setting this clock to std::chrono::system_clock::time_point::min(), tells the object the animation is at the beginning.
+        system_clock::time_point start_clock;
+        /// Last Y used to calculate the direction of the object
+        float last_y[3] = { 0, 1, 0 };
+        /// Model alignment with the curve
+        bool align;
+        /// Control points used to calculate the curve
+        vector<float *> ctrl_points;
+
+// Methods ////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * @brief Returns the position and derivative at any given time along the Catmull-Rom curve
+         * 
+         * @param t Time
+         * @param p0 First control point
+         * @param p1 Second control point
+         * @param p2 Third control point
+         * @param p3 Fourth controlo point
+         * @param pos Position array in which the position will be returned
+         * @param deriv Derivative of the curve at the specified point in time
+         */
         void get_catmull_rom_point(float time, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv);
+        /**
+         * @brief Returns the position and derivative at the current time.
+         * @note This function uses the system clock to get the current time 
+         * 
+         * @param pos Position array in which to store the position
+         * @param deriv Derivative array in which to store the derivative of the position
+         */
         void get_global_catmull_rom_point(float *pos, float *deriv);
 
     public:

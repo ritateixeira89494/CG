@@ -81,6 +81,7 @@ void Translate::apply() {
         if(start_clock == system_clock::time_point::min()) {
             start_clock = system_clock::now();
         }
+        auto new_clock = system_clock::now();
         
         float pos[4];
         float deriv[4];
@@ -114,7 +115,6 @@ void Translate::apply() {
             glMultMatrixf((float *) rotation);
         }
 
-        auto new_clock = system_clock::now();
         curr_time = duration_cast<milliseconds>(new_clock - start_clock);
         if(curr_time > full_time) {
             curr_time -= full_time;
