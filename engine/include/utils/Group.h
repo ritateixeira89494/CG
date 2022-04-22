@@ -6,6 +6,7 @@
 #include "model/model.h"
 #include "model/transforms/Transform.h"
 #include "model/transforms/Translate.h"
+#include "model/transforms/Rotate.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -31,13 +32,22 @@ class Group {
         vector<Group *> subGroups;
 
         /**
-         * @brief Creates a translate object from a XMLElement.
-         * @note This method takes care of deciding if the translation is dynamic or not
+         * @brief Creates a Translate object from a XMLElement.
+         * @note This method takes care of deciding if the translation is dynamic or not.
          * 
-         * @param translateNode translate group
-         * @return Translate* Translate object. Dynamic or not, depending on the xml
+         * @param translateNode Translation group
+         * @return Translate* Translate object. Dynamic or not, depending on the xml specification.
          */
         static Translate *getTranslate(XMLElement *translateNode);
+
+        /**
+         * @brief Creates a Rotate object from a XMLElement.
+         * @note This method takes care of deciding if the translation is dynamic or not.
+         * 
+         * @param rotateNode Rotation group
+         * @return Rotate* Rotate object. Dynamic or not, depending on the xml specification.
+         */
+        static Rotate *getRotate(XMLElement *rotateNode);
 
         /**
          * @brief Gets the transforms of the transforms node.

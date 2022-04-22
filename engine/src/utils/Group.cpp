@@ -80,6 +80,18 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
     }
 }
 
+Rotate *Group::getRotate(XMLElement *rotateNode) {
+    int time;
+    auto coords = getCoordinatesFromElement(rotateNode);
+
+    if(rotateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
+        float angle = rotateNode->FloatAttribute("angle");
+        return new Rotate(angle, coords->x, coords->y, coords->z);
+    } else {
+        return new Rotate(time, coords->x, coords->y, coords->z);
+    }
+}
+
 vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
     vector<Transform *> currentTransforms = {};
 
@@ -93,10 +105,7 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
         if (strcmp(name, "translate") == 0) {
             t = getTranslate(transform);
         } else if (strcmp(name, "rotate") == 0) {
-            auto coords = getCoordinatesFromElement(transform);
-            auto rotate = new Rotate(transform->FloatAttribute("angle"), coords->x, coords->y, coords->z);
-            t = rotate;
-            // TODO: Initialize Rotate
+            t = getRotate(transform);
         } else if (strcmp(name, "scale") == 0) {
             auto coords = getCoordinatesFromElement(transform);
             auto scale = new Scale(coords->x, coords->y, coords->z);
