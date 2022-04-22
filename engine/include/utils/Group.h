@@ -5,6 +5,7 @@
 #include "tinyxml2/tinyxml2.h"
 #include "model/model.h"
 #include "model/transforms/Transform.h"
+#include "model/transforms/Translate.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -28,6 +29,15 @@ class Group {
          * Vector of the subgroups of the group.
          */
         vector<Group *> subGroups;
+
+        /**
+         * @brief Creates a translate object from a XMLElement.
+         * @note This method takes care of deciding if the translation is dynamic or not
+         * 
+         * @param translateNode translate group
+         * @return Translate* Translate object. Dynamic or not, depending on the xml
+         */
+        static Translate *getTranslate(XMLElement *translateNode);
 
         /**
          * @brief Gets the transforms of the transforms node.

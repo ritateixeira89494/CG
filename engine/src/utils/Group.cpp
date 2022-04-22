@@ -53,6 +53,33 @@ Coord getCoordinatesFromElement(XMLElement *element) {
 
 }
 
+Translate *Group::getTranslate(XMLElement *translateNode) {
+    int time;
+    auto coords = getCoordinatesFromElement(translateNode);
+
+    if(translateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
+        return new Translate(coords->x, coords->y, coords->z);
+    } else {
+        bool align;
+        translateNode->QueryBoolAttribute("align", &align);
+        vector<float *> points = {};
+        XMLElement *lol = translateNode->FirstChildElement();
+        while(lol != nullptr) {
+            float x, y, z;
+            lol->QueryFloatAttribute("x", &x);
+            lol->QueryFloatAttribute("y", &y);
+            lol->QueryFloatAttribute("z", &z);
+            float *t = (float *) malloc(sizeof(float) * 3);
+            t[0] = x;
+            t[1] = y;
+            t[2] = z;
+            points.push_back(t);
+            lol = lol->NextSiblingElement();
+        }
+        return new Translate(time, align, points);
+    }
+}
+
 vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
     vector<Transform *> currentTransforms = {};
 
@@ -64,34 +91,7 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
         const char *name = transform->Name(); // transform's name
         cout << name << endl;
         if (strcmp(name, "translate") == 0) {
-            auto coords = getCoordinatesFromElement(transform);
-            int time;
-            Translate *translate;
-            if(transform->QueryIntAttribute("time", &time) != XML_SUCCESS) {
-                translate = new Translate(coords->x, coords->y, coords->z);
-            } else {
-                bool align;
-                transform->QueryBoolAttribute("align", &align);
-                vector<float *> points = {};
-                XMLElement *lol = transform->FirstChildElement();
-                while(lol != nullptr) {
-                    float x, y, z;
-                    lol->QueryFloatAttribute("x", &x);
-                    lol->QueryFloatAttribute("y", &y);
-                    lol->QueryFloatAttribute("z", &z);
-
-                    float *t = (float *) malloc(sizeof(float) * 3);
-                    t[0] = x;
-                    t[1] = y;
-                    t[2] = z;
-
-                    points.push_back(t);
-                    lol = lol->NextSiblingElement();
-                }
-                translate = new Translate(time, align, points);
-            }
-            t = translate;
-            // TODO: Initialize Translate
+            t = getTranslate(transform);
         } else if (strcmp(name, "rotate") == 0) {
             auto coords = getCoordinatesFromElement(transform);
             auto rotate = new Rotate(transform->FloatAttribute("angle"), coords->x, coords->y, coords->z);
