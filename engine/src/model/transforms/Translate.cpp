@@ -29,7 +29,6 @@ Translate::Translate(int time, bool alignment) : Transform(0,0,0) {
     full_time   = seconds{time};
     curr_time   = milliseconds{0};
     start_clock = system_clock::time_point::min();
-    //last_clock  = 0;
     align       = alignment;
     ctrl_points = {};
 }
@@ -90,14 +89,30 @@ void Translate::apply() {
 
         glTranslatef(pos[0], pos[1], pos[2]);
 
-        /* TODO: add aligning
         if(align) {
-            float rotation[4][4];
             float z[3];
             float y[3];
 
-            cross(deriv, yy, z)
-        }*/
+            cross(deriv, last_y, z);
+            cross(z, deriv, y);
+
+            normalize(deriv);
+            normalize(y);
+            normalize(z);
+
+            last_y[0] = y[0];
+            last_y[1] = y[1];
+            last_y[2] = y[2];
+
+            float rotation[4][4] = {
+                {deriv[0], deriv[1], deriv[2], 0},
+                {y[0], y[1], y[2], 0},
+                {z[0], z[1], z[2], 0},
+                {0, 0, 0, 1}
+            };
+
+            glMultMatrixf((float *) rotation);
+        }
 
         auto new_clock = system_clock::now();
         curr_time = duration_cast<milliseconds>(new_clock - start_clock);

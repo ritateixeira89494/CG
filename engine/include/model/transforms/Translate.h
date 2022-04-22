@@ -17,8 +17,10 @@ class Translate : public Transform {
     /// Current time length of the translation
     milliseconds curr_time;
     /// Last clock cycle. Used to calculate time passed since last iteration. (Or for tweening)
-    /// @note setting this clock to 0, tells the object the animation is at the beginning.
+    /// @note setting this clock to std::chrono::system_clock::time_point::min(), tells the object the animation is at the beginning.
     system_clock::time_point start_clock;
+    /// Last Y used to calculate the direction of the object
+    float last_y[3] = { 0, 1, 0 };
     /// Model alignment with the curve
     bool align;
     /// Control points used to calculate the curve
