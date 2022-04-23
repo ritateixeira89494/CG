@@ -18,12 +18,17 @@ using namespace std;
  */
 
 void drawBezierPatches(char *file) {
-    int n_patches, n_pontos_controlo;
+    int n_patches, n_cont_points;
     vector<int *> patches = {}; // Structure to store the patches indexes
-    vector<float *> controlPoints = {};
+    vector<float *> control_points = {};
 
 
     FILE *f = fopen(file, "r");
+
+    if (!f) {
+        cerr << "Invalid bezier patch file path!" << endl;
+        exit(1);
+    }
 
     fscanf(f, "%d", &n_patches);
 
@@ -36,12 +41,12 @@ void drawBezierPatches(char *file) {
         patches.push_back(patch);
     }
 
-    fscanf(f, "%d", &n_pontos_controlo);
+    fscanf(f, "%d", &n_cont_points);
 
-    for (int i = 0; i < n_pontos_controlo; i++) {
-        float *xyz = (float *) malloc(sizeof(float) * 3);
+    for (int i = 0; i < n_cont_points; i++) {
+        auto *xyz = (float *) malloc(sizeof(float) * 3);
         fscanf(f, "%f, %f, %f", &xyz[0], &xyz[1], &xyz[2]);
-        controlPoints.push_back(xyz);
+        control_points.push_back(xyz);
     }
 
     // Print stuff
@@ -52,7 +57,7 @@ void drawBezierPatches(char *file) {
         cout << endl;
     }
 
-    for (const float *xyz: controlPoints) {
+    for (const float *xyz: control_points) {
         cout << "x=" << xyz[0] << " y=" << xyz[1] << " z=" << xyz[2] << endl;
     }
 

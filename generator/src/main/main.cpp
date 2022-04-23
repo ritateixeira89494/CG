@@ -1,6 +1,5 @@
 
 #include <math.h>
-#include "main.h"
 
 #include <iostream>
 #include <string>
@@ -9,10 +8,10 @@
 
 #include <stdio.h>
 
-#include "Box.h"
-#include "Sphere.h"
-#include "Piramide.h"
-#include "Plane.h"
+#include "primitives/Box.h"
+#include "primitives/Sphere.h"
+#include "primitives/Piramide.h"
+#include "primitives/Plane.h"
 
 using namespace std;
 

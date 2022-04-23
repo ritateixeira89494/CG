@@ -3,9 +3,9 @@
 #include <string>
 #include <fstream>
 
-#include "Box.h"
-#include "Plane.h"
-#include "utils.h"
+#include "primitives/Box.h"
+#include "primitives/Plane.h"
+#include "utils/utils.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin
     auto p8 = make_tuple(xOr, yOr + edge, origin);
 
     auto p10 = make_tuple(xOr, yOr, origin);
-    auto p11= make_tuple(xOr + edge, yOr, origin);
+    auto p11 = make_tuple(xOr + edge, yOr, origin);
     auto p12 = make_tuple(xOr + edge, yOr + edge, origin);
 
     write_triangle(p1, p2, p3, file);
@@ -73,12 +73,14 @@ void drawBox(float length, float divisions, string nameOfFile) {
     file.open(nameOfFile);
 
     float increment = length / divisions;
-    for (float divisionX = 0, line = -length/2, column = -length / 2; divisionX < divisions; line = line + increment, divisionX++) {
-        for (float divisionY = 0, column =- length / 2; divisionY < divisions; column = column + increment, divisionY++) {
-            drawSquareUp(line, column, increment, length/2, &file); //1 -> Box, 0-> Plane
-            drawSquareDown(line, column, increment, &file, length/2); //1 -> Box, 0-> Plane
-            drawSquareXY(line, column, increment, &file, length/2);
-          drawSquareYZ(line, column, increment, &file, length/2);
+    for (float divisionX = 0, line = -length / 2, column = -length / 2;
+         divisionX < divisions; line = line + increment, divisionX++) {
+        for (float divisionY = 0, column = -length / 2;
+             divisionY < divisions; column = column + increment, divisionY++) {
+            drawSquareUp(line, column, increment, length / 2, &file); //1 -> Box, 0-> Plane
+            drawSquareDown(line, column, increment, &file, length / 2); //1 -> Box, 0-> Plane
+            drawSquareXY(line, column, increment, &file, length / 2);
+            drawSquareYZ(line, column, increment, &file, length / 2);
         }
     }
 }

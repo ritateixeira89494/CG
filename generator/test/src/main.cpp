@@ -1,5 +1,4 @@
 #include <math.h>
-#include "main.h"
 
 #include <iostream>
 #include <string>
@@ -8,12 +7,12 @@
 
 #include <stdio.h>
 
-#include "../include/Bezier.h"
+#include "curves/Bezier.h"
 
 using namespace std;
 
 int main(int argc, char **argv) {
-    char filePath[] = "../engine/test/teapot.patch";
+    char filePath[] = "teapot.patch";
     drawBezierPatches(filePath);
     return 0;
 }
