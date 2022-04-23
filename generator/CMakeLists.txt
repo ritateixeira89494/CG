@@ -19,7 +19,7 @@ file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 # Find all source files and add them to the executable
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_executable(${PROJECT_NAME} ${SOURCES} testes/main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCES} tests/main.cpp)
 
 #Link all libs
 target_include_directories(${PROJECT_NAME} PUBLIC include)
