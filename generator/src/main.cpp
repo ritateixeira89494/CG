@@ -25,7 +25,7 @@ bool iequals(const string &a, const string &b) {
                       });
 }
 
-
+/*
 int main(int argc, char **argv) {
     if (iequals(argv[1], "Plane")) {
         float len = stoi(argv[2]);
@@ -52,3 +52,5 @@ int main(int argc, char **argv) {
 
     return 1;
 }
+
+*/
