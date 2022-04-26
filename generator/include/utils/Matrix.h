@@ -59,9 +59,11 @@ class Matrix {
 
         Matrix *operator*=(const Matrix matrix);
 
-        Matrix *transpose();
+        Matrix transpose();
 
         std::ostream &operator<<(std::ostream &outs);
+
+        void print();
 };
 
 

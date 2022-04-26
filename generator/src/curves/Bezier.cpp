@@ -23,7 +23,7 @@ using namespace std;
  *
  */
 
-float bezier_matrix[4][4] = {
+float bezier__matrix[4][4] = {
         {-1, 3,  -3, 1},
         {3,  -6, 3,  0},
         {-3, 3,  0,  0},
@@ -36,7 +36,7 @@ float p_2[3] = {1.f, 0.f, 0.f};
 float p_3[3] = {1.f, 1.f, 0.f};
 
 
-float P[4];
+float P[3];
 
 int tessellation = 4;
 
@@ -48,7 +48,7 @@ float **initialize_A(float *p0, float *p1, float *p2, float *p3) {
 
     for (int i = 0; i < 3; i++) {
         float v[4] = {p0[i], p1[i], p2[i], p3[i]};
-        multMatrixVector((float *) bezier_matrix, v, A[i]);
+        multMatrixVector((float *) bezier__matrix, v, A[i]);
     }
 
     cout << "[Bezier] A matrix:" << endl;
@@ -89,9 +89,7 @@ void get_bezier_point(float **A) {
     for (int i = 0; i < tessellation; i++) {
         const float t = ((float) i) / ((float) tessellation - 1);
         p(t, A);
-        cout << "t=" << t << " point=[" << "x=" << P[0] << " y=" << P[1] << " z=" << P[2] << " w=" << P[3]
-             << "]"
-             << endl;
+        cout << "t=" << t << " point=[" << "x=" << P[0] << " y=" << P[1] << " z=" << P[2] << "]" << endl;
     }
 }
 

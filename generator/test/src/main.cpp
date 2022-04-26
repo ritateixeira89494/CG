@@ -1,9 +1,12 @@
-#include "curves/Bezier.h"
+#include "curves/BezierSurface.h"
+#include <iostream>
 
 using namespace std;
 
 int main(int argc, char **argv) {
     char filePath[] = "teapot.patch";
-    drawBezierPatches(filePath);
+
+    BezierSurface::P(nullptr, 0.1f, 0.1f);
+
     return 0;
 }

@@ -62,7 +62,6 @@ Matrix *Matrix::operator+=(Matrix matrix) {
     Matrix m = this->operator+(matrix);
     this->mat = m.mat;
 
-
     return this;
 }
 
@@ -137,7 +136,7 @@ Matrix *Matrix::operator*=(const Matrix matrix) {
     return this;
 }
 
-Matrix *Matrix::transpose() {
+Matrix Matrix::transpose() {
     int lines = get_lines();
     int cols = get_cols();
     vector<vector<float>> new_matrix = {};
@@ -148,9 +147,8 @@ Matrix *Matrix::transpose() {
         }
         new_matrix.emplace_back(new_line);
     }
-    this->set_matrix(new_matrix);
 
-    return this;
+    return Matrix(new_matrix);
 }
 
 ostream &operator<<(ostream &outs, Matrix m) {
@@ -165,4 +163,14 @@ ostream &operator<<(ostream &outs, Matrix m) {
     }
 
     return outs;
+}
+
+void Matrix::print() {
+    auto m = this->get_matrix();
+    for (auto line: m) {
+        for (auto elem: line) {
+            cout << elem << " ";
+        }
+        cout << endl;
+    }
 }
