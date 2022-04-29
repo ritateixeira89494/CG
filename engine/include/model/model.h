@@ -49,6 +49,7 @@ namespace model {
              * @return int Number of triangles loaded
              */
             int load_model(char *path); // Loads the model from a ".3d" file
+
             /**
              * @brief Get the triangle list
              *

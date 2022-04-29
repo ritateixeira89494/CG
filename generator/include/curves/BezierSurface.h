@@ -6,7 +6,7 @@
 
 class BezierSurface {
     public:
-        static std::tuple<float, float, float> P(Matrix *control_points, float u, float v);
+        static std::tuple<float, float, float> P(Matrix *pre_cal_control_points, float u, float v);
 };
 
 

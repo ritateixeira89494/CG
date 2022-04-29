@@ -73,11 +73,20 @@ vector<vector<float>> p_vector_z = {
 
 Matrix points = Matrix(p_vector_x);
 
-//Matrix pre_calc_x = M * p_vector_x * M.transpose();
+Matrix pre_calc_x = M * p_vector_x * M.transpose();
+Matrix pre_calc_y = M * p_vector_y * M.transpose();
+Matrix pre_calc_z = M * p_vector_z * M.transpose();
 
 // TODO: Pre-calculate M * points * M.transpose() // Why transpose? Since M is symmetric?
 
-std::tuple<float, float, float> BezierSurface::P(Matrix *control_points, float u, float v) {
+/**
+ *
+ * @param pre_cal_control_points pre-calculated control points. This means
+ * @param u
+ * @param v
+ * @return
+ */
+std::tuple<float, float, float> BezierSurface::P(Matrix *pre_cal_control_points, float u, float v) {
     //control_points = &pre_calc_x;
     Matrix u_vector = Matrix({
                                      {powf(u, 3), powf(u, 2), u, 1}
@@ -89,16 +98,17 @@ std::tuple<float, float, float> BezierSurface::P(Matrix *control_points, float u
                                      {v},
                                      {1}
                              });
-    Matrix res_x = u_vector * M * p_vector_x * M.transpose() * v_vector;
-    Matrix res_y = u_vector * M * p_vector_y * M.transpose() * v_vector;
-    Matrix res_z = u_vector * M * p_vector_z * M.transpose() * v_vector;
+    Matrix res_x = u_vector * pre_calc_x * v_vector;
+    Matrix res_y = u_vector * pre_calc_y * v_vector;
+    Matrix res_z = u_vector * pre_calc_z * v_vector;
 
-    cout << "X: " << endl;
-    res_x.print();
-    cout << "Y: " << endl;
-    res_y.print();
-    cout << "Z: " << endl;
-    res_z.print();
+    float x = res_x.get_matrix()[0][0];
+    float y = res_y.get_matrix()[0][0];
+    float z = res_z.get_matrix()[0][0];
 
-    return {1.f, 1.f, 1.f};
+    cout << "X: " << x << endl;
+    cout << "Y: " << y << endl;
+    cout << "Z: " << z << endl;
+
+    return {x, y, z};
 }
