@@ -119,7 +119,7 @@ Matrix Matrix::operator*(Matrix matrix) {
 
     cout << "Dimension of the result matrix: " << n1 << "x" << m2 << endl;
 
-    vector<vector<float>> v(m1, vector<float>(m2, 0));
+    vector<vector<float>> v(n1, vector<float>(m2, 0));
 
     for (int i = 0; i < n1; i++) {
         for (int j = 0; j < m2; j++) {
