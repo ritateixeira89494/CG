@@ -26,7 +26,7 @@ class Translate : public Transform {
         /// Model alignment with the curve
         bool align;
         /// Control points used to calculate the curve
-        vector<float *> ctrl_points;
+        vector<tuple<float,float,float>> ctrl_points;
         /// Specifies whether to draw or not the Catmull-Rom curve
         bool draw;
         /// Number of segments to divide the curve when drawing it
@@ -45,7 +45,7 @@ class Translate : public Transform {
          * @param pos Position array in which the position will be returned
          * @param deriv Derivative of the curve at the specified point in time
          */
-        void get_catmull_rom_point(float time, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv);
+        void get_catmull_rom_point(float time, tuple<float,float,float> p0, tuple<float,float,float> p1, tuple<float,float,float> p2, tuple<float,float,float> p3, float *pos, float *deriv);
         /**
          * @brief Returns the position and derivative at the given time.
          * 
@@ -72,7 +72,7 @@ class Translate : public Transform {
          * @param full_time animation length
          * @param ctrl_points vector with all control points
          */
-        Translate(int full_time, bool align, bool draw, int curve_segments, vector<float *> ctrl_points);
+        Translate(int full_time, bool align, bool draw, int curve_segments, vector<tuple<float,float,float>> ctrl_points);
 
         /**
          * @brief Construct a dynamic animation with no control points
@@ -119,26 +119,26 @@ class Translate : public Transform {
          * 
          * @param time new full_time
          */
-        void set_full_time(float time);
+        void set_full_time(int time);
         /**
          * @brief Get the full_time value
          * 
          * @return float Full animation length
          */
-        float get_full_time();
+        int get_full_time();
 
         /**
          * @brief Set the curr_time value
          * 
-         * @param time new curr_time @note Must be less than full_time
+         * @param time new curr_time in milliseconds @note Must be less than full_time
          */
-        void set_curr_time(milliseconds time);
+        void set_curr_time(int time);
         /**
          * @brief Get the curr_time value
          * 
          * @return float curr_time value
          */
-        milliseconds get_curr_time();
+        int get_curr_time();
 
         /**
          * @brief Set the start clock cycle
@@ -178,7 +178,7 @@ class Translate : public Transform {
          * 
          * @return vector<tuple<float,float,float>> vector with all control points of this translation
          */
-        vector<float *> get_ctrl_points();
+        vector<tuple<float,float,float>> get_ctrl_points();
 
         /**
          * @brief Set the draw flag

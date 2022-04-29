@@ -21,7 +21,7 @@ Translate::Translate(float x, float y, float z) : Transform(x, y, z) {
     draw = false;
 }
 
-Translate::Translate(int time, bool alignment, bool d, int segments, vector<float *> points) : Transform(0,0,0) {
+Translate::Translate(int time, bool alignment, bool d, int segments, vector<tuple<float,float,float>> points) : Transform(0,0,0) {
     dynamic = true;
     full_time   = seconds{time};
     curr_time   = milliseconds{0};
@@ -43,7 +43,7 @@ Translate::Translate(int time, bool alignment, bool d, int segments) : Transform
     curve_segments = segments;
 }
 
-void Translate::get_catmull_rom_point(float t, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv) {
+void Translate::get_catmull_rom_point(float t, tuple<float,float,float> p0, tuple<float,float,float> p1, tuple<float,float,float> p2, tuple<float,float,float> p3, float *pos, float *deriv) {
     float catmull_rom_matrix[4][4] = {
         {-0.5f,  1.5f, -1.5f,  0.5f},
 		{ 1.0f, -2.5f,  2.0f, -0.5f},
@@ -51,13 +51,17 @@ void Translate::get_catmull_rom_point(float t, float *p0, float *p1, float *p2, 
 		{ 0.0f,  1.0f,  0.0f,  0.0f}
     };
 
-    float A[4][4];
+    float p0_arr[3] = { get<0>(p0), get<1>(p0), get<2>(p0) };
+    float p1_arr[3] = { get<0>(p1), get<1>(p1), get<2>(p1) };
+    float p2_arr[3] = { get<0>(p2), get<1>(p2), get<2>(p2) };
+    float p3_arr[3] = { get<0>(p3), get<1>(p3), get<2>(p3) };
 
+    float A[4][4];
     float T[4] = { t*t*t, t*t, t, 1 };
     float Tderiv[4] = { 3*t*t, 2*t, 1, 0 };
 
     for(int i = 0; i < 3; i++) {
-        float v[4] = { p0[i], p1[i], p2[i], p3[i] };
+        float v[4] = { p0_arr[i], p1_arr[i], p2_arr[i], p3_arr[i] };
         mult_matrix_vector((float *) catmull_rom_matrix, v, A[i]);
 
         pos[i] = T[0]*A[i][0] + T[1]*A[i][1] + T[2]*A[i][2] + T[3]*A[i][3];
@@ -79,7 +83,12 @@ void Translate::get_global_catmull_rom_point(float gt, float *pos, float *deriv)
     indices[2] = (indices[1]+1) % n_points;
     indices[3] = (indices[2]+1) % n_points;
 
-    get_catmull_rom_point(t, ctrl_points[indices[0]], ctrl_points[indices[1]], ctrl_points[indices[2]], ctrl_points[indices[3]], pos, deriv);
+    auto p0 = ctrl_points[indices[0]];
+    auto p1 = ctrl_points[indices[1]];
+    auto p2 = ctrl_points[indices[2]];
+    auto p3 = ctrl_points[indices[3]];
+
+    get_catmull_rom_point(t, p0, p1, p2, p3, pos, deriv);
 }
 
 void Translate::draw_curve() {
@@ -150,8 +159,51 @@ void Translate::apply() {
 }
 
 void Translate::set_dynamic(bool d) {
-    dynamic = d;
+    this->dynamic = d;
 }
 bool Translate::get_dynamic() {
     return dynamic;
+}
+
+void Translate::set_full_time(int time) {
+    this->full_time = seconds{time};
+}
+int Translate::get_full_time() {
+    return full_time.count();
+}
+
+void Translate::set_curr_time(int time) {
+    this->curr_time = milliseconds{time};
+}
+int Translate::get_curr_time() {
+    return curr_time.count();
+}
+
+void Translate::set_start_clock(system_clock::time_point clock) {
+    this->start_clock = clock;
+}
+system_clock::time_point Translate::get_start_clock() {
+    return start_clock;
+}
+
+void Translate::set_align(bool alignment) {
+    this->align = alignment;
+}
+bool Translate::get_align() {
+    return align;
+}
+
+void Translate::set_ctrl_points(vector<tuple<float,float,float>> points) {
+    this->ctrl_points = points;
+}
+
+vector<tuple<float,float,float>> Translate::get_ctrl_points() {
+    return ctrl_points;
+}
+
+void Translate::set_draw(bool draw) {
+    this->draw = draw;
+}
+bool Translate::get_draw() {
+    return draw;
 }

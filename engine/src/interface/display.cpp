@@ -216,13 +216,13 @@ void parse_key(unsigned char key, int x, int y) {
             if (model_mode)
                 scene.change_scale(0.1);
             else
-                scene.zoom(-0.1);
+                scene.zoom(-0.2);
             break;
         case '-':
             if (model_mode)
                 scene.change_scale(-0.1);
             else
-                scene.zoom(0.1);
+                scene.zoom(0.2);
             break;
         case '\r':
             model_mode = !model_mode;

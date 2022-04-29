@@ -28,3 +28,24 @@ void Rotate::apply() {
         glRotatef(cur_rotation, x, y, z);
     }
 }
+
+void Rotate::set_dynamic(bool dynamic) {
+    this->dynamic = dynamic;
+}
+bool Rotate::get_dynamic() {
+    return dynamic;
+}
+
+void Rotate::set_angle(float angle) {
+    this->angle = angle;
+}
+float Rotate::get_angle() {
+    return angle;
+}
+
+void Rotate::set_start(int start) {
+    this->start = start;
+}
+int Rotate::get_start() {
+    return start;
+}

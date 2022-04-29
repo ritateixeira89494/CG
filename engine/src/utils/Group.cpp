@@ -71,18 +71,17 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
             draw = false;
         }
 
-        vector<float *> points = {};
+        vector<tuple<float,float,float>> points = {};
         XMLElement *lol = translateNode->FirstChildElement();
         while(lol != nullptr) {
             float x, y, z;
             lol->QueryFloatAttribute("x", &x);
             lol->QueryFloatAttribute("y", &y);
             lol->QueryFloatAttribute("z", &z);
-            float *t = (float *) malloc(sizeof(float) * 3);
-            t[0] = x;
-            t[1] = y;
-            t[2] = z;
-            points.push_back(t);
+            
+            auto point = make_tuple(x,y,z);
+
+            points.push_back(point);
             lol = lol->NextSiblingElement();
         }
         return new Translate(time, align, draw, segments, points);
