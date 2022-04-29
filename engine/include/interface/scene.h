@@ -59,8 +59,10 @@ namespace interface {
 
             /**
                 @brief Renders all models of the scene
+
+                @param cam_mode bool telling if camera mode is active or not
             */
-            void render_models();
+            void render_models(bool cam_mode);
 
             /**
                 @brief Applies to all models, the vector passed as the argument

@@ -8,7 +8,7 @@
 
     <group> <!-- Sun and the rest of the solar system -->
         <models>
-            <model file="sphere.3d"/> <!-- generator sphere 10 20 20 sphere.3d -->
+            <model file="sphere.3d" color="0.5 0.5 0.0"/> <!-- generator sphere 10 20 20 sphere.3d -->
         </models>
         <group> <!-- Mercury -->
             <transform>

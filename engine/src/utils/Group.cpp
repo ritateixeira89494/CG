@@ -137,6 +137,8 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 
     XMLElement *model = modelsNode->FirstChildElement("model");
 
+    Model *m;
+
     while (model != nullptr) {
         const char *modelPath = model->Attribute("file");
         cout << modelPath << endl;
@@ -145,10 +147,19 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 
         if (texture); // TODO: Pass texture path to model.
 
-        const XMLElement *colorElement = model->FirstChildElement("color");
+        const char *mainColor = model->Attribute("color");
 
-        auto m = new Model(modelPath);
+        if (mainColor) {
+            tuple<float, float, float> color = {0, 0, 0};
+            sscanf(mainColor, "%f %f %f", &get<0>(color), &get<1>(color), &get<2>(color));
+            m = new Model(modelPath, color);
 
+        } else {
+            m = new Model(modelPath);
+        }
+
+        const XMLElement *lightingColorElement = model->FirstChildElement(
+                "color"); // TODO: Finish implementing the color attributes
 
         currentModels.push_back(m);
         model = model->NextSiblingElement();
@@ -156,9 +167,10 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
     return currentModels;
 }
 
-Color Group::getColor(XMLElement *color) {
+LightingColors Group::getColor(XMLElement *color) {
     if (!color) return {};
 
+    return *new LightingColors();
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
@@ -177,7 +189,7 @@ vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
     return currentSubGroups;
 }
 
-void Group::render() {
+void Group::render(bool cam_mode) {
     glPushMatrix();
 
     for (const auto transform: transforms) {
@@ -189,11 +201,11 @@ void Group::render() {
     }
 
     for (const auto model: models) {
-        model->render();
+        model->render(cam_mode);
     }
 
     for (const auto subgroup: subGroups) {
-        subgroup->render();
+        subgroup->render(cam_mode);
     }
 
     glPopMatrix();

@@ -24,15 +24,21 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Find all libs
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
+
+if (NOT GLEW_FOUND)
+    message(ERROR " GLEW not found")
+endif (NOT GLEW_FOUND)
 
 if (NOT OpenGL_FOUND)
     message(ERROR " OpenGL not found")
 endif (NOT OpenGL_FOUND)
+
 if (NOT GLUT_FOUND)
     message(ERROR " Glut not found")
 endif (NOT GLUT_FOUND)
 
 # Link libs to our program
 target_include_directories(Engine PUBLIC include)
-include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+include_directories(${OpenGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${GLEW_LIBRARIES})

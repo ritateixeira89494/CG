@@ -103,9 +103,9 @@ namespace interface {
         this->groups = Group::getGroups(groupElement);
     }
 
-    void Scene::render_models() {
+    void Scene::render_models(bool cam_mode) {
         for (auto group: groups) {
-            group->render();
+            group->render(cam_mode);
         }
     }
 
