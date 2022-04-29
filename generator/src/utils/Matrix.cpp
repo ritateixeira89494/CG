@@ -104,26 +104,30 @@ Matrix *Matrix::operator-=(Matrix matrix) {
 
 Matrix Matrix::operator*(Matrix matrix) {
 // Getting the dimensions of the matrices
-    int n1 = matrix.get_lines();
-    int m1 = matrix.get_cols();
+    int n1 = this->get_lines();
+    int m1 = this->get_cols();
 
-    int n2 = this->get_lines();
-    int m2 = this->get_cols();
+    int n2 = matrix.get_lines();
+    int m2 = matrix.get_cols();
+
 
     if (m1 != n2) {
-        cerr << "Invalid matrix dimensions!" << endl;
+        cerr << "Invalid matrix dimensions! Can't multiply a matrix with " << n1 << "x" << m1 << " with " << n2 << "x"
+             << m2 << endl;
+        exit(1);
     }
+
+    cout << "Dimension of the result matrix: " << n1 << "x" << m2 << endl;
 
     vector<vector<float>> v(m1, vector<float>(m2, 0));
 
-    for (int j = 0; j < m1; j++) {
-        for (int k = 0; k < n1; k++) {
-            for (int i = 0; i < m1; i++) {
-                v[i][j] += this->mat[i][k] * this->mat[k][j];
+    for (int i = 0; i < n1; i++) {
+        for (int j = 0; j < m2; j++) {
+            for (int k = 0; k < n2; k++) {
+                v[i][j] += this->mat[i][k] * matrix.mat[k][j];
             }
         }
     }
-
 
     return v;
 }
