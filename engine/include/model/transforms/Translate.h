@@ -15,12 +15,12 @@ class Translate : public Transform {
         /// Specifies if this translation is dynamic or static
         bool dynamic;
         /// Full time length of the translation
-        seconds full_time;
-        /// Current time length of the translation
-        milliseconds curr_time;
-        /// Last clock cycle. Used to calculate time passed since last iteration. (Or for tweening)
-        /// @note setting this clock to std::chrono::system_clock::time_point::min(), tells the object the animation is at the beginning.
-        system_clock::time_point start_clock;
+        milliseconds full_time;
+        /**
+         * @brief Time elapsed since the application started
+         * @note This value is gotten from @b glutGet(GL_ELAPSED_TIME)
+         */
+        int start;
         /// Last Y used to calculate the direction of the object
         float last_y[3] = { 0, 1, 0 };
         /// Model alignment with the curve
@@ -115,43 +115,30 @@ class Translate : public Transform {
         bool get_dynamic();
 
         /**
-         * @brief Set the full_time value
+         * @brief Set the animation length in milliseconds
          * 
-         * @param time new full_time
+         * @param time New animation length in milliseconds
          */
         void set_full_time(int time);
         /**
-         * @brief Get the full_time value
+         * @brief Get the animation length
          * 
          * @return float Full animation length
          */
         int get_full_time();
 
         /**
-         * @brief Set the curr_time value
+         * @brief Set the start of the animation
          * 
-         * @param time new curr_time in milliseconds @note Must be less than full_time
+         * @param start New animation start
          */
-        void set_curr_time(int time);
+        void set_start(int start);
         /**
-         * @brief Get the curr_time value
+         * @brief Get the time elapsed since the start of the application 
          * 
-         * @return float curr_time value
+         * @return Time elapsed since the application started
          */
-        int get_curr_time();
-
-        /**
-         * @brief Set the start clock cycle
-         * 
-         * @param start_clock clock cycle to set 
-         */
-        void set_start_clock(system_clock::time_point start_clock);
-        /**
-         * @brief Get the start clock cycle
-         * 
-         * @return time_point start clock cycle
-         */
-        system_clock::time_point get_start_clock();
+        int get_start();
 
         /**
          * @brief Set the model align

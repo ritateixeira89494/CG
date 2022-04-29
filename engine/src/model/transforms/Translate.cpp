@@ -14,32 +14,29 @@ using namespace std::chrono;
 Translate::Translate(float x, float y, float z) : Transform(x, y, z) {
     dynamic = false;
     full_time = seconds{0};
-    curr_time = milliseconds{0};
-    start_clock = system_clock::time_point::min();
+    start = -1;
     align = false;
     ctrl_points = {};
     draw = false;
 }
 
 Translate::Translate(int time, bool alignment, bool d, int segments, vector<tuple<float,float,float>> points) : Transform(0,0,0) {
-    dynamic = true;
-    full_time   = seconds{time};
-    curr_time   = milliseconds{0};
-    start_clock = system_clock::time_point::min();
-    align       = alignment;
-    ctrl_points = points;
-    draw = d;
+    dynamic        = true;
+    full_time      = milliseconds{time*1000};
+    start          = -1;
+    align          = alignment;
+    ctrl_points    = points;
+    draw           = d;
     curve_segments = segments;
 }
 
 Translate::Translate(int time, bool alignment, bool d, int segments) : Transform(0,0,0) {
-    dynamic = true;
-    full_time   = seconds{time};
-    curr_time   = milliseconds{0};
-    start_clock = system_clock::time_point::min();
-    align       = alignment;
-    ctrl_points = {};
-    draw = d;
+    dynamic        = true;
+    full_time      = milliseconds{time*1000};
+    start          = -1;
+    align          = alignment;
+    ctrl_points    = {};
+    draw           = d;
     curve_segments = segments;
 }
 
@@ -112,16 +109,15 @@ void Translate::apply() {
     if(!dynamic) {
         glTranslatef(this->x, this->y, this->z);
     } else {
-        if(start_clock == system_clock::time_point::min()) {
-            start_clock = system_clock::now();
+        if(start == -1) {
+            start = glutGet(GLUT_ELAPSED_TIME);
         }
-        auto new_clock = system_clock::now();
-        curr_time = duration_cast<milliseconds>(new_clock - start_clock);
+        int now = glutGet(GLUT_ELAPSED_TIME);
         
         float pos[4];
         float deriv[4];
 
-        float gt = (curr_time.count() / (full_time.count()*1000.0f));       
+        float gt = (now-start)*1.0f / full_time.count();       
 
         get_global_catmull_rom_point(gt, pos, deriv);
 
@@ -151,10 +147,6 @@ void Translate::apply() {
 
             glMultMatrixf((float *) rotation);
         }
-
-        if(curr_time > full_time) {
-            curr_time -= full_time;
-        }
     }
 }
 
@@ -166,24 +158,17 @@ bool Translate::get_dynamic() {
 }
 
 void Translate::set_full_time(int time) {
-    this->full_time = seconds{time};
+    this->full_time = milliseconds{time};
 }
 int Translate::get_full_time() {
     return full_time.count();
 }
 
-void Translate::set_curr_time(int time) {
-    this->curr_time = milliseconds{time};
+void Translate::set_start(int start) {
+    this->start = start;
 }
-int Translate::get_curr_time() {
-    return curr_time.count();
-}
-
-void Translate::set_start_clock(system_clock::time_point clock) {
-    this->start_clock = clock;
-}
-system_clock::time_point Translate::get_start_clock() {
-    return start_clock;
+int Translate::get_start() {
+    return start;
 }
 
 void Translate::set_align(bool alignment) {

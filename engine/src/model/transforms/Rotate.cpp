@@ -5,20 +5,20 @@
 Rotate::Rotate(float angle, float x, float y, float z) : Transform(x, y, z) {
     dynamic = false;
     this->angle = angle;
-    start = 0;
+    start = -1;
 }
 
 Rotate::Rotate(int t, float x, float y, float z) : Transform(x, y, z) {
     dynamic = true;
     full_time = t * 1000;
-    start = 0;
+    start = -1;
 }
 
 void Rotate::apply() {
     if(!dynamic) {
         glRotatef(angle, this->x, this->y, this->z);
     } else {
-        if(start == 0) {
+        if(start == -1) {
             start = glutGet(GLUT_ELAPSED_TIME);
         }
         int cur_time = (glutGet(GLUT_ELAPSED_TIME) - start) % full_time;

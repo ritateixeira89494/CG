@@ -23,7 +23,7 @@ class Rotate : public Transform {
 
         /**
          * @brief Elapsed time at the start of the animation.
-         * @note This is gotten from glutGet(GL_ELAPSED_TIME)
+         * @note This is gotten from @b glutGet(GL_ELAPSED_TIME)
          */
         int start;
 
