@@ -23,7 +23,7 @@ file(GLOB_RECURSE MAIN src/main.cpp)
 list(REMOVE_ITEM SOURCES ${MAIN})
 message(${SOURCES})
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} src/main.cpp)
 
 # Tests
 add_executable(${PROJECT_NAME}_test_bezier ${SOURCES} test/src/main.cpp)

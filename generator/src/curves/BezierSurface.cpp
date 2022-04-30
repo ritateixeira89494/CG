@@ -1,8 +1,12 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err34-c"
+
 #include "curves/BezierSurface.h"
 #include <tuple>
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "utils/Matrix.h"
 
 std::vector<std::vector<float>> bezier_matrix = {
@@ -37,8 +41,6 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
 
     return {x, y, z};
 }
-
-// TODO: Pre-calculate M * points * M.transpose() // Why transpose? Since M is symmetric?
 
 std::vector<std::vector<tuple<float, float, float>>>
 BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, float> *>> control_points,
@@ -144,42 +146,19 @@ void BezierSurface::processBezierPatches(char *file, char *output_file, int tess
         control_points.push_back(xyz);
     }
 
-    // Print stuff
     for (const int *patch: patches) {
         vector<vector<tuple<float, float, float> *>> c_p_patch; // Control Points of the patch
 
         for (int i = 0; i < 4; i++) {
-            c_p_patch.push_back({});
+            c_p_patch.emplace_back();
             for (int o = 0; o < 4; o++) {
-                c_p_patch[i].push_back(control_points[i * 4 + o]);
+                c_p_patch[i].push_back(control_points[patch[(i * 4 + o)]]);
             }
         }
-
-        for (auto line: c_p_patch) {
-            for (auto elem: line) {
-                cout << get<0>(*elem) << " " << get<1>(*elem) << " " << get<2>(*elem) << " ";
-            }
-            cout << endl;
-        }
-
-        cout << endl << endl;
 
         auto points = BezierSurface::get_all_points_bezier_surface(c_p_patch, tessellation);
         BezierSurface::generate_triangles(points, output_file);
-
-        /*
-        for (int i = 0; i < 16; i++) {
-
-            cout << patch[i] << " ";
-        }
-        cout << endl;
-         */
     }
-
-    /*
-        for (const auto xyz: control_points) {
-            cout << "x=" << get<0>(*xyz) << " y=" << get<1>(*xyz) << " z=" << get<2>(*xyz) << endl;
-        }
-        */
-
 }
+
+#pragma clang diagnostic pop

@@ -12,6 +12,7 @@
 #include "primitives/Sphere.h"
 #include "primitives/Piramide.h"
 #include "primitives/Plane.h"
+#include "curves/BezierSurface.h"
 
 using namespace std;
 
@@ -44,9 +45,14 @@ int main(int argc, char **argv) {
         float slices = stoi(argv[4]);
         float stacks = stoi(argv[5]);
         drawPyramid(radius, height, slices, stacks, argv[6]);
+    } else if (iequals(argv[1], "bezier")) { //  generator bezier teapot.patch 10 bezier.3d
+        char *patch_file = argv[2];
+        int tessellation = stoi(argv[3]);
+        char *output_file = argv[4];
+        BezierSurface::processBezierPatches(patch_file, output_file, tessellation);
     } else {
-        cout << "Parâmetros incorretos";
+        cout << "Invalid arguments!";
     }
 
-    return 1;
+    return 0;
 }
