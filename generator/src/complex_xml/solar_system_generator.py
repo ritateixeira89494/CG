@@ -1,3 +1,4 @@
+from random import random, randint
 import xml.etree.cElementTree as Tree
 from numpy import pi,sin,cos
 from sys import argv
@@ -53,10 +54,10 @@ def draw_group(parent, models=None, transforms=None, comment=None):
     return group
 
 
-def get_ctrl_points_circle(radius, num):
+def get_ctrl_points_circle(radius, num=16):
     points = []
-    for i in range(ctrl_pt_num):
-        angle = 2*pi - ((i / ctrl_pt_num) * 2*pi)
+    for i in range(num):
+        angle = 2*pi - ((i / num) * 2*pi)
         x = cos(angle) * radius
         y = 0
         z = sin(angle) * radius
@@ -81,7 +82,7 @@ def draw_mercury(parent):
     radius = 25
     models = [sphere]
     comment = 'Mercury'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '15'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '10'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -95,7 +96,7 @@ def draw_venus(parent):
     radius = 30
     models = [sphere]
     comment = 'Venus'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [
         ('translate', [('time', '20'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '15'), ('x', '0'), ('y','-1'), ('z','0')], None),
@@ -109,7 +110,7 @@ def draw_earth(parent):
     radius = 35
     models = [sphere]
     comment = 'Earth'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '25'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '13'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -126,7 +127,7 @@ def draw_moon(parent):
     radius = 5
     models = [sphere]
     comment = 'Moon'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '10'), ('align', 'True'), ('draw', 'True')], points),
         ('scale', [('x','0.35'),('y','0.35'),('z','0.35')], None),
@@ -139,7 +140,7 @@ def draw_mars(parent):
     radius = 45
     models = [sphere]
     comment = 'Mars'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '35'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '10'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -153,7 +154,7 @@ def draw_jupiter(parent):
     radius = 55
     models = [sphere]
     comment = 'Jupiter'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '45'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '30'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -167,11 +168,34 @@ def draw_saturn(parent):
     radius = 70
     models = [sphere]
     comment = 'Saturn'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '55'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '35'), ('x', '0'), ('y','1'), ('z','0')], None),
         ('scale', [('x','3.5'),('y','3.5'),('z','3.5')], None),
+    ]
+    asteroids = 1000
+
+    saturn = draw_group(parent, models, transforms, comment)
+    
+    for i in range(asteroids):
+        radius = random() + 2
+        translate_time = randint(20, 50)
+        rotate_time = randint(5,30)
+        rotation = randint(0, 360)
+        draw_saturn_asteroid(saturn, radius, translate_time, rotation)
+
+    return saturn
+
+
+def draw_saturn_asteroid(parent, radius, translate_time, rotation):
+    models = [sphere]
+    comment = 'Saturn Asteroid'
+    points = get_ctrl_points_circle(radius)
+    transforms = [ 
+        ('rotate', [('angle', str(rotation)), ('x', '0'), ('y','1'), ('z','0')], None),
+        ('translate', [('time', str(translate_time)), ('align', 'False'), ('draw', 'False')], points),
+        ('scale', [('x','0.01'),('y','0.01'),('z','0.01')], None),
     ]
 
     return draw_group(parent, models, transforms, comment)
@@ -181,7 +205,7 @@ def draw_uranus(parent):
     radius = 85
     models = [sphere]
     comment = 'Uranus'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '65'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '40'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -195,7 +219,7 @@ def draw_neptune(parent):
     radius = 95
     models = [sphere]
     comment = 'Neptune'
-    points = get_ctrl_points_circle(radius, ctrl_pt_num)
+    points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '75'), ('align', 'False'), ('draw', 'True')], points),
         ('rotate', [('time', '45'), ('x', '0'), ('y','1'), ('z','0')], None),
@@ -206,7 +230,6 @@ def draw_neptune(parent):
 
 
 sphere = 'sphere.3d'
-ctrl_pt_num = 16
 output = 'solar_system.xml'
 
 if len(argv) == 2:
