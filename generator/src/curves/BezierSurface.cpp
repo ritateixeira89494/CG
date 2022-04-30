@@ -21,16 +21,18 @@ std::vector<std::vector<float>> bezier_matrix = {
 };
 
 /**
- * Converting the Bezier matrix to a Matrix instance
+ * Converting the Bezier matrix to a Matrix object.
  */
 static Matrix M = Matrix(bezier_matrix);
 
 std::tuple<float, float, float>
 BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const float u, const float v) {
+    // [u^3, u^2, u, 1]
     Matrix u_vector = Matrix({
                                      {powf(u, 3), powf(u, 2), u, 1}
                              });
 
+    // [v^3, v^2, v, 1]
     Matrix v_vector = Matrix({
                                      {powf(v, 3)},
                                      {powf(v, 2)},
@@ -38,10 +40,11 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
                                      {1}
                              });
 
-    Matrix res_x = u_vector * *pre_cal_x * v_vector;
-    Matrix res_y = u_vector * *pre_cal_y * v_vector;
-    Matrix res_z = u_vector * *pre_cal_z * v_vector;
+    Matrix res_x = u_vector * *pre_cal_x * v_vector; // u * M * P_x * M * v
+    Matrix res_y = u_vector * *pre_cal_y * v_vector; // u * M * P_y * M * v
+    Matrix res_z = u_vector * *pre_cal_z * v_vector; // u * M * P_z * M * v
 
+    // Getting the scalar of the matrix.
     float x = res_x.get_matrix()[0][0];
     float y = res_y.get_matrix()[0][0];
     float z = res_z.get_matrix()[0][0];
@@ -52,12 +55,12 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
 std::vector<std::vector<tuple<float, float, float>>>
 BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, float> *>> control_points,
                                              int tessellation) {
-    if (tessellation <= 1) {
+    if (tessellation <= 1) { // Check if the tessellation value is valid.
         cerr << "Tessellation value is invalid." << endl;
         exit(1);
     }
-    //cout << "[Bezier Surface] Number of points: " << tessellation << endl;
 
+    // Separates the Matrix of vectors into a matrix of each coordinate.
     vector<vector<float>> p_vector_x(4, vector<float>(4, 0));
     vector<vector<float>> p_vector_y(4, vector<float>(4, 0));
     vector<vector<float>> p_vector_z(4, vector<float>(4, 0));
@@ -70,12 +73,13 @@ BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, f
     }
 
     // Pre-calculus of matrix
-    Matrix pre_cal_x = M * p_vector_x * M.transpose();
-    Matrix pre_cal_y = M * p_vector_y * M.transpose();
-    Matrix pre_cal_z = M * p_vector_z * M.transpose();
+    Matrix pre_cal_x = M * p_vector_x * M;
+    Matrix pre_cal_y = M * p_vector_y * M;
+    Matrix pre_cal_z = M * p_vector_z * M;
 
     std::vector<std::vector<tuple<float, float, float>>> res;
 
+    // Finally, calculates the surface points
     for (int i = 0; i < tessellation; i++) {
         const float t_i = ((float) i) / ((float) tessellation - 1);
         res.emplace_back();
@@ -83,10 +87,6 @@ BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, f
             const float t_j = ((float) j) / ((float) tessellation - 1);
             auto p = BezierSurface::P(&pre_cal_x, &pre_cal_y, &pre_cal_z, t_i, t_j);
             res[i].push_back(p);
-            /*
-            cout << "t_i=" << t_i << " t_j=" << t_j << " point=[" << "x=" << get<0>(p) << " y=" << get<1>(p) << " z="
-                 << get<2>(p) << "]" << endl;
-                 */
         }
     }
 
