@@ -14,80 +14,8 @@ std::vector<std::vector<float>> bezier_matrix = {
 
 Matrix M = Matrix(bezier_matrix);
 
-tuple<float, float, float> P0 = {-1, 3, -3};
-
-tuple<float, float, float> P1 = {-1, 3, -3};
-
-
-tuple<float, float, float> P2 = {-1,
-                                 3,
-                                 -3};
-
-tuple<float, float, float> P3 = {-1, 3, -3};
-
-tuple<float, float, float> P4 = {-1, 3, -3};
-
-tuple<float, float, float> P5 = {-1, 3, -3};
-
-tuple<float, float, float> P6 = {-1, 3, -3};
-
-tuple<float, float, float> P7 = {-1, 3, -3};
-
-tuple<float, float, float> P8 = {-1, 3, -3};
-
-tuple<float, float, float> P9 = {-1, 3, -3};
-
-tuple<float, float, float> P10 = {-1, 3, -3};
-
-tuple<float, float, float> P11 = {-1, 3, -3};
-
-tuple<float, float, float> P12 = {-1, 3, -3};
-
-tuple<float, float, float> P13 = {-1, 3, -3};
-
-tuple<float, float, float> P14 = {-1, 3, -3};
-
-tuple<float, float, float> P15 = {-1, 3, -3};
-
-
-vector<vector<float>> p_vector_x = {
-        {get<0>(P0),  get<0>(P1),  get<0>(P2),  get<0>(P3)},
-        {get<0>(P4),  get<0>(P5),  get<0>(P6),  get<0>(P7)},
-        {get<0>(P8),  get<0>(P9),  get<0>(P10), get<0>(P11)},
-        {get<0>(P12), get<0>(P13), get<0>(P14), get<0>(P15)}
-};
-
-vector<vector<float>> p_vector_y = {
-        {get<1>(P1),  get<1>(P1),  get<1>(P2),  get<1>(P3)},
-        {get<1>(P4),  get<1>(P5),  get<1>(P6),  get<1>(P7)},
-        {get<1>(P8),  get<1>(P9),  get<1>(P11), get<1>(P11)},
-        {get<1>(P12), get<1>(P13), get<1>(P14), get<1>(P15)}
-};
-
-vector<vector<float>> p_vector_z = {
-        {get<2>(P2),  get<2>(P1),  get<2>(P2),  get<2>(P3)},
-        {get<2>(P4),  get<2>(P5),  get<2>(P6),  get<2>(P7)},
-        {get<2>(P8),  get<2>(P9),  get<2>(P12), get<2>(P11)},
-        {get<2>(P12), get<2>(P13), get<2>(P14), get<2>(P15)}
-};
-
-Matrix points = Matrix(p_vector_x);
-
-Matrix pre_calc_x = M * p_vector_x * M.transpose();
-Matrix pre_calc_y = M * p_vector_y * M.transpose();
-Matrix pre_calc_z = M * p_vector_z * M.transpose();
-
-// TODO: Pre-calculate M * points * M.transpose() // Why transpose? Since M is symmetric?
-
-/**
- *
- * @param pre_cal_control_points pre-calculated control points. This means
- * @param u
- * @param v
- * @return
- */
-std::tuple<float, float, float> BezierSurface::P(Matrix *pre_cal_control_points, float u, float v) {
-    //control_points = &pre_calc_x;
+std::tuple<float, float, float>
+BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const float u, const float v) {
     Matrix u_vector = Matrix({
                                      {powf(u, 3), powf(u, 2), u, 1}
                              });
@@ -98,17 +26,85 @@ std::tuple<float, float, float> BezierSurface::P(Matrix *pre_cal_control_points,
                                      {v},
                                      {1}
                              });
-    Matrix res_x = u_vector * pre_calc_x * v_vector;
-    Matrix res_y = u_vector * pre_calc_y * v_vector;
-    Matrix res_z = u_vector * pre_calc_z * v_vector;
+
+    Matrix res_x = u_vector * *pre_cal_x * v_vector;
+    Matrix res_y = u_vector * *pre_cal_y * v_vector;
+    Matrix res_z = u_vector * *pre_cal_z * v_vector;
 
     float x = res_x.get_matrix()[0][0];
     float y = res_y.get_matrix()[0][0];
     float z = res_z.get_matrix()[0][0];
 
-    cout << "X: " << x << endl;
-    cout << "Y: " << y << endl;
-    cout << "Z: " << z << endl;
-
     return {x, y, z};
+}
+
+// TODO: Pre-calculate M * points * M.transpose() // Why transpose? Since M is symmetric?
+
+std::vector<std::vector<tuple<float, float, float>>>
+BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, float>>> control_points,
+                                             int tessellation) {
+    if (tessellation <= 1) {
+        cerr << "Tessellation value is invalid." << endl;
+        exit(1);
+    }
+    cout << "[Bezier Surface] Number of points: " << tessellation << endl;
+
+    vector<vector<float>> p_vector_x(4, vector<float>(4, 0));
+    vector<vector<float>> p_vector_y(4, vector<float>(4, 0));
+    vector<vector<float>> p_vector_z(4, vector<float>(4, 0));
+    for (int l = 0; l < 4; l++) {
+        for (int col = 0; col < 4; col++) {
+            p_vector_x[l][col] = get<0>(control_points[l][col]);
+            p_vector_y[l][col] = get<1>(control_points[l][col]);
+            p_vector_z[l][col] = get<2>(control_points[l][col]);
+        }
+    }
+
+    //std::cout << "p_vector_x: " << endl;
+
+    // Pre-calculus of matrix
+    Matrix pre_cal_x = M * p_vector_x * M.transpose();
+    Matrix pre_cal_y = M * p_vector_y * M.transpose();
+    Matrix pre_cal_z = M * p_vector_z * M.transpose();
+
+    std::vector<std::vector<tuple<float, float, float>>> res;
+
+    for (int i = 0; i < tessellation; i++) {
+        const float t_i = ((float) i) / ((float) tessellation - 1);
+        res.push_back({});
+        for (int j = 0; j < tessellation; j++) {
+            const float t_j = ((float) j) / ((float) tessellation - 1);
+            auto p = BezierSurface::P(&pre_cal_x, &pre_cal_y, &pre_cal_z, t_i, t_j);
+            res[i].push_back(p);
+            cout << "t_i=" << t_i << " t_j=" << t_j << " point=[" << "x=" << get<0>(p) << " y=" << get<1>(p) << " z="
+                 << get<2>(p) << "]" << endl;
+        }
+    }
+
+    return res;
+}
+
+void
+BezierSurface::generate_triangles(std::vector<std::vector<tuple<float, float, float>>> points, const char *file_name) {
+    ofstream file;
+    file.open(file_name);
+
+    for (int i = 0; i < points.size() - 1; i++) {
+        for (int o = 0; o < points[0].size() - 1; o++) {
+            file << "(" << get<0>(points[i][o]) << ", " << get<1>(points[i][o]) << ", " << get<2>(points[i][o]) << ");";
+            file << "(" << get<0>(points[i + 1][o]) << ", " << get<1>(points[i + 1][o]) << ", "
+                 << get<2>(points[i + 1][o]) << ");";
+            file << "(" << get<0>(points[i][o + 1]) << ", " << get<1>(points[i][o + 1]) << ", "
+                 << get<2>(points[i][o + 1]) << ")" << endl;
+
+            file << "(" << get<0>(points[i + 1][o]) << ", " << get<1>(points[i + 1][o]) << ", "
+                 << get<2>(points[i + 1][o]) << ");";
+            file << "(" << get<0>(points[i + 1][o + 1]) << ", " << get<1>(points[i + 1][o + 1]) << ", "
+                 << get<2>(points[i + 1][o + 1]) << ");";
+            file << "(" << get<0>(points[i][o + 1]) << ", " << get<1>(points[i][o + 1]) << ", "
+                 << get<2>(points[i][o + 1]) << ")" << endl;
+        }
+    }
+
+    file.close();
 }

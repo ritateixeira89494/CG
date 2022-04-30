@@ -82,7 +82,7 @@ void render_normal() {
     glRotatef(radian2degree(m_rotation_beta), 0, 0, 1);
     glScalef(scale, scale, scale);
     scene.render_models();
-    glScalef(1/scale,1/scale,1/scale);
+    glScalef(1 / scale, 1 / scale, 1 / scale);
     glTranslatef(-get<0>(position), -get<1>(position), -get<2>(position));
 
 }
@@ -90,59 +90,59 @@ void render_normal() {
 void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(multiview) {
-        glViewport(0,0,width/2, height/2);
+    if (multiview) {
+        glViewport(0, 0, width / 2, height / 2);
 
         glLoadIdentity();
-        scene.set_radius(scene.get_radius()/2);
+        scene.set_radius(scene.get_radius() / 2);
         tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
         tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
         tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
-        scene.set_radius(scene.get_radius()*2);
+        scene.set_radius(scene.get_radius() * 2);
         gluLookAt(
-            get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-            get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-            get<0>(up), get<1>(up), get<2>(up)
+                get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+                get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                get<0>(up), get<1>(up), get<2>(up)
         );
         render_normal();
 
-        glViewport(width/2,0,width/2, height/2);
+        glViewport(width / 2, 0, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-            0, 10, 0.01,
-            0, 0,  0,
-            0, 1, 0
+                0, 10, 0.01,
+                0, 0, 0,
+                0, 1, 0
         );
         render_normal();
 
-        glViewport(0,height/2,width/2, height/2);
+        glViewport(0, height / 2, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-            10, 0, 0,
-            0,  0, 0,
-            0,  1, 0 
+                10, 0, 0,
+                0, 0, 0,
+                0, 1, 0
         );
         render_normal();
 
-        glViewport(width/2,height/2,width/2, height/2);
+        glViewport(width / 2, height / 2, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-            0, 0, 10,
-            0, 0,  0,
-            0, 1,  0
+                0, 0, 10,
+                0, 0, 0,
+                0, 1, 0
         );
         render_normal();
     } else {
-        glViewport(0,0,width, height);
+        glViewport(0, 0, width, height);
         glLoadIdentity();
         tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
         tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
         tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
 
         gluLookAt(
-            get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-            get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-            get<0>(up), get<1>(up), get<2>(up)
+                get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+                get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                get<0>(up), get<1>(up), get<2>(up)
         );
         render_normal();
     }
@@ -187,16 +187,16 @@ void parse_key(unsigned char key, int x, int y) {
         case 'A':
         case 'a':
             if (model_mode)
-                scene.move_models(-M_PI/2);
+                scene.move_models(-M_PI / 2);
             else
-                scene.move_camera(-M_PI/2);
+                scene.move_camera(-M_PI / 2);
             break;
         case 'D':
         case 'd':
             if (model_mode)
-                scene.move_models(M_PI/2);
+                scene.move_models(M_PI / 2);
             else
-                scene.move_camera(M_PI/2);
+                scene.move_camera(M_PI / 2);
             break;
         case 'W':
         case 'w':
