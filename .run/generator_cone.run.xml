@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="generator_cone" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="cone 2 3 8 10 cone.3d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/demos" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cg2022" TARGET_NAME="generator" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cg2022" RUN_TARGET_NAME="generator">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

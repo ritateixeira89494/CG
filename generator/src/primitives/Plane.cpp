@@ -1,7 +1,7 @@
 #include <fstream>
 #include <string>
 #include <tuple>
-#include "utils.h"
+#include "utils/utils.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ void drawSquareDown(float xOr, float yOr, float edge, ofstream *file, float orig
     auto p4 = make_tuple(xOr, -origin, yOr + edge);
     auto p5 = make_tuple(xOr + edge, -origin, yOr);
     auto p6 = make_tuple(xOr + edge, -origin, yOr + edge);
-    
+
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
 }
@@ -28,7 +28,7 @@ void drawSquareUp(float xOr, float yOr, float edge, float height, ofstream *file
     auto p4 = make_tuple(xOr + edge, height, yOr + edge);
     auto p5 = make_tuple(xOr + edge, height, yOr);
     auto p6 = make_tuple(xOr, height, yOr + edge);
-    
+
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
 }

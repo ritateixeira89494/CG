@@ -2,10 +2,11 @@
 #include <fstream>
 #include <cmath>
 
-#include "Piramide.h"
-#include "utils.h"
+#include "primitives/Piramide.h"
+#include "utils/utils.h"
 
 using namespace std;
+
 /*!
     Here we describe the points that are compose the base of the pyramid. 
     We use polar coordinates, and write to the file that is open in piramide3d.
