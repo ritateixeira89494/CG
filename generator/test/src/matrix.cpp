@@ -25,7 +25,7 @@ int main() {
 
     cout << "Sum of matrices" << endl;
     auto sum = ((m1 + m2)).get_matrix();
-    for (auto line: sum) {
+    for (const auto &line: sum) {
         for (auto elem: line) {
             cout << elem << " ";
         }
@@ -36,7 +36,7 @@ int main() {
 
     cout << "Subtraction of matrices" << endl;
     auto sub = ((m1 - m2)).get_matrix();
-    for (auto line: sub) {
+    for (const auto &line: sub) {
         for (auto elem: line) {
             cout << elem << " ";
         }
@@ -47,7 +47,7 @@ int main() {
     cout << "Multiplication " << endl;
 
     auto result = (m1 * m2).get_matrix();
-    for (auto line: result) {
+    for (const auto &line: result) {
         for (auto elem: line) {
             cout << elem << " ";
         }
@@ -56,8 +56,8 @@ int main() {
 
     //
     cout << "Transpose of matrices" << endl;
-    auto transp = m1.transpose()->get_matrix();
-    for (auto line: transp) {
+    auto transp = m1.transpose().get_matrix();
+    for (const auto &line: transp) {
         for (auto elem: line) {
             cout << elem << " ";
         }

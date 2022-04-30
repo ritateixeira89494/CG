@@ -97,54 +97,5 @@ void getBezierTriangle() {
     // TODO: Code this function
 }
 
-void drawBezierPatches(char *file) {
-    int n_patches, n_cont_points;
-    vector<int *> patches = {}; // Structure to store the patches indexes
-    vector<float *> control_points = {};
-
-
-    FILE *f = fopen(file, "r");
-
-    if (!f) {
-        cerr << "Invalid bezier patch file path!" << endl;
-        exit(1);
-    }
-
-    fscanf(f, "%d", &n_patches);
-
-    for (int i = 0; i < n_patches; i++) {
-        int *patch = (int *) malloc(sizeof(int) * 16);
-        fscanf(f, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", &patch[0], &patch[1], &patch[2],
-               &patch[3], &patch[4],
-               &patch[5], &patch[6], &patch[7], &patch[8], &patch[9], &patch[10], &patch[11], &patch[12], &patch[13],
-               &patch[14], &patch[15]);
-        patches.push_back(patch);
-    }
-
-    fscanf(f, "%d", &n_cont_points);
-
-    for (int i = 0; i < n_cont_points; i++) {
-        auto *xyz = (float *) malloc(sizeof(float) * 3);
-        fscanf(f, "%f, %f, %f", &xyz[0], &xyz[1], &xyz[2]);
-        control_points.push_back(xyz);
-    }
-
-    // Print stuff
-    /*
-    for (const int *patch: patches) {
-        for (int i = 0; i < 16; i++) {
-            cout << patch[i] << " ";
-        }
-        cout << endl;
-    }
-
-    for (const float *xyz: control_points) {
-        cout << "x=" << xyz[0] << " y=" << xyz[1] << " z=" << xyz[2] << endl;
-    }
-     */
-
-    float **A = initialize_A(p_0, p_1, p_2, p_3);
-    get_bezier_point(A);
-}
 
 #pragma clang diagnostic pop

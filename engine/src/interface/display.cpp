@@ -261,7 +261,7 @@ void run(int argc, char *argv[]) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glPolygonMode(GL_FRONT, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     scene = Scene(argv[1]);
 
