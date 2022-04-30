@@ -9,6 +9,10 @@
 #include <fstream>
 #include "utils/Matrix.h"
 
+/**
+ * Bezier Matrix
+ * Matrix used to defined the Bezier curve.
+ */
 std::vector<std::vector<float>> bezier_matrix = {
         {-1, 3,  -3, 1},
         {3,  -6, 3,  0},
@@ -16,6 +20,9 @@ std::vector<std::vector<float>> bezier_matrix = {
         {1,  0,  0,  0}
 };
 
+/**
+ * Converting the Bezier matrix to a Matrix instance
+ */
 static Matrix M = Matrix(bezier_matrix);
 
 std::tuple<float, float, float>
@@ -87,9 +94,9 @@ BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, f
 }
 
 void
-BezierSurface::generate_triangles(std::vector<std::vector<tuple<float, float, float>>> points, const char *file_name) {
+BezierSurface::generate_triangles(std::vector<std::vector<tuple<float, float, float>>> points, const char *file_path) {
     ofstream file;
-    file.open(file_name, std::ios_base::app);
+    file.open(file_path, std::ios_base::app);
 
     for (int i = 0; i < points.size() - 1; i++) {
         for (int o = 0; o < points[0].size() - 1; o++) {
@@ -111,13 +118,13 @@ BezierSurface::generate_triangles(std::vector<std::vector<tuple<float, float, fl
     file.close();
 }
 
-void BezierSurface::processBezierPatches(char *file, char *output_file, int tessellation) {
+void BezierSurface::processBezierPatches(char *file_path, char *output_file, int tessellation) {
     int n_patches, n_cont_points;
     vector<int *> patches = {}; // Structure to store the patches indexes
     vector<tuple<float, float, float> *> control_points = {};
 
 
-    FILE *f = fopen(file, "r");
+    FILE *f = fopen(file_path, "r");
 
     if (!f) {
         cerr << "Invalid bezier patch file path!" << endl;
@@ -159,6 +166,10 @@ void BezierSurface::processBezierPatches(char *file, char *output_file, int tess
         auto points = BezierSurface::get_all_points_bezier_surface(c_p_patch, tessellation);
         BezierSurface::generate_triangles(points, output_file);
     }
+
+    // Free everything
+    for (auto point: control_points) free(point);
+    for (auto patch: patches) free(patch);
 }
 
 #pragma clang diagnostic pop
