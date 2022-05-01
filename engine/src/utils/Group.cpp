@@ -70,6 +70,10 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
         if(translateNode->QueryBoolAttribute("draw", &draw) != XML_SUCCESS) {
             draw = false;
         }
+        int offset;
+        if(translateNode->QueryIntAttribute("offset", &offset) != XML_SUCCESS) {
+            offset = 0;
+        }
 
         vector<tuple<float,float,float>> points = {};
         XMLElement *lol = translateNode->FirstChildElement();
@@ -84,7 +88,7 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
             points.push_back(point);
             lol = lol->NextSiblingElement();
         }
-        return new Translate(time, align, draw, segments, points);
+        return new Translate(time, align, draw, offset, segments, points);
     }
 }
 

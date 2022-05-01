@@ -57,10 +57,35 @@ def draw_group(parent, models=None, transforms=None, comment=None):
 def get_ctrl_points_circle(radius, num=16):
     points = []
     for i in range(num):
-        angle = 2*pi - ((i / num) * 2*pi)
+        angle = -((i / num) * 2*pi)
         x = cos(angle) * radius
         y = 0
         z = sin(angle) * radius
+
+        points.append(('point', [('x', str(x)), ('y', str(y)), ('z', str(z))]))
+
+    return points
+
+
+def get_ctrl_points_ellipse(a_radius, b_radius, num=16):
+    points = []
+    for i in range(num):
+        angle = -((i/num) * 2*pi) # Here we are flipping
+        x = cos(angle) * a_radius
+        y = 0
+        z = sin(angle) * b_radius
+
+        points.append(('point', [('x', str(x)), ('y', str(y)), ('z', str(z))]))
+
+    return points
+
+
+def get_ctrl_points_line(length, num=4):
+    points = []
+    for i in range(num):
+        x = -(i*length / num)
+        y = 0
+        z = 0
 
         points.append(('point', [('x', str(x)), ('y', str(y)), ('z', str(z))]))
 
@@ -180,8 +205,7 @@ def draw_saturn(parent):
     
     for i in range(asteroids):
         radius = random() + 2
-        translate_time = randint(20, 50)
-        rotate_time = randint(5,30)
+        translate_time = randint(10, 40)
         rotation = randint(0, 360)
         draw_saturn_asteroid(saturn, radius, translate_time, rotation)
 
@@ -189,10 +213,11 @@ def draw_saturn(parent):
 
 
 def draw_saturn_asteroid(parent, radius, translate_time, rotation):
-    models = [sphere]
+    models = [sphere_very_low_detail]
     comment = 'Saturn Asteroid'
     points = get_ctrl_points_circle(radius)
     transforms = [ 
+        ('rotate', [('time', '35'), ('x', '0'), ('y','-1'), ('z','0')], None), # Undo rotation applied to Saturn
         ('rotate', [('angle', str(rotation)), ('x', '0'), ('y','1'), ('z','0')], None),
         ('translate', [('time', str(translate_time)), ('align', 'False'), ('draw', 'False')], points),
         ('scale', [('x','0.01'),('y','0.01'),('z','0.01')], None),
@@ -208,7 +233,7 @@ def draw_uranus(parent):
     points = get_ctrl_points_circle(radius)
     transforms = [ 
         ('translate', [('time', '65'), ('align', 'False'), ('draw', 'True')], points),
-        ('rotate', [('time', '40'), ('x', '0'), ('y','1'), ('z','0')], None),
+        ('rotate', [('time', '40'), ('x', '0'), ('y','-1'), ('z','0')], None),
         ('scale', [('x','2.57'),('y','2.57'),('z','2.57')], None),
     ]
 
@@ -229,7 +254,52 @@ def draw_neptune(parent):
     return draw_group(parent, models, transforms, comment)
 
 
+def draw_commet_trail(parent):
+    length = 40
+    models = [sphere_very_low_detail]
+    comment = 'Commet Trail'
+    trail_num = 1000
+
+    for i in range(trail_num):
+        angle_x = random()
+        angle_y = random()
+        angle_z = random()
+        angle = random()*10
+        time = randint(5,20)
+        offset_time = randint(0,time*1000)
+        actual_length = random()*length
+        points = get_ctrl_points_line(actual_length)
+        transforms = [ 
+            ('rotate', [('angle', str(angle)), ('x', str(angle_x)), ('y', str(angle_y)), ('z', str(angle_z))], None),
+            ('translate', [('time', str(time)), ('align', 'False'), ('draw', 'False'), ('offset',str(offset_time))], points),
+            ('scale', [('x','0.02'),('y','0.02'),('z','0.02')], None)
+        ]
+
+        draw_group(parent, models, transforms, comment)
+
+
+
+def draw_commet(parent):
+    a_radius = 100
+    b_radius = 60
+    models = [sphere]
+    comment = 'Commet'
+    points = get_ctrl_points_ellipse(a_radius, b_radius) 
+    transforms = [ 
+        ('rotate', [('angle','15'), ('x','0'), ('y','0'), ('z','1')], None),
+        ('translate', [('x','60'), ('y','0'), ('z','0')], None),
+        ('translate', [('time', '100'), ('align', 'True'), ('draw', 'True')], points),
+        ('scale', [('x','1'),('y','1'),('z','1')], None),
+    ]
+
+    commet = draw_group(parent, models, transforms, comment)
+    draw_commet_trail(commet)
+
+    return commet
+
+
 sphere = 'sphere.3d'
+sphere_very_low_detail = 'sphere_very_low_detail.3d'
 output = 'solar_system.xml'
 
 if len(argv) == 2:
@@ -249,6 +319,7 @@ draw_jupiter(world)
 draw_saturn(world)
 draw_uranus(world)
 draw_neptune(world)
+draw_commet(world)
 
 tree = Tree.ElementTree(world)
 Tree.indent(tree)
