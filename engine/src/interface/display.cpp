@@ -19,7 +19,7 @@ using namespace interface;
 
 Scene scene;
 
-GLuint modes[3] = { GL_LINE, GL_FILL, GL_POINT };
+GLuint modes[3] = {GL_LINE, GL_FILL, GL_POINT};
 int mode = 0; // Specifies the current active mode in the modes array
 
 bool cam_mode = false;
@@ -30,6 +30,8 @@ bool polygon_mode = false;
 int width = 800;
 int height = 800;
 float aspect_ratio = width * 1.0f / height;
+
+string file_path;
 
 float x_per;
 float y_per;
@@ -196,7 +198,7 @@ void parse_key(unsigned char key, int x, int y) {
         // Switch between fill mode and line mode
         case 'P':
         case 'p':
-            if(mode == 2)
+            if (mode == 2)
                 mode = 0;
             else mode++;
 
@@ -254,6 +256,10 @@ void parse_key(unsigned char key, int x, int y) {
         case 'e':
             axis = !axis;
             break;
+        case 'R':
+        case 'r':
+            scene = Scene(file_path.data());
+            break;
         case 'Q':
         case 'q':
             std::cout << "Goodbye!!" << std::endl;
@@ -286,12 +292,13 @@ void run(int argc, char *argv[]) {
 
     glewInit();
 
+    file_path.assign(argv[1]);
     scene = Scene(argv[1]);
 
     auto per = scene.get_camera_pos();
-    x_per = get<0>(per)*2;
-    y_per = get<1>(per)*2;
-    z_per = get<2>(per)*2;
+    x_per = get<0>(per) * 2;
+    y_per = get<1>(per) * 2;
+    z_per = get<2>(per) * 2;
 
     glutMainLoop();
 }

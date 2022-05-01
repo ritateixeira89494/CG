@@ -55,7 +55,7 @@ namespace interface {
 
                 @param path Path to the xml file
             */
-            explicit Scene(char *path);
+            explicit Scene(const char *path);
 
             /**
                 @brief Renders all models of the scene
@@ -258,12 +258,14 @@ namespace interface {
              * @return float Model scale
              */
             float get_scale();
+
             /**
              * @brief Get the camera zoom
              * 
              * @return float camera zoom
              */
             float get_radius();
+
             /**
              * @brief Set the camera zoom
              * 
