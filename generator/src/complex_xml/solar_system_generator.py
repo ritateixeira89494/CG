@@ -1,7 +1,7 @@
 from random import random, randint
 import xml.etree.cElementTree as Tree
-from numpy import pi, sin, cos
-from sys import argv
+from numpy import pi,sin,cos
+from sys import argv, version_info
 
 
 def define_camera(world):
@@ -325,4 +325,11 @@ draw_neptune(world)
 draw_comet(world)
 
 tree = Tree.ElementTree(world)
+
+if version_info >= (3,9): # This method is only available in Python >= 3.9
+    print(f'Running Python {version_info.major}.{version_info.minor}. Indenting feature active...')
+    Tree.indent(tree)
+else:
+    print(f'Running Python {version_info.major}.{version_info.minor}. Indenting feature disabled... (Minimum version required: Python 3.9)')
+
 tree.write(output)
