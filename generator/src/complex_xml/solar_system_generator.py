@@ -256,7 +256,7 @@ def draw_neptune(parent):
     return draw_group(parent, models, transforms, comment)
 
 
-def draw_commet_trail(parent):
+def draw_comet_trail(parent):
     length = 40
     models = [sphere_very_low_detail]
     comment = 'Comet Trail'
