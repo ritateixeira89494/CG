@@ -57,6 +57,7 @@ namespace interface {
 
         if (doc.LoadFile(path) != tinyxml2::XML_SUCCESS) {
             cerr << "Something went wrong with the xml file!" << endl;
+            exit(1);
             throw; // TODO: handle error here;
         }
 
@@ -228,6 +229,7 @@ namespace interface {
     float Scene::get_radius() {
         return radius;
     }
+
     void Scene::set_radius(float rad) {
         radius = rad;
     }

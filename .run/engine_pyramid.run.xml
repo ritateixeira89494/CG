@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="engine_pyramid" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="generated.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/demos" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cg2022" TARGET_NAME="Engine" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cg2022" RUN_TARGET_NAME="Engine">
+  <configuration default="false" name="engine_pyramid" type="CMakeRunConfiguration" factoryName="Application" folderName="Engine" PROGRAM_PARAMS="generated.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/demos/show" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cg2022" TARGET_NAME="Engine" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cg2022" RUN_TARGET_NAME="Engine">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>

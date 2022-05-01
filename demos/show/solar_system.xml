@@ -8,7 +8,8 @@
 
     <group> <!-- Sun and the rest of the solar system -->
         <models>
-            <model file="sphere.3d" color="0.5 0.5 0.0"/> <!-- generator sphere 10 20 20 sphere.3d -->
+            <model file="../models/../models/sphere.3d"
+                   color="0.5 0.5 0.0"/> <!-- generator sphere 10 20 20 sphere.3d -->
         </models>
         <group> <!-- Mercury -->
             <transform>
@@ -16,7 +17,7 @@
                 <scale x="0.0034" y="0.0034" z="0.0034"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Venus -->
@@ -25,7 +26,7 @@
                 <scale x="0.0086" y="0.0086" z="0.0086"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Earth -->
@@ -34,7 +35,7 @@
                 <scale x="0.0091" y="0.0091" z="0.0091"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Mars -->
@@ -43,7 +44,7 @@
                 <scale x="0.0048" y="0.0048" z="0.0048"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Jupiter -->
@@ -52,7 +53,7 @@
                 <scale x="0.100" y="0.100" z="0.100"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Saturn -->
@@ -61,7 +62,7 @@
                 <scale x="0.084" y="0.084" z="0.084"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Uranus -->
@@ -70,7 +71,7 @@
                 <scale x="0.034" y="0.034" z="0.034"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
         <group> <!-- Neptune -->
@@ -79,7 +80,7 @@
                 <scale x="0.033" y="0.033" z="0.033"/>
             </transform>
             <models>
-                <model file="sphere.3d"/>
+                <model file="../models/sphere.3d"/>
             </models>
         </group>
     </group>

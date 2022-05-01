@@ -1,4 +1,10 @@
 
+#ifndef DEBUG_MODE
+#define DEBUG_MODE 1
+#endif
+#define DEBUG(x) {if(DEBUG_MODE) std::cerr << x;}
+
+
 #include <math.h>
 
 #include <iostream>
