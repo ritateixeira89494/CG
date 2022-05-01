@@ -20,7 +20,7 @@ Translate::Translate(float x, float y, float z) : Transform(x, y, z) {
     draw = false;
 }
 
-Translate::Translate(int time, bool alignment, bool d, int segments, vector<tuple<float,float,float>> points) : Transform(0,0,0) {
+Translate::Translate(int time, bool alignment, bool d, int offs, int segments, vector<tuple<float,float,float>> points) : Transform(0,0,0) {
     dynamic        = true;
     full_time      = milliseconds{time*1000};
     start          = -1;
@@ -28,9 +28,10 @@ Translate::Translate(int time, bool alignment, bool d, int segments, vector<tupl
     ctrl_points    = points;
     draw           = d;
     curve_segments = segments;
+    offset         = offs;
 }
 
-Translate::Translate(int time, bool alignment, bool d, int segments) : Transform(0,0,0) {
+Translate::Translate(int time, bool alignment, bool d, int offs, int segments) : Transform(0,0,0) {
     dynamic        = true;
     full_time      = milliseconds{time*1000};
     start          = -1;
@@ -38,6 +39,7 @@ Translate::Translate(int time, bool alignment, bool d, int segments) : Transform
     ctrl_points    = {};
     draw           = d;
     curve_segments = segments;
+    offset         = offs;
 }
 
 void Translate::get_catmull_rom_point(float t, tuple<float,float,float> p0, tuple<float,float,float> p1, tuple<float,float,float> p2, tuple<float,float,float> p3, float *pos, float *deriv) {
@@ -117,7 +119,7 @@ void Translate::apply() {
         float pos[4];
         float deriv[4];
 
-        float gt = (now-start)*1.0f / full_time.count();       
+        float gt = (now-start+offset)*1.0f / full_time.count();       
 
         get_global_catmull_rom_point(gt, pos, deriv);
 

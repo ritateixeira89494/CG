@@ -31,6 +31,10 @@ int width = 800;
 int height = 800;
 float aspect_ratio = width * 1.0f / height;
 
+float x_per;
+float y_per;
+float z_per;
+
 void placeAxis() {
     glBegin(GL_LINES);
     // X Axis in red
@@ -114,7 +118,7 @@ void render() {
         glViewport(width / 2, 0, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-                0, 10, 0.01,
+                0, y_per, 0.01,
                 0, 0, 0,
                 0, 1, 0
         );
@@ -123,7 +127,7 @@ void render() {
         glViewport(0, height / 2, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-                10, 0, 0,
+                x_per, 0, 0,
                 0, 0, 0,
                 0, 1, 0
         );
@@ -132,7 +136,7 @@ void render() {
         glViewport(width / 2, height / 2, width / 2, height / 2);
         glLoadIdentity();
         gluLookAt(
-                0, 0, 10,
+                0, 0, z_per,
                 0, 0, 0,
                 0, 1, 0
         );
@@ -283,6 +287,11 @@ void run(int argc, char *argv[]) {
     glewInit();
 
     scene = Scene(argv[1]);
+
+    auto per = scene.get_camera_pos();
+    x_per = get<0>(per)*2;
+    y_per = get<1>(per)*2;
+    z_per = get<2>(per)*2;
 
     glutMainLoop();
 }

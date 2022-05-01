@@ -32,6 +32,7 @@ class Translate : public Transform {
         /// Number of segments to divide the curve when drawing it
         /// @note This does @b not affect translation itself
         int curve_segments;
+        int offset;
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
         /**
@@ -72,14 +73,14 @@ class Translate : public Transform {
          * @param full_time animation length
          * @param ctrl_points vector with all control points
          */
-        Translate(int full_time, bool align, bool draw, int curve_segments, vector<tuple<float,float,float>> ctrl_points);
+        Translate(int full_time, bool align, bool draw, int offset, int curve_segments, vector<tuple<float,float,float>> ctrl_points);
 
         /**
          * @brief Construct a dynamic animation with no control points
          * 
          * @param full_time animation length
          */
-        Translate(int full_time, bool align, bool draw, int curve_segments);
+        Translate(int full_time, bool align, bool draw, int offset, int curve_segments);
 
 // Methods ////////////////////////////////////////////////////////////////////////////////////////
 
