@@ -298,8 +298,8 @@ def draw_commet(parent):
     return commet
 
 
-sphere = 'sphere.3d'
-sphere_very_low_detail = 'sphere_very_low_detail.3d'
+sphere = '../models/sphere.3d'
+sphere_very_low_detail = '../models/sphere_very_low_detail.3d'
 output = 'solar_system.xml'
 
 if len(argv) == 2:
