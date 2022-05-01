@@ -99,6 +99,18 @@ namespace interface {
         this->groups = Group::getGroups(groupElement);
     }
 
+    Perspective Scene::get_perspective() {
+        auto cam_pos = get_camera_pos();
+        auto cam_center = get_camera_center();
+        auto up = get_up();
+
+        return Perspective(
+                    get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+                    get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                    get<0>(up), get<1>(up), get<2>(up)
+                );
+    }
+
     void Scene::render_models(bool cam_mode) {
         for (auto group: groups) {
             group->render(cam_mode);
@@ -115,12 +127,14 @@ namespace interface {
         m_rotation_beta += angle_beta;
     }
 
-    void Scene::move_camera(float angle) {
+    Perspective Scene::move_camera(float angle) {
         get<0>(camera_center) += 0.1 * sin(alpha + angle);
         get<2>(camera_center) += 0.1 * cos(alpha + angle);
+
+        return get_perspective();
     }
 
-    void Scene::rotate_camera(float angle_alpha, float angle_beta) {
+    Perspective Scene::rotate_camera(float angle_alpha, float angle_beta) {
         alpha += angle_alpha;
         beta += angle_beta;
 
@@ -128,6 +142,8 @@ namespace interface {
             beta = 3.14;
         else if (beta < 0.01)
             beta = 0.01;
+
+        return get_perspective();
     }
 
     void Scene::change_scale(float val) {
@@ -136,10 +152,12 @@ namespace interface {
             scale = 0.1;
     }
 
-    void Scene::zoom(float zoom) {
+    Perspective Scene::zoom(float zoom) {
         radius += zoom;
         if (radius < 0.1)
             radius = 0.1;
+
+        return get_perspective();
     }
 
     tuple<float, float, float> Scene::get_position() {

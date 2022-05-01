@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include <vector>
+#include "interface/perspective.h"
 #include "../model/model.h"
 #include "utils/Group.h"
 
@@ -25,11 +26,11 @@ namespace interface {
             float fov = 60;
             /// Distance to the near plane. Objects closer than this plane will get discarded
             float near = 1;
-            /// Distance to the far plane. Objects farther than this plane whill get discarded
+            /// Distance to the far plane. Objects farther than this plane will get discarded
             float far = 1000;
             /// Camera horizontal rotation
             float alpha = 0;
-            // Camera vertical rotation
+            /// Camera vertical rotation
             float beta = 0;
             /// Camera radius to the @link camera_center @endlink
             float radius = 1;
@@ -58,6 +59,12 @@ namespace interface {
             explicit Scene(const char *path);
 
             /**
+             * @brief Returns a perspective object
+             * @return Perspective object calculated from spherical coordinates
+             */
+            Perspective get_perspective();
+
+            /**
                 @brief Renders all models of the scene
 
                 @param cam_mode bool telling if camera mode is active or not
@@ -83,15 +90,17 @@ namespace interface {
              * @brief Moves the camera in the vector direction
              *
              * @param angle Angle to move the camera in relation to its focused point
+             * @return The updated perspective
              */
-            void move_camera(float angle);
+            Perspective move_camera(float angle);
 
             /**
-                @brief Rotates the models in the specified angle
-
-                @param angle Angle in which to rotate the models
+             * @brief Rotates the models in the specified angle
+             *
+             * @param angle Angle in which to rotate the models
+             * @return The updated perspective
             */
-            void rotate_camera(float angle_alpha, float angle_beta);
+            Perspective rotate_camera(float angle_alpha, float angle_beta);
 
             /**
              * @brief Changes the model scale
@@ -104,8 +113,9 @@ namespace interface {
              * @brief Changes the camera zoom. In other words it adds the zoom value to the camera radius
              *
              * @param zoom Zoom amount
+             * @return The updated perspective
              */
-            void zoom(float zoom);
+            Perspective zoom(float zoom);
 
             /**
              * @brief Get the translation vector applied to all the models

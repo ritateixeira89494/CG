@@ -11,7 +11,10 @@
 #include "model/transforms/Translate.h"
 #include "interface/display.h"
 #include "interface/scene.h"
+#include "interface/view.h"
+#include "interface/perspective.h"
 #include "utils/coords.h"
+#include "utils/misc.h"
 #include <cmath>
 #include <iostream>
 
@@ -24,18 +27,32 @@ int mode = 0; // Specifies the current active mode in the modes array
 
 bool cam_mode = false;
 bool axis = true;
-bool multiview = true;
-bool polygon_mode = false;
+bool sel_mode = false;
 
 int width = 800;
 int height = 800;
-float aspect_ratio = width * 1.0f / height;
 
 string file_path;
 
 float x_per;
 float y_per;
 float z_per;
+int dclick = 0;
+
+int multiview = 1;
+
+// Normal perspective that the user can move.
+// It is initialized like this because the compiler complains if we don't initialize it.
+// This value is never used and is replaced right after the scene is loaded.
+Perspective normal = Perspective(1,1,1);
+
+// List of perspectives
+vector<Perspective *> perspectives = {
+        &normal
+};
+
+View *view = new View;
+View selected;
 
 void placeAxis() {
     glBegin(GL_LINES);
@@ -60,16 +77,45 @@ void change_size(int w, int h) {
 
     width = w;
     height = h;
-    aspect_ratio = w * 1.0f / h;
+}
 
+void update_perspectives_rec(vector<Perspective *> ps, View **v) {
+    auto split = split_vector<Perspective *>(ps);
+    vector<Perspective *> first = get<0>(split);
+    vector<Perspective *> second = get<1>(split);
 
-    glMatrixMode(GL_PROJECTION);
+    if(*v == nullptr) {
+        *v = new View();
+    } else {
+        (*v)->set_perspective(nullptr);
+    }
 
-    glLoadIdentity();
+    if(first.size() == 1){
+        if(second.size() == 0) {
+            *v = new View(first[0]);
+        } else {
+            View *left = new View(first[0]);
+            View *right = new View(second[0]);
 
-    gluPerspective(scene.get_fov(), aspect_ratio, scene.get_near(), scene.get_far());
+            (*v)->set_perspective(nullptr);
+            (*v)->set_left(left);
+            (*v)->set_right(right);
+            (*v)->set_div(0.50);
+        }
+    } else {
+        update_perspectives_rec(first, (*v)->get_left());
+        if(second.size() != 1) {
+            update_perspectives_rec(second, (*v)->get_right());
+        } else {
+            View *r = new View(second[0]);
+            (*v)->set_right(r);
+        }
+    }
+}
 
-    glMatrixMode(GL_MODELVIEW);
+void update_perspectives() {
+    vector<Perspective *> ps(perspectives.begin(), perspectives.begin() + multiview);
+    update_perspectives_rec(ps, &view);
 }
 
 void render_normal() {
@@ -98,92 +144,168 @@ void render_normal() {
 
 }
 
-void render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    if (multiview) {
-        glViewport(0, 0, width / 2, height / 2);
-
-        glLoadIdentity();
-        scene.set_radius(scene.get_radius() / 2);
-        tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
-        tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
-        tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
-        scene.set_radius(scene.get_radius() * 2);
-        gluLookAt(
-                get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-                get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-                get<0>(up), get<1>(up), get<2>(up)
-        );
-        render_normal();
-
-        glViewport(width / 2, 0, width / 2, height / 2);
-        glLoadIdentity();
-        gluLookAt(
-                0, y_per, 0.01,
-                0, 0, 0,
-                0, 1, 0
-        );
-        render_normal();
-
-        glViewport(0, height / 2, width / 2, height / 2);
-        glLoadIdentity();
-        gluLookAt(
-                x_per, 0, 0,
-                0, 0, 0,
-                0, 1, 0
-        );
-        render_normal();
-
-        glViewport(width / 2, height / 2, width / 2, height / 2);
-        glLoadIdentity();
-        gluLookAt(
-                0, 0, z_per,
-                0, 0, 0,
-                0, 1, 0
-        );
-        render_normal();
+void render_rec(View v, int start_x, int start_y, int w, int h, bool horizontal) {
+    if(v.get_perpective() == nullptr) {
+        int new_w = w;
+        int new_h = h;
+        if (horizontal) {
+            new_w = floor(w * v.get_div());
+            render_rec(**v.get_left(), start_x, start_y, new_w, new_h, !horizontal);
+            render_rec(**v.get_right(), start_x + new_w, start_y, w-new_w, new_h, !horizontal);
+        } else {
+            new_h = floor(h * v.get_div());
+            render_rec(**v.get_left(), start_x, start_y, new_w, new_h, !horizontal);
+            render_rec(**v.get_right(), start_x, start_y + new_h, new_w, h-new_h, !horizontal);
+        }
     } else {
-        glViewport(0, 0, width, height);
-        glLoadIdentity();
-        tuple<GLfloat, GLfloat, GLfloat> cam_pos = scene.get_camera_pos();
-        tuple<GLfloat, GLfloat, GLfloat> cam_center = scene.get_camera_center();
-        tuple<GLfloat, GLfloat, GLfloat> up = scene.get_up();
+        // Set black background for the view, but a little smaller
+        // so that we get a white border
+        glEnable(GL_SCISSOR_TEST);
+            glScissor(start_x+1,start_y+1,w-2,h-2);
+            glClearColor(0,0,0,1);
+            glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_SCISSOR_TEST);
 
+        // Get the view's aspect ratio
+        float ratio = (w-2.0f) / (h-2.0f);
+        // Set the perspective, to keep the proper aspect ratio
+        glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(scene.get_fov(), ratio, scene.get_near(), scene.get_far());
+        glMatrixMode(GL_MODELVIEW);
+
+        glViewport(start_x+1, start_y+1, w-2, h-2); // Set the viewport to the same size we set for the black background
+        glLoadIdentity();
+
+        // Set the camera according to the perspective
+        Perspective p = *v.get_perpective();
+        auto cam_pos = p.get_cam_pos();
+        auto cam_center = p.get_cam_center();
+        auto up = p.get_up();
         gluLookAt(
                 get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-                get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-                get<0>(up), get<1>(up), get<2>(up)
+                        get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                                get<0>(up), get<1>(up), get<2>(up)
         );
-        render_normal();
+        render_normal(); // Render the scene
     }
+}
 
+void render() {
+    glClearColor(1,1,1,1); // Set a white background in the entire window
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the bit buffer and the color buffer with the color set above
+
+    View *v;
+    // Render views
+    if(sel_mode) {
+        v = &selected;
+    } else {
+        v = view;
+    }
+    render_rec(*v, 0, 0, width, height, true);
+
+    // Display buffer
     glutSwapBuffers();
+}
+
+Perspective *get_selected_perspective(View *v, int start_x, int start_y, int w, int h, bool horizontal, int x, int y) {
+    int division_point;
+
+    if(v->get_perpective() == nullptr) {
+        if(horizontal) {
+            int new_w = w*v->get_div();
+            division_point = start_x + new_w;
+
+            if(x < division_point) {
+                return get_selected_perspective(*v->get_left(), start_x, start_y, new_w, h, !horizontal, x, y);
+            } else {
+                return get_selected_perspective(*v->get_right(), start_x + new_w, start_y, new_w, h, !horizontal, x, y);
+            }
+        } else {
+            int new_h = h*v->get_div();
+            division_point = start_y + new_h;
+
+            if(y < division_point) {
+                return get_selected_perspective(*v->get_left(), start_x, start_y, w, new_h, !horizontal, x, y);
+            } else {
+                return get_selected_perspective(*v->get_right(), start_x, start_y + new_h, w, new_h, !horizontal, x, y);
+            }
+        }
+    } else {
+        return v->get_perpective();
+    }
+}
+
+View *get_selected_view(View *v, int *start_x, int *start_y, int *w, int *h, bool *horizontal, int x, int y) {
+    if(v->get_perpective() == nullptr) {
+        if(*horizontal) {
+            float new_w = (*w) * v->get_div();
+            int division_point = *start_x + new_w;
+
+            if(
+                    division_point - 10 < x && x < division_point + 10
+                    && *start_y < y && y < *start_y + *h
+            ) {
+                return v;
+            } else if(x < division_point) {
+                *horizontal = !(*horizontal);
+                *w = new_w;
+                return get_selected_view(*v->get_left(), start_x, start_y, w, h, horizontal, x, y);
+            } else {
+                *horizontal = !(*horizontal);
+                *start_x = *start_x + new_w;
+                *w = *w - new_w;
+                return get_selected_view(*v->get_right(), start_x, start_y, w, h, horizontal, x, y);
+            }
+        } else {
+            float new_h = (*h) * v->get_div();
+            int division_point = *start_y + new_h;
+
+            if(
+                    division_point - 3 < y && y < division_point + 3
+                    && *start_x < x && x < *start_x + (*w)
+                    ) {
+                return v;
+            } else if(y < division_point) {
+                *horizontal = !(*horizontal);
+                *h = new_h;
+                return get_selected_view(*v->get_left(), start_x, start_y, w, h, horizontal, x, y);
+            } else {
+                *horizontal = !(*horizontal);
+                *start_y = *start_y + new_h;
+                *h = *h - new_h;
+                return get_selected_view(*v->get_right(), start_x, start_y, w, h, horizontal, x, y);
+            }
+        }
+    }
+    else {
+        return nullptr;
+    }
 }
 
 void parse_spec_key(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
             if (cam_mode)
-                scene.rotate_camera(-0.1, 0);
+                normal = scene.rotate_camera(-0.1, 0);
             else
                 scene.rotate_models(-0.1, 0);
             break;
         case GLUT_KEY_RIGHT:
             if (cam_mode)
-                scene.rotate_camera(0.1, 0);
+                normal = scene.rotate_camera(0.1, 0);
             else
                 scene.rotate_models(0.1, 0);
             break;
         case GLUT_KEY_UP:
             if (cam_mode)
-                scene.rotate_camera(0, -0.1);
+                normal = scene.rotate_camera(0, -0.1);
             else
                 scene.rotate_models(0, -0.1);
             break;
         case GLUT_KEY_DOWN:
             if (cam_mode)
-                scene.rotate_camera(0, 0.1);
+                normal = scene.rotate_camera(0, 0.1);
             else
                 scene.rotate_models(0, 0.1);
             break;
@@ -208,40 +330,40 @@ void parse_key(unsigned char key, int x, int y) {
         case 'A':
         case 'a':
             if (cam_mode)
-                scene.move_camera(-M_PI / 2);
+                normal = scene.move_camera(-M_PI / 2);
             else
-                scene.move_models(-M_PI / 2);
+                scene.move_models(-M_PI/2);
             break;
         case 'D':
         case 'd':
             if (cam_mode)
-                scene.move_camera(M_PI / 2);
+                normal = scene.move_camera(M_PI / 2);
             else
                 scene.move_models(M_PI / 2);
             break;
         case 'W':
         case 'w':
             if (cam_mode)
-                scene.move_camera(M_PI);
+                normal = scene.move_camera(M_PI);
             else
                 scene.move_models(M_PI);
             break;
         case 'S':
         case 's':
             if (cam_mode)
-                scene.move_camera(0);
+                normal = scene.move_camera(0);
             else
                 scene.move_models(0);
             break;
         case '+':
             if (cam_mode)
-                scene.zoom(-0.2);
+                normal = scene.zoom(-0.2);
             else
                 scene.change_scale(0.1);
             break;
         case '-':
             if (cam_mode)
-                scene.zoom(0.2);
+                normal = scene.zoom(0.2);
             else
                 scene.change_scale(-0.1);
             break;
@@ -264,10 +386,119 @@ void parse_key(unsigned char key, int x, int y) {
         case 'q':
             std::cout << "Goodbye!!" << std::endl;
             exit(0);
+        case '1':
+            if(!sel_mode) {
+                multiview = 1;
+                update_perspectives();
+            }
+            break;
+        case '2':
+            if(!sel_mode) {
+                multiview = 2;
+                update_perspectives();
+            }
+            break;
+        case '3':
+            if(!sel_mode) {
+                multiview = 3;
+                update_perspectives();
+            }
+            break;
+        case '4':
+            if(!sel_mode) {
+                multiview = 4;
+                update_perspectives();
+            }
+            break;
+        case '5':
+            if(!sel_mode) {
+                multiview = 5;
+                update_perspectives();
+            }
+            break;
+        case '6':
+            if(!sel_mode) {
+                multiview = 6;
+                update_perspectives();
+            }
+            break;
+        case '7':
+            if(!sel_mode) {
+                multiview = 7;
+                update_perspectives();
+            }
+            break;
         default:
             return;
     }
 
+    glutPostRedisplay();
+}
+
+int ticket = 0;
+
+void reset_dclick(int x) {
+    if (x == ticket)
+        dclick = 0;
+}
+
+// TODO: Improve code quality
+
+int start_x, start_y;
+bool tracking = false;
+View *ve;
+bool horizontal = true;
+int w = width;
+int h = height;
+
+void onMouseClick(int key, int state, int x, int y) {
+    if(key == GLUT_LEFT_BUTTON && state == GLUT_DOWN && multiview != 1) {
+        dclick++;
+        if(dclick == 1) {
+            glutTimerFunc(1000, reset_dclick, ticket++);
+        } else if(dclick == 2) {
+            sel_mode = !sel_mode;
+            if(sel_mode) {
+                Perspective *sel = get_selected_perspective(view, 0, 0, width, height, true, x, height-y);
+                selected.set_perspective(sel);
+            }
+            dclick = 0;
+        }
+    } else if(key == GLUT_RIGHT_BUTTON){
+        if(state == GLUT_DOWN) {
+            horizontal = true;
+            w = width;
+            h = height;
+            start_x = 0;
+            start_y = 0;
+            ve = get_selected_view(view, &start_x, &start_y, &w, &h, &horizontal, x,height-y);
+            if(ve != nullptr)
+                tracking = true;
+        } else if(state == GLUT_UP) {
+            tracking = false;
+        }
+
+    }
+    glutPostRedisplay();
+}
+
+void on_mouse_motion(int x, int y) {
+    int delta_x, delta_y;
+    if(!tracking)
+        return;
+
+    float lol = (float) (x - start_x) / (float) w;
+    float yay = (float) (height - y - start_y) / (float) h;
+
+    if(tracking) {
+        float new_div;
+        if(horizontal) {
+            new_div = lol;
+        } else {
+            new_div = yay;
+        }
+        ve->set_div(new_div);
+    }
     glutPostRedisplay();
 }
 
@@ -283,6 +514,8 @@ void run(int argc, char *argv[]) {
     glutReshapeFunc(change_size);
     glutKeyboardFunc(parse_key);
     glutSpecialFunc(parse_spec_key);
+    glutMouseFunc(onMouseClick);
+    glutMotionFunc(on_mouse_motion);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -295,10 +528,17 @@ void run(int argc, char *argv[]) {
     file_path.assign(argv[1]);
     scene = Scene(argv[1]);
 
-    auto per = scene.get_camera_pos();
-    x_per = get<0>(per) * 2;
-    y_per = get<1>(per) * 2;
-    z_per = get<2>(per) * 2;
+    normal = scene.get_perspective();
+    auto per = normal.get_cam_pos();
+
+    perspectives.emplace_back(new Perspective(get<0>(per) * 2, 0, 0));
+    perspectives.emplace_back(new Perspective(0, get<1>(per) * 2, 0.01));
+    perspectives.emplace_back(new Perspective(0,0, get<2>(per) * 2));
+    perspectives.emplace_back(new Perspective(-(get<0>(per) * 2), 0, 0));
+    perspectives.emplace_back(new Perspective(0, -(get<1>(per) * 2), 0.01));
+    perspectives.emplace_back(new Perspective(0,0, -(get<2>(per) * 2)));
+
+    update_perspectives();
 
     glutMainLoop();
 }
