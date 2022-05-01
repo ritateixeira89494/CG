@@ -23,7 +23,7 @@ namespace model {
     long Model::load_model(char *path) {
         FILE *f = fopen(path, "r");
         if (!f) {
-            cerr << "Invalid model path!" << endl;
+            cerr << "\"" << path << "\" path to model is invalid!" << endl;
             return -1;
         }
 

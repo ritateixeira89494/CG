@@ -1,4 +1,4 @@
-import xml.etree.cElementTree as Tree
+import xml.etree.ElementTree as Tree
 
 from typing import List, Tuple
 
@@ -6,9 +6,10 @@ world = Tree.Element('world')
 
 camera = Tree.SubElement(world, "camera")
 
-cubo = ['/home/banderas/CG2022/engine/test/xml/3d/boxPi.3d']
-sphere = ['/home/banderas/CG2022/engine/test/xml/3d/sphere1_10_10.3d']
-cone = ['/home/banderas/CG2022/engine/test/xml/3d/cone1_2_10_4.3d']
+square = ['../models/box.3d']
+sphere = ['../models/sphere.3d']
+cone = ['../models/cone.3d']
+
 
 # Camera stuff
 def get_camera_element(element):
@@ -73,7 +74,7 @@ transforms1 = [
 
 models1 = [
     # 'plane.3d',
-    cubo
+    square
 ]
 
 
@@ -99,7 +100,7 @@ def draw_layer(group, size):
         tr = []
 
         for _ in range(size):
-            m = cubo
+            m = square
 
             inner_group = get_group_element(inner_group, tr, m)
 
@@ -140,7 +141,7 @@ def draw_ovni(piramid_complete):
         ('scale', [('x', '5'), ('y', '5'), ('z', '5')]),
     ]
     get_group_element(world, sphereUpSize, sphere)
-    #Two cones part
+    # Two cones part
     transform_elem = Tree.SubElement(group_elem, 'transform')
     coneOvniScale = [
         ('scale', [('x', '11'), ('y', '3'), ('z', '11')])]
@@ -153,11 +154,11 @@ def draw_ovni(piramid_complete):
         ('translate', [('x', '0'), ('y', '-32'), ('z', '0')]),
         ('scale', [('x', '8'), ('y', '15'), ('z', '8')])]
     posCone = get_group_element(group_elem, coneOutOvniScale, cone)
-    #Cube part
+    # Cube part
     cuboTranslate = [('translate', [('x', '0'), ('y', '-40'), ('z', '0')]),
                      ('scale', [('x', '8'), ('y', '8'), ('z', '8')])
-        ]
-    get_group_element(group_elem, cuboTranslate, cubo)
+                     ]
+    get_group_element(group_elem, cuboTranslate, square)
 
 
 draw_4_pyramid(world, 10)

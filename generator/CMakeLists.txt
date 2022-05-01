@@ -19,7 +19,17 @@ file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 # Find all source files and add them to the executable
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_executable(${PROJECT_NAME} ${SOURCES})
+file(GLOB_RECURSE MAIN src/main.cpp)
+list(REMOVE_ITEM SOURCES ${MAIN})
+message(${SOURCES})
+
+add_executable(${PROJECT_NAME} ${SOURCES} src/main.cpp)
+
+# Tests
+add_executable(${PROJECT_NAME}_test_bezier ${SOURCES} test/src/main.cpp)
+add_executable(${PROJECT_NAME}_test_matrix ${SOURCES} test/src/matrix.cpp)
 
 #Link all libs
 target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME}_test_bezier PUBLIC include)
+target_include_directories(${PROJECT_NAME}_test_matrix PUBLIC include)

@@ -199,7 +199,7 @@ void parse_key(unsigned char key, int x, int y) {
             if(mode == 2)
                 mode = 0;
             else mode++;
-            
+
             glPolygonMode(GL_FRONT, modes[mode]);
             break;
 
