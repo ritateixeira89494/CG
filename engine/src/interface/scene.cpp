@@ -41,8 +41,6 @@ namespace interface {
         element->QueryAttribute("y", &y);
         element->QueryAttribute("z", &z);
 
-        cout << "Element coordinates: " << x << ' ' << y << ' ' << z << ' ' << endl;
-
         return new coordinates{
                 x,
                 y,
@@ -51,8 +49,7 @@ namespace interface {
 
     }
 
-    // TODO: Code this function
-    Scene::Scene(char *path) {
+    Scene::Scene(const char *path) {
         XMLDocument doc;
 
         if (doc.LoadFile(path) != tinyxml2::XML_SUCCESS) {
@@ -96,8 +93,6 @@ namespace interface {
             near = 1;
             far = 1000;
         }
-
-        cout << "Projection parameters: fov=" << fov << " near=" << near << " far=" << far << endl;
 
         // Groups
         XMLElement *groupElement = world->FirstChildElement("group");

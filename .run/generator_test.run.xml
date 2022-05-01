@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="generator_bezier" type="CMakeRunConfiguration" factoryName="Application" folderName="Generator" PROGRAM_PARAMS="bezier patches/teapot.patch 10 bezier.3d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/demos/models" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cg2022" TARGET_NAME="generator" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cg2022" RUN_TARGET_NAME="generator">
+  <configuration default="false" name="generator_teapot" type="CMakeRunConfiguration" factoryName="Application" folderName="Generator" PROGRAM_PARAMS="bezier patches/teapot.patch 10 teapot.3d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/demos/models" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cg2022" TARGET_NAME="generator" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cg2022" RUN_TARGET_NAME="generator">
     <envs>
       <env name="DEBUG_MODE" value="0" />
     </envs>

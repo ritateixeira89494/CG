@@ -43,8 +43,6 @@ Coord getCoordinatesFromElement(XMLElement *element) {
     element->QueryAttribute("y", &y);
     element->QueryAttribute("z", &z);
 
-    cout << "Element coordinates: " << x << ' ' << y << ' ' << z << ' ' << endl;
-
     return new coordinates{
             x,
             y,
@@ -57,33 +55,33 @@ Translate *Group::getTranslate(XMLElement *translateNode) {
     int time;
     auto coords = getCoordinatesFromElement(translateNode);
 
-    if(translateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
+    if (translateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
         return new Translate(coords->x, coords->y, coords->z);
     } else {
         bool align;
         translateNode->QueryBoolAttribute("align", &align);
         int segments;
-        if(translateNode->QueryIntAttribute("segments", &segments) != XML_SUCCESS) {
+        if (translateNode->QueryIntAttribute("segments", &segments) != XML_SUCCESS) {
             segments = 200;
         }
         bool draw;
-        if(translateNode->QueryBoolAttribute("draw", &draw) != XML_SUCCESS) {
+        if (translateNode->QueryBoolAttribute("draw", &draw) != XML_SUCCESS) {
             draw = false;
         }
         int offset;
-        if(translateNode->QueryIntAttribute("offset", &offset) != XML_SUCCESS) {
+        if (translateNode->QueryIntAttribute("offset", &offset) != XML_SUCCESS) {
             offset = 0;
         }
 
-        vector<tuple<float,float,float>> points = {};
+        vector<tuple<float, float, float>> points = {};
         XMLElement *lol = translateNode->FirstChildElement();
-        while(lol != nullptr) {
+        while (lol != nullptr) {
             float x, y, z;
             lol->QueryFloatAttribute("x", &x);
             lol->QueryFloatAttribute("y", &y);
             lol->QueryFloatAttribute("z", &z);
-            
-            auto point = make_tuple(x,y,z);
+
+            auto point = make_tuple(x, y, z);
 
             points.push_back(point);
             lol = lol->NextSiblingElement();
@@ -96,7 +94,7 @@ Rotate *Group::getRotate(XMLElement *rotateNode) {
     int time;
     auto coords = getCoordinatesFromElement(rotateNode);
 
-    if(rotateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
+    if (rotateNode->QueryIntAttribute("time", &time) != XML_SUCCESS) {
         float angle = rotateNode->FloatAttribute("angle");
         return new Rotate(angle, coords->x, coords->y, coords->z);
     } else {
@@ -113,7 +111,6 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
         // Creating the respective transforms
         Transform *t;
         const char *name = transform->Name(); // transform's name
-        cout << name << endl;
         if (strcmp(name, "translate") == 0) {
             t = getTranslate(transform);
         } else if (strcmp(name, "rotate") == 0) {
@@ -145,7 +142,6 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 
     while (model != nullptr) {
         const char *modelPath = model->Attribute("file");
-        cout << modelPath << endl;
 
         const XMLElement *texture = model->FirstChildElement("texture");
 
@@ -181,7 +177,6 @@ vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
     vector<Group *> currentSubGroups = {};
 
     while (firstGroup != nullptr) {
-        // cout << "Group read" << endl;
 
         auto g = new Group(firstGroup);
 
@@ -198,7 +193,7 @@ void Group::render(bool cam_mode) {
 
     for (const auto transform: transforms) {
         Translate *translate = dynamic_cast<Translate *>(transform);
-        if(translate != nullptr) {
+        if (translate != nullptr) {
             translate->draw_curve();
         }
         transform->apply();
