@@ -161,7 +161,7 @@ def draw_ovni(piramid_complete):
     get_group_element(group_elem, cuboTranslate, square)
 
 
-draw_4_pyramid(world, 10)
+draw_4_pyramid(world, 12)  # TODO: Bug with argument size with 13 or more!
 
 draw_ovni(world)
 tree = Tree.ElementTree(world)

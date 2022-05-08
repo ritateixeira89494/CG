@@ -134,22 +134,34 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
     // Reset output file
     remove(output_file);
 
-    fscanf(f, "%d", &n_patches);
+    if (fscanf(f, "%d", &n_patches) <= 0) {
+        cerr << "Invalid bezier patch file format!" << endl;
+        exit(1);
+    }
 
     for (int i = 0; i < n_patches; i++) {
         int *patch = (int *) malloc(sizeof(int) * 16);
-        fscanf(f, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", &patch[0], &patch[1], &patch[2],
-               &patch[3], &patch[4],
-               &patch[5], &patch[6], &patch[7], &patch[8], &patch[9], &patch[10], &patch[11], &patch[12], &patch[13],
-               &patch[14], &patch[15]);
+        if (fscanf(f, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", &patch[0], &patch[1], &patch[2],
+                   &patch[3], &patch[4], &patch[5], &patch[6], &patch[7], &patch[8], &patch[9], &patch[10], &patch[11],
+                   &patch[12], &patch[13], &patch[14], &patch[15])
+            <= 0) {
+            cerr << "Invalid bezier patch file format!" << endl;
+            exit(1);
+        }
         patches.push_back(patch);
     }
 
-    fscanf(f, "%d", &n_cont_points);
+    if (fscanf(f, "%d", &n_cont_points) <= 0) {
+        cerr << "Invalid bezier patch file format!" << endl;
+        exit(1);
+    }
 
     for (int i = 0; i < n_cont_points; i++) {
         auto xyz = new tuple<float, float, float>;
-        fscanf(f, "%f, %f, %f", &(get<0>(*xyz)), &(get<1>(*xyz)), &(get<2>(*xyz)));
+        if (fscanf(f, "%f, %f, %f", &(get<0>(*xyz)), &(get<1>(*xyz)), &(get<2>(*xyz))) <= 0) {
+            cerr << "Invalid bezier patch file format!" << endl;
+            exit(1);
+        }
         control_points.push_back(xyz);
     }
 
@@ -168,7 +180,7 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
     }
 
     // Free everything
-    for (auto point: control_points) free(point);
+    for (auto point: control_points) delete (point);
     for (auto patch: patches) free(patch);
 }
 

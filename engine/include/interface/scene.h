@@ -2,14 +2,16 @@
 #define __SCENE_H__
 
 #include <vector>
+#include <map>
 #include "interface/perspective.h"
-#include "../model/model.h"
+#include "model/model.h"
 #include "utils/Group.h"
 
 using namespace model;
 
 namespace interface {
     class Scene {
+
             /**
              * @brief Camera center
              *

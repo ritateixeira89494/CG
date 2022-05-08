@@ -5,6 +5,7 @@
 #include "model/LightingColors.h"
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 using namespace triangle;
@@ -13,12 +14,15 @@ namespace model {
     class Model {
         private:
 
-/// Number of triangles in the model
+            /**
+             * Map to store the ids of the vbo that is going to be storing the model in the GPU.
+             */
+            static map<string, pair<unsigned int, long>> model_ids;
+
+            /// Number of triangles in the model
             long n_triangles;
             /// List of triangles
-            vector<float> triangles;
-
-            unsigned int vbo_buffer[1] = {0};
+            unsigned int vbo_buffer = 0;
 
             string texture_path;
 

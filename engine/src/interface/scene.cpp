@@ -32,7 +32,6 @@ namespace interface {
     } *Coord;
 
     Coord getCoordinatesFromElement(XMLElement *element) {
-
         float x;
         float y;
         float z;
@@ -105,10 +104,10 @@ namespace interface {
         auto up = get_up();
 
         return Perspective(
-                    get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
-                    get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
-                    get<0>(up), get<1>(up), get<2>(up)
-                );
+                get<0>(cam_pos), get<1>(cam_pos), get<2>(cam_pos),
+                get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
+                get<0>(up), get<1>(up), get<2>(up)
+        );
     }
 
     void Scene::render_models(bool cam_mode) {
@@ -128,8 +127,8 @@ namespace interface {
     }
 
     Perspective Scene::move_camera(float angle) {
-        get<0>(camera_center) += 0.1 * sin(alpha + angle);
-        get<2>(camera_center) += 0.1 * cos(alpha + angle);
+        get<0>(camera_center) += 0.1f * sin(alpha + angle);
+        get<2>(camera_center) += 0.1f * cos(alpha + angle);
 
         return get_perspective();
     }
