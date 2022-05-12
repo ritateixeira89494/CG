@@ -158,9 +158,12 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
             m = new Model(modelPath);
         }
 
-        const XMLElement *lightingColorElement = model->FirstChildElement(
+        XMLElement *lightingColorElement = model->FirstChildElement(
                 "color"); // TODO: Finish implementing the color attributes
+        LightingColors colors = getColor(lightingColorElement);
 
+
+        m->set_lighting_colors(colors);
         currentModels.push_back(m);
         model = model->NextSiblingElement();
     }
@@ -168,9 +171,61 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 }
 
 LightingColors Group::getColor(XMLElement *color) {
-    if (!color) return {};
+    if (!color) return *new LightingColors();
 
-    return *new LightingColors();
+    auto diffuse = color->FirstChildElement("diffuse");
+    auto ambient = color->FirstChildElement("ambient");
+    auto specular = color->FirstChildElement("specular");
+    auto emissive = color->FirstChildElement("emissive");
+    auto shininess = color->FirstChildElement("shininess");
+    
+    auto diff_tup = make_tuple(1,1,1);
+    auto amb_tup = make_tuple(1,1,1);
+    auto spec_tup = make_tuple(1,1,1);
+    auto emiss_tup = make_tuple(1,1,1);
+    int shine = 0;
+
+    if(diffuse) {
+        int r = 0,g = 0,b = 0;
+        diffuse->QueryIntAttribute("R",&r);
+        diffuse->QueryIntAttribute("G",&g);
+        diffuse->QueryIntAttribute("B",&b);
+
+        diff_tup = make_tuple(r,g,b);
+    }
+
+    if(ambient) {
+        int r = 0,g = 0,b = 0;
+        ambient->QueryIntAttribute("R",&r);
+        ambient->QueryIntAttribute("G",&g);
+        ambient->QueryIntAttribute("B",&b);
+
+        amb_tup = make_tuple(r,g,b);
+    }
+
+    if(specular) {
+        int r = 0,g = 0,b = 0;
+        specular->QueryIntAttribute("R",&r);
+        specular->QueryIntAttribute("G",&g);
+        specular->QueryIntAttribute("B",&b);
+
+        spec_tup = make_tuple(r,g,b);
+    }
+
+    if(emissive) {
+        int r = 0,g = 0,b = 0;
+        emissive->QueryIntAttribute("R",&r);
+        emissive->QueryIntAttribute("G",&g);
+        emissive->QueryIntAttribute("B",&b);
+
+        emiss_tup = make_tuple(r,g,b);
+    }
+    
+    if(shininess) {
+        shininess->QueryIntAttribute("value",&shine);
+    }
+
+    return *new LightingColors(diff_tup, amb_tup, spec_tup, emiss_tup, shine); 
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {

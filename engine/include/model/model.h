@@ -79,6 +79,12 @@ namespace model {
              */
             vector<float> get_triangles();
 
+            /**
+             * @brief Set the Color of the object
+             * 
+             * @param lc LightingColors object to set
+             */
+            void set_lighting_colors(LightingColors lc);
 
             /**
              * @brief Renders a model.

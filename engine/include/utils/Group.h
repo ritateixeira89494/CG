@@ -73,7 +73,7 @@ class Group {
          */
         static vector<Group *> getSubGroups(XMLElement *firstGroup);
 
-        LightingColors getColor(XMLElement *color);
+        static LightingColors getColor(XMLElement *color);
 
     public:
 

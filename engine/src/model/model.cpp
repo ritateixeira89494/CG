@@ -19,6 +19,10 @@ using namespace std;
 namespace model {
     map<string, pair<unsigned int, long>> Model::model_ids = {}; // Path of the model -> (vbo_id, n_triangles)
 
+    void Model::set_lighting_colors(LightingColors colors) {
+        lightingColors = colors;
+    }
+
     long Model::get_n_triangles() const {
         return n_triangles;
     }
