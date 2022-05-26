@@ -1,4 +1,3 @@
-#include "lighting/Directional.h"
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -12,6 +11,8 @@
 #include "interface/scene.h"
 #include "tinyxml2/tinyxml2.h"
 #include "utils/coords.h"
+#include "lighting/Directional.h"
+#include "lighting/Point.h"
 
 using namespace tinyxml2;
 
@@ -62,8 +63,14 @@ namespace interface {
 
                 Directional *l = new Directional(dirX, dirY, dirZ);
                 light_list.push_back((Light *) l);
-            } 
-            else if(strcmp(type, "point") == 0) {}
+            } else if(strcmp(type, "point") == 0) {
+                float posX, posY, posZ;
+                light->QueryFloatAttribute("posX", &posX);
+                light->QueryFloatAttribute("posY", &posY);
+                light->QueryFloatAttribute("posZ", &posZ);
+                Point *p = new Point(posX,posY,posZ);
+                light_list.push_back((Light *) p);
+            }
             else if(strcmp(type, "spotlight") == 0) {}
             light = light->NextSiblingElement();
         }
