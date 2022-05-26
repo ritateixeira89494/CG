@@ -1,5 +1,5 @@
-#ifndef CG2022_LIGHTINGCOLORS_H
-#define CG2022_LIGHTINGCOLORS_H
+#ifndef CG2022_MATERIALCOLORS_H
+#define CG2022_MATERIALCOLORS_H
 
 #include <tuple>
 
@@ -28,4 +28,4 @@ class MaterialColors {
 };
 
 
-#endif //CG2022_LIGHTINGCOLORS_H
+#endif //CG2022_MATERIALCOLORS_H
