@@ -5,9 +5,12 @@
 #include <map>
 #include "interface/perspective.h"
 #include "model/model.h"
+#include "tinyxml2/tinyxml2.h"
 #include "utils/Group.h"
+#include "lighting/Light.h"
 
 using namespace model;
+using namespace lighting;
 
 namespace interface {
     class Scene {
@@ -36,6 +39,8 @@ namespace interface {
             float beta = 0;
             /// Camera radius to the @link camera_center @endlink
             float radius = 1;
+            /// List of lights
+            vector<Light *> light_list;
             /// List of models loaded into the scene
             vector<Group *> groups;
             /// Translation vector applied to all models
@@ -61,10 +66,22 @@ namespace interface {
             explicit Scene(const char *path);
 
             /**
+             * Loads the lights in the XML file
+             *
+             * @param lights XMLELement to read the lights from
+             */ 
+            void load_lights(XMLElement *lights);
+
+            /**
              * @brief Returns a perspective object
              * @return Perspective object calculated from spherical coordinates
              */
             Perspective get_perspective();
+
+            /**
+             * @brief Places all the loaded lights into the scene
+             */
+            void place_lights();
 
             /**
                 @brief Renders all models of the scene

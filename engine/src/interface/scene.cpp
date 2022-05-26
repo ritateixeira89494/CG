@@ -1,3 +1,4 @@
+#include "lighting/Directional.h"
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -48,6 +49,26 @@ namespace interface {
 
     }
 
+    void Scene::load_lights(XMLElement *lights) {
+        XMLElement *light = lights->FirstChildElement("light");
+        while(light != nullptr) {
+            const char *type = light->Attribute("type");
+
+            if(strcmp(type,"directional") == 0) {
+                float dirX, dirY, dirZ;
+                light->QueryFloatAttribute("dirX", &dirX);
+                light->QueryFloatAttribute("dirY", &dirY);
+                light->QueryFloatAttribute("dirZ", &dirZ);
+
+                Directional *l = new Directional(dirX, dirY, dirZ);
+                light_list.push_back((Light *) l);
+            } 
+            else if(strcmp(type, "point") == 0) {}
+            else if(strcmp(type, "spotlight") == 0) {}
+            light = light->NextSiblingElement();
+        }
+    }
+
     Scene::Scene(const char *path) {
         XMLDocument doc;
 
@@ -93,6 +114,9 @@ namespace interface {
             far = 1000;
         }
 
+        XMLElement *lights = world->FirstChildElement("lights");
+        load_lights(lights);
+
         // Groups
         XMLElement *groupElement = world->FirstChildElement("group");
         this->groups = Group::getGroups(groupElement);
@@ -108,6 +132,12 @@ namespace interface {
                 get<0>(cam_center), get<1>(cam_center), get<2>(cam_center),
                 get<0>(up), get<1>(up), get<2>(up)
         );
+    }
+
+    void Scene::place_lights() {
+        for(Light *l: light_list) {
+            l->place();
+        }
     }
 
     void Scene::render_models(bool cam_mode) {

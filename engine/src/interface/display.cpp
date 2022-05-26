@@ -22,7 +22,7 @@ using namespace interface;
 
 Scene scene;
 
-GLuint modes[3] = {GL_LINE, GL_FILL, GL_POINT};
+GLuint modes[3] = {GL_FILL, GL_LINE,  GL_POINT};
 int mode = 0; // Specifies the current active mode in the modes array
 
 bool cam_mode = false;
@@ -34,9 +34,6 @@ int height = 800;
 
 string file_path;
 
-float x_per;
-float y_per;
-float z_per;
 int dclick = 0;
 
 int multiview = 1;
@@ -119,6 +116,8 @@ void update_perspectives() {
 }
 
 void render_normal() {
+    scene.place_lights();
+
     if (axis)
         placeAxis();
 
@@ -321,11 +320,13 @@ void parse_key(unsigned char key, int x, int y) {
         // Switch between fill mode and line mode
         case 'P':
         case 'p':
-            if (mode == 2)
-                mode = 0;
-            else mode++;
+            if(!cam_mode) {
+                if (mode == 2)
+                    mode = 0;
+                else mode++;
 
-            glPolygonMode(GL_FRONT, modes[mode]);
+                glPolygonMode(GL_FRONT, modes[mode]);
+            }
             break;
 
         case 'A':
@@ -370,6 +371,13 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case '\r':
             cam_mode = !cam_mode;
+            if(cam_mode) {
+                glDisable(GL_LIGHTING);
+                glPolygonMode(GL_FRONT, GL_LINE);
+            } else {
+                glEnable(GL_LIGHTING);
+                glPolygonMode(GL_FRONT, modes[mode]);
+            }
             break;
         case 'V':
         case 'v':
@@ -503,7 +511,7 @@ void on_mouse_motion(int x, int y) {
     glutPostRedisplay();
 }
 
-void run(int argc, char *argv[]) {
+void set_gl_settings(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
@@ -520,11 +528,17 @@ void run(int argc, char *argv[]) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glPolygonMode(GL_FRONT, GL_LINE);
-
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glPolygonMode(GL_FRONT, modes[mode]);
 
     glewInit();
+}
+
+void run(int argc, char *argv[]) {
+    set_gl_settings(argc, argv);
 
     file_path.assign(argv[1]);
     scene = Scene(argv[1]);

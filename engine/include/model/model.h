@@ -13,16 +13,19 @@ using namespace triangle;
 namespace model {
     class Model {
         private:
-
             /**
              * Map to store the ids of the vbo that is going to be storing the model in the GPU.
              */
             static map<string, pair<unsigned int, long>> model_ids;
+            /**
+             * Map to store the ids of the vbo that is going to be storing the normals in the GPU.
+             */
+            static map<string, pair<unsigned int, long>> normal_ids;
 
             /// Number of triangles in the model
             long n_triangles;
             /// List of triangles
-            unsigned int vbo_buffer = 0;
+            unsigned int vbo_buffer[2] = { 0,0 };
 
             string texture_path;
 
@@ -72,6 +75,13 @@ namespace model {
              * @return Number of triangles loaded
              */
             long load_model(char *path); // Loads the model from a ".3d" file
+            /**
+             * @brief Loads a model from a ".normal" file
+             *
+             * @param path File path
+             * @return Number of normals loaded
+             */
+            long load_normal(char *path); // Loads the model from a ".normal" file
             /**
              * @brief Get the triangle list
              *
