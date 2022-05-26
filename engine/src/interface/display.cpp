@@ -320,15 +320,12 @@ void parse_key(unsigned char key, int x, int y) {
         // Switch between fill mode and line mode
         case 'P':
         case 'p':
-            if(!cam_mode) {
-                if (mode == 2)
-                    mode = 0;
-                else mode++;
+            if (mode == 2)
+                mode = 0;
+            else mode++;
 
-                glPolygonMode(GL_FRONT, modes[mode]);
-            }
+            glPolygonMode(GL_FRONT, modes[mode]);
             break;
-
         case 'A':
         case 'a':
             if (cam_mode)
@@ -371,13 +368,6 @@ void parse_key(unsigned char key, int x, int y) {
             break;
         case '\r':
             cam_mode = !cam_mode;
-            if(cam_mode) {
-                glDisable(GL_LIGHTING);
-                glPolygonMode(GL_FRONT, GL_LINE);
-            } else {
-                glEnable(GL_LIGHTING);
-                glPolygonMode(GL_FRONT, modes[mode]);
-            }
             break;
         case 'V':
         case 'v':
