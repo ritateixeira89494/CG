@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 
+#include "model/MaterialColors.h"
 #include "model/model.h"
 #include "model/triangle.h"
 
@@ -20,8 +21,8 @@ namespace model {
     map<string, pair<unsigned int, long>> Model::model_ids = {}; // Path of the model -> (vbo_id, n_triangles)
     map<string, pair<unsigned int, long>> Model::normal_ids = {};
 
-    void Model::set_lighting_colors(LightingColors colors) {
-        lightingColors = colors;
+    void Model::set_material_colors(MaterialColors colors) {
+        materialColors = colors;
     }
 
     long Model::get_n_triangles() const {
@@ -133,13 +134,13 @@ namespace model {
 
     Model::Model() {
         n_triangles = 0;
-        lightingColors = LightingColors();
+        materialColors = MaterialColors();
         texture_path = "";
     }
 
     Model::Model(const char *path) {
         n_triangles = 0;
-        lightingColors = LightingColors();
+        materialColors = MaterialColors();
         texture_path = "";
         color = {1.0, 1.0, 1.0};
         load_model(const_cast<char *>(path));
@@ -148,7 +149,7 @@ namespace model {
 
     Model::Model(const char *path, tuple<float, float, float> color) {
         n_triangles = 0;
-        lightingColors = LightingColors();
+        materialColors = MaterialColors();
         texture_path = "";
         this->color = color;
         load_model(const_cast<char *>(path));
@@ -159,21 +160,7 @@ namespace model {
         if (!cam_mode)
             glColor3f(get<0>(color), get<1>(color), get<2>(color));
 
-        auto dif_tup = lightingColors.diffuse;
-        auto amb_tup = lightingColors.ambient;
-        auto spec_tup = lightingColors.specular;
-        auto emiss_tup = lightingColors.emissive;
-        auto shininess = lightingColors.shininess; 
-
-        float diffuse[4] = { get<0>(dif_tup)/256, get<1>(dif_tup)/256, get<2>(dif_tup)/256, 1 };
-        float ambient[4] = { get<0>(amb_tup)/256, get<1>(amb_tup)/256, get<2>(amb_tup)/256, 1 };
-        float specular[4] = { get<0>(spec_tup)/256, get<1>(spec_tup)/256, get<2>(spec_tup)/256, 1 };
-        float emissive[4] = { get<0>(emiss_tup)/256, get<1>(emiss_tup)/256, get<2>(emiss_tup)/256, 1 };
-
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-        glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+        materialColors.apply_color();
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[0]);
         glVertexPointer(3, GL_FLOAT, 0, nullptr);
@@ -182,12 +169,11 @@ namespace model {
         glNormalPointer(GL_FLOAT, 0, 0);
         
         glDrawArrays(GL_TRIANGLES, 0, (int) n_triangles);
-
     }
 
-    Model::Model(const char *path, const string &texture_path, const LightingColors lightingColor) : Model(path) {
+    Model::Model(const char *path, const string &texture_path, const MaterialColors materialColor) : Model(path) {
         this->texture_path = texture_path;
-        this->lightingColors = lightingColor;
+        this->materialColors = materialColor;
     }
 
 }

@@ -1,10 +1,12 @@
 #include "utils/Group.h"
+#include "model/MaterialColors.h"
 #include "model/transforms/Translate.h"
 #include <vector>
 #include <iostream>
 #include "GL/glut.h"
 #include "model/transforms/Rotate.h"
 #include "model/transforms/Scale.h"
+#include "tinyxml2/tinyxml2.h"
 
 //TODO Change this
 #include <stdlib.h>
@@ -132,7 +134,6 @@ vector<Transform *> Group::getTransforms(XMLNode *transformsNode) {
     return currentTransforms;
 }
 
-
 vector<Model *> Group::getModels(XMLNode *modelsNode) {
     vector<Model *> currentModels = {};
 
@@ -158,74 +159,60 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
             m = new Model(modelPath);
         }
 
-        XMLElement *lightingColorElement = model->FirstChildElement(
-                "color"); // TODO: Finish implementing the color attributes
-        LightingColors colors = getColor(lightingColorElement);
+        XMLElement *color_elem = model->FirstChildElement("color");
+        MaterialColors colors = getColor(color_elem);
 
-
-        m->set_lighting_colors(colors);
+        m->set_material_colors(colors);
         currentModels.push_back(m);
         model = model->NextSiblingElement();
     }
     return currentModels;
 }
 
-LightingColors Group::getColor(XMLElement *color) {
-    if (!color) return *new LightingColors();
+MaterialColors Group::getColor(XMLElement *color_elem) {
+    if (!color_elem) return MaterialColors();
 
-    auto diffuse = color->FirstChildElement("diffuse");
-    auto ambient = color->FirstChildElement("ambient");
-    auto specular = color->FirstChildElement("specular");
-    auto emissive = color->FirstChildElement("emissive");
-    auto shininess = color->FirstChildElement("shininess");
+    auto diff = color_elem->FirstChildElement("diffuse");
+    auto amb = color_elem->FirstChildElement("ambient");
+    auto spec = color_elem->FirstChildElement("specular");
+    auto emiss = color_elem->FirstChildElement("emissive");
+    auto shine = color_elem->FirstChildElement("shininess");
     
-    auto diff_tup = make_tuple(1,1,1);
-    auto amb_tup = make_tuple(1,1,1);
-    auto spec_tup = make_tuple(1,1,1);
-    auto emiss_tup = make_tuple(1,1,1);
-    int shine = 0;
+    int diffuse[4] = { 255, 255, 255, 255 };
+    int ambient[4] = { 1, 1, 1, 1 };
+    int specular[4] = { 255, 255, 255, 255 };
+    int emissive[4] = { 1, 1, 1, 1 };
+    int shininess = 128;
 
-    if(diffuse) {
-        int r = 0,g = 0,b = 0;
-        diffuse->QueryIntAttribute("R",&r);
-        diffuse->QueryIntAttribute("G",&g);
-        diffuse->QueryIntAttribute("B",&b);
-
-        diff_tup = make_tuple(r,g,b);
+    if(diff) {
+        diff->QueryIntAttribute("R", &(diffuse[0]));
+        diff->QueryIntAttribute("G", &(diffuse[1]));
+        diff->QueryIntAttribute("B", &(diffuse[2]));
     }
 
-    if(ambient) {
-        int r = 0,g = 0,b = 0;
-        ambient->QueryIntAttribute("R",&r);
-        ambient->QueryIntAttribute("G",&g);
-        ambient->QueryIntAttribute("B",&b);
-
-        amb_tup = make_tuple(r,g,b);
+    if(amb) {
+        amb->QueryIntAttribute("R", &(ambient[0]));
+        amb->QueryIntAttribute("G", &(ambient[1]));
+        amb->QueryIntAttribute("B", &(ambient[2]));
     }
 
-    if(specular) {
-        int r = 0,g = 0,b = 0;
-        specular->QueryIntAttribute("R",&r);
-        specular->QueryIntAttribute("G",&g);
-        specular->QueryIntAttribute("B",&b);
-
-        spec_tup = make_tuple(r,g,b);
+    if(spec) {
+        spec->QueryIntAttribute("R", &(specular[0]));
+        spec->QueryIntAttribute("G", &(specular[1]));
+        spec->QueryIntAttribute("B", &(specular[2]));
     }
 
-    if(emissive) {
-        int r = 0,g = 0,b = 0;
-        emissive->QueryIntAttribute("R",&r);
-        emissive->QueryIntAttribute("G",&g);
-        emissive->QueryIntAttribute("B",&b);
-
-        emiss_tup = make_tuple(r,g,b);
+    if(emiss) {
+        emiss->QueryIntAttribute("R", &(emissive[0]));
+        emiss->QueryIntAttribute("G", &(emissive[1]));
+        emiss->QueryIntAttribute("B", &(emissive[2]));
     }
     
-    if(shininess) {
-        shininess->QueryIntAttribute("value",&shine);
+    if(shine) {
+        shine->QueryIntAttribute("value",&shininess);
     }
 
-    return *new LightingColors(diff_tup, amb_tup, spec_tup, emiss_tup, shine); 
+    return MaterialColors(diffuse, ambient, specular, emissive, shininess); 
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {

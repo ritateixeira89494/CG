@@ -2,7 +2,7 @@
 #define __MODEL_H__
 
 #include "triangle.h"
-#include "model/LightingColors.h"
+#include "model/MaterialColors.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -29,7 +29,7 @@ namespace model {
 
             string texture_path;
 
-            LightingColors lightingColors;
+            MaterialColors materialColors;
 
             tuple<float, float, float> color;
 
@@ -59,7 +59,7 @@ namespace model {
             /*
              * // TODO: Document this constructor
              */
-            Model(const char *path, const string &texture_path, LightingColors color);
+            Model(const char *path, const string &texture_path, MaterialColors color);
 
             /**
              * @brief Get the number of triangles
@@ -92,9 +92,9 @@ namespace model {
             /**
              * @brief Set the Color of the object
              * 
-             * @param lc LightingColors object to set
+             * @param lc MaterialColors object to set
              */
-            void set_lighting_colors(LightingColors lc);
+            void set_material_colors(MaterialColors lc);
 
             /**
              * @brief Renders a model.

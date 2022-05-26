@@ -2,6 +2,7 @@
 #define CG2022_GROUP_H
 
 #include <vector>
+#include "model/MaterialColors.h"
 #include "tinyxml2/tinyxml2.h"
 #include "model/model.h"
 #include "model/transforms/Transform.h"
@@ -58,6 +59,14 @@ class Group {
         static vector<Transform *> getTransforms(XMLNode *transformsNode);
 
         /**
+         * @brief Gets the model's color.
+         *
+         * @param color_elem The color element
+         * @return MaterialColors specified
+         */
+        static MaterialColors getColor(XMLElement *color_elem);
+
+        /**
          * @brief Gets the models of the models node.
          *
          * @param modelsNode the models node.
@@ -72,8 +81,6 @@ class Group {
          * @return vector with all groups of the element.
          */
         static vector<Group *> getSubGroups(XMLElement *firstGroup);
-
-        static LightingColors getColor(XMLElement *color);
 
     public:
 
