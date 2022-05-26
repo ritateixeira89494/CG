@@ -12,6 +12,7 @@
 #include "tinyxml2/tinyxml2.h"
 #include "utils/coords.h"
 #include "lighting/Directional.h"
+#include "lighting/Spotlight.h"
 #include "lighting/Point.h"
 
 using namespace tinyxml2;
@@ -68,10 +69,30 @@ namespace interface {
                 light->QueryFloatAttribute("posX", &posX);
                 light->QueryFloatAttribute("posY", &posY);
                 light->QueryFloatAttribute("posZ", &posZ);
+
                 Point *p = new Point(posX,posY,posZ);
                 light_list.push_back((Light *) p);
+            } else if(strcmp(type, "spotlight") == 0) {
+                float dirX, dirY, dirZ;
+                light->QueryFloatAttribute("dirX", &dirX);
+                light->QueryFloatAttribute("dirY", &dirY);
+                light->QueryFloatAttribute("dirZ", &dirZ);
+
+                float posX, posY, posZ;
+                light->QueryFloatAttribute("posX", &posX);
+                light->QueryFloatAttribute("posY", &posY);
+                light->QueryFloatAttribute("posZ", &posZ);
+
+                float cutoff;
+                light->QueryFloatAttribute("cutoff", &cutoff);
+
+                Spotlight *s = new Spotlight(
+                        posX,posY,posZ,
+                        dirX,dirY,dirZ,
+                        cutoff
+                );
+                light_list.push_back((Light *) s);
             }
-            else if(strcmp(type, "spotlight") == 0) {}
             light = light->NextSiblingElement();
         }
     }
