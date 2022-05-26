@@ -4,6 +4,7 @@
 
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <GL/gl.h>
 
 #endif
 
@@ -54,15 +55,24 @@ View selected;
 void placeAxis() {
     glBegin(GL_LINES);
     // X Axis in red
-    glColor3f(1.0f, 0.0f, 0.0f);
+    float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, red);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, red);
     glVertex3f(-1000.0f, 0.0f, 0.0f);
     glVertex3f(1000.0f, 0.0f, 0.0f);
     // Y Axis in Green
-    glColor3f(0.0f, 1.0f, 0.0f);
+    float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, green);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, green);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, green);
     glVertex3f(0.0f, -1000.0f, 0.0f);
     glVertex3f(0.0f, 1000.0f, 0.0f);
     // Z Axis in Blue
-    glColor3f(0.0f, 0.0f, 1.0f);
+    float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f};
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, blue);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blue);
     glVertex3f(0.0f, 0.0f, -1000.0f);
     glVertex3f(0.0f, 0.0f, 1000.0f);
     glEnd();
