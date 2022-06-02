@@ -1,3 +1,4 @@
+#include <tuple>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -38,7 +39,7 @@ void drawSquareUpT(float xOr, float yOr, float edge, float height, ofstream *fil
     Also, we start by calculating each point, and then we write them to files.
 */
 void
-drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxBeta, float radius, ofstream *file) {
+drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxBeta, float radius, ofstream *file, ofstream *norm_file) {
     //Point 1
     float x1 = radius * cos(currentBeta) * sin(currentalfa);
     float y1 = radius * sin(currentBeta);
@@ -84,13 +85,24 @@ drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxB
     }
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
+
+    
+    tuple<float, float, float> p1_norm = make_tuple(get<0>(p1)/radius,get<1>(p1)/radius,get<2>(p1)/radius);
+    tuple<float, float, float> p2_norm = make_tuple(get<0>(p2)/radius,get<1>(p2)/radius,get<2>(p2)/radius);
+    tuple<float, float, float> p3_norm = make_tuple(get<0>(p3)/radius,get<1>(p3)/radius,get<2>(p3)/radius);
+    tuple<float, float, float> p4_norm = make_tuple(get<0>(p4)/radius,get<1>(p4)/radius,get<2>(p4)/radius);
+    tuple<float, float, float> p5_norm = make_tuple(get<0>(p5)/radius,get<1>(p5)/radius,get<2>(p5)/radius);
+    tuple<float, float, float> p6_norm = make_tuple(get<0>(p6)/radius,get<1>(p6)/radius,get<2>(p6)/radius);
+    
+    write_triangle(p1_norm, p2_norm, p3_norm, norm_file);
+    write_triangle(p4_norm, p5_norm, p6_norm, norm_file);
 }
 
 /*!
     In this function we describe all points, in both alfa and beta coordinates.
 	Also, we divide each level of the sphere in parallelograms.
 */
-void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
+void drawTopSphere(int radius, int slices, int stacks, ofstream *file, ofstream *norm_file) {
     //Alfa = xOz plano
     float incrementAlfa = 2 * M_PI / slices;
     float currentalfa;
@@ -106,8 +118,8 @@ void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
          currentBeta < (M_PI / 2); currentBeta += incrementBeta, proxBeta += incrementBeta) {
         for (currentalfa = 0, proxAlfa = incrementAlfa;
              currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
-            drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file);
-            drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file);
+            drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file, norm_file);
+            drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file, norm_file);
         }
     }
 }
@@ -119,8 +131,11 @@ void drawSphere(int radius, int slices, int stacks, string filename) {
     ofstream file;
     file.open(filename);
 
+    string normalPath = replace_extension(filename, "normal");
+    ofstream normalFile;
+    normalFile.open(normalPath);
 
-    drawTopSphere(radius, slices, stacks / 2, &file);
+    drawTopSphere(radius, slices, stacks / 2, &file, &normalFile);
 
     file.close();
 }

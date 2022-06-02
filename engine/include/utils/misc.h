@@ -4,6 +4,7 @@
 #include <tuple>
 #include <vector>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -31,5 +32,7 @@ tuple<vector<T>,vector<T>> split_vector(vector<T> original) {
 
     return make_tuple(first, second);
 }
+
+string replace_extension(string filepath, string newExt);
 
 #endif //__MISC_H__

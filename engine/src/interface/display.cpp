@@ -530,6 +530,7 @@ void set_gl_settings(int argc, char *argv[]) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glShadeModel(GL_SMOOTH);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glPolygonMode(GL_FRONT, modes[mode]);

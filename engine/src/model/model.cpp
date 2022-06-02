@@ -5,6 +5,7 @@
 #include "model/MaterialColors.h"
 #include "model/model.h"
 #include "model/triangle.h"
+#include "utils/misc.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -143,17 +144,15 @@ namespace model {
         materialColors = MaterialColors();
         texture_path = "";
         color = {1.0, 1.0, 1.0};
+
+        string normal_path = replace_extension(path, "normal");
+
         load_model(const_cast<char *>(path));
-        load_normal(const_cast<char *>("box.normal"));
+        load_normal(const_cast<char *>(normal_path.c_str()));
     }
 
-    Model::Model(const char *path, tuple<float, float, float> color) {
-        n_triangles = 0;
-        materialColors = MaterialColors();
-        texture_path = "";
+    Model::Model(const char *path, tuple<float, float, float> color) : Model(path) {
         this->color = color;
-        load_model(const_cast<char *>(path));
-        load_normal(const_cast<char *>("box.normal"));
     }
 
     void Model::render(bool cam_mode) {

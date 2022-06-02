@@ -31,8 +31,8 @@ namespace lighting {
 
         glEnable(GL_LIGHT0 + id);
 
-        glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, diffuse);
-        glLightfv(GL_LIGHT0 + id, GL_AMBIENT, ambient);
-        glLightfv(GL_LIGHT0 + id, GL_SPECULAR, specular);
+        glLightfv(GL_LIGHT0 + this->id, GL_DIFFUSE, diffuse);
+        glLightfv(GL_LIGHT0 + this->id, GL_AMBIENT, ambient);
+        glLightfv(GL_LIGHT0 + this->id, GL_SPECULAR, specular);
     }
 }
