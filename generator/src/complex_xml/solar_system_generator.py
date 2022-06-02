@@ -27,7 +27,44 @@ def define_camera(world):
     projection.attrib['far'] = '1000'
 
 
-def draw_group(parent, models=None, transforms=None, comment=None):
+def set_colors(color_elem, diff_rgb, amb_rgb, spec_rgb, emiss_rgb, shininess):
+    diff = Tree.SubElement(color_elem, 'diffuse')
+    diff.attrib['R'] = str(diff_rgb[0])
+    diff.attrib['G'] = str(diff_rgb[1])
+    diff.attrib['B'] = str(diff_rgb[2])
+      
+    amb = Tree.SubElement(color_elem, 'ambient')
+    amb.attrib['R'] = str(amb_rgb[0])
+    amb.attrib['G'] = str(amb_rgb[1])
+    amb.attrib['B'] = str(amb_rgb[2])
+   
+    spec = Tree.SubElement(color_elem, 'specular')
+    spec.attrib['R'] = str(spec_rgb[0])
+    spec.attrib['G'] = str(spec_rgb[1])
+    spec.attrib['B'] = str(spec_rgb[2])
+     
+    emiss = Tree.SubElement(color_elem, 'emissive')
+    emiss.attrib['R'] = str(emiss_rgb[0])
+    emiss.attrib['G'] = str(emiss_rgb[1])
+    emiss.attrib['B'] = str(emiss_rgb[2])
+
+    shine = Tree.SubElement(color_elem, 'shininess')
+    shine.attrib['value'] = str(shininess)
+
+ 
+def add_light(world):
+    lights = Tree.SubElement(world, 'lights')
+    comment = 'Sun ilumination'
+    lights.append(Tree.Comment(comment))
+
+    light_elem = Tree.SubElement(lights, 'light')
+    light_elem.attrib['type'] = 'point'
+    light_elem.attrib['posX'] = '0'
+    light_elem.attrib['posY'] = '0'
+    light_elem.attrib['posZ'] = '0'
+
+
+def draw_group(parent, models=None, diff_rgb=(255,255,255), amb_rgb=(255,255,255), spec_rgb=(255,255,255), emiss_rgb=(255,255,255), shininess=128, transforms=None, comment=None):
     group = Tree.SubElement(parent, 'group')
 
     if comment is not None:
@@ -51,6 +88,9 @@ def draw_group(parent, models=None, transforms=None, comment=None):
     for model in models:
         model_elem = Tree.SubElement(models_elem, 'model')
         model_elem.attrib['file'] = model
+        
+        color_elem = Tree.SubElement(model_elem, 'color')
+        set_colors(color_elem, diff_rgb, amb_rgb, spec_rgb, emiss_rgb, shininess)
 
     return group
 
@@ -101,8 +141,13 @@ def draw_sun(parent):
         ('scale', [('x', '15'), ('y', '15'), ('z', '15')], None),
         ('rotate', [('time', '60'), ('x', '0'), ('y', '1'), ('z', '0')], None)
     ]
+    diffuse = (252, 229, 112)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (252,229,112)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_mercury(parent):
@@ -115,8 +160,13 @@ def draw_mercury(parent):
         ('rotate', [('time', '10'), ('x', '0'), ('y', '1'), ('z', '0')], None),
         ('scale', [('x', '0.49'), ('y', '0.49'), ('z', '0.49')], None),
     ]
+    diffuse = (128, 128, 128)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_venus(parent):
@@ -129,8 +179,13 @@ def draw_venus(parent):
         ('rotate', [('time', '15'), ('x', '0'), ('y', '-1'), ('z', '0')], None),
         ('scale', [('x', '1.21'), ('y', '1.21'), ('z', '1.21')], None)
     ]
+    diffuse = (255, 198, 73)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_earth(parent):
@@ -143,8 +198,13 @@ def draw_earth(parent):
         ('rotate', [('time', '13'), ('x', '0'), ('y', '1'), ('z', '0')], None),
         ('scale', [('x', '1.27'), ('y', '1.27'), ('z', '1.27')], None),
     ]
+    diffuse = (79,76,176)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    earth = draw_group(parent, models, transforms, comment)
+    earth = draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
     draw_moon(earth)
 
     return earth
@@ -159,8 +219,13 @@ def draw_moon(parent):
         ('translate', [('time', '10'), ('align', 'True'), ('draw', 'True')], points),
         ('scale', [('x', '0.35'), ('y', '0.35'), ('z', '0.35')], None),
     ]
+    diffuse = (148, 144, 141)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_mars(parent):
@@ -173,8 +238,13 @@ def draw_mars(parent):
         ('rotate', [('time', '10'), ('x', '0'), ('y', '1'), ('z', '0')], None),
         ('scale', [('x', '0.68'), ('y', '0.68'), ('z', '0.68')], None),
     ]
+    diffuse = (226, 123, 88)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_jupiter(parent):
@@ -187,8 +257,13 @@ def draw_jupiter(parent):
         ('rotate', [('time', '30'), ('x', '0'), ('y', '1'), ('z', '0')], None),
         ('scale', [('x', '5'), ('y', '5'), ('z', '5')], None),
     ]
+    diffuse = (211, 156, 126)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_saturn(parent):
@@ -202,8 +277,13 @@ def draw_saturn(parent):
         ('scale', [('x', '3.5'), ('y', '3.5'), ('z', '3.5')], None),
     ]
     asteroids = 1000
+    diffuse = (52, 62, 71)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    saturn = draw_group(parent, models, transforms, comment)
+    saturn = draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
     for i in range(asteroids):
         radius = random() + 2
@@ -224,8 +304,13 @@ def draw_saturn_asteroid(parent, radius, translate_time, rotation):
         ('translate', [('time', str(translate_time)), ('align', 'False'), ('draw', 'False')], points),
         ('scale', [('x', '0.01'), ('y', '0.01'), ('z', '0.01')], None),
     ]
+    diffuse = (118,118,118)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_uranus(parent):
@@ -238,8 +323,13 @@ def draw_uranus(parent):
         ('rotate', [('time', '40'), ('x', '0'), ('y', '-1'), ('z', '0')], None),
         ('scale', [('x', '2.57'), ('y', '2.57'), ('z', '2.57')], None),
     ]
+    diffuse = (101, 134, 139)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_neptune(parent):
@@ -252,8 +342,13 @@ def draw_neptune(parent):
         ('rotate', [('time', '45'), ('x', '0'), ('y', '1'), ('z', '0')], None),
         ('scale', [('x', '2.27'), ('y', '2.27'), ('z', '2.27')], None),
     ]
+    diffuse = (91,93,223)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    return draw_group(parent, models, transforms, comment)
+    return draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_comet_trail(parent):
@@ -277,8 +372,13 @@ def draw_comet_trail(parent):
              points),
             ('scale', [('x', '0.02'), ('y', '0.02'), ('z', '0.02')], None)
         ]
+        diffuse = (118,118,118)
+        ambient = (10,10,10)
+        specular = (255,255,255)
+        emissive = (0,0,0)
+        shininess = 128
 
-        draw_group(parent, models, transforms, comment)
+        draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
 
 
 def draw_comet(parent):
@@ -293,8 +393,13 @@ def draw_comet(parent):
         ('translate', [('time', '100'), ('align', 'True'), ('draw', 'True')], points),
         ('scale', [('x', '1'), ('y', '1'), ('z', '1')], None),
     ]
+    diffuse = (118,118,118)
+    ambient = (10,10,10)
+    specular = (255,255,255)
+    emissive = (0,0,0)
+    shininess = 128
 
-    comet = draw_group(parent, models, transforms, comment)
+    comet = draw_group(parent, models, diffuse, ambient, specular, emissive, shininess, transforms, comment)
     draw_comet_trail(comet)
 
     return comet
@@ -312,6 +417,7 @@ world = Tree.Element('world')
 world.append(Tree.Comment('XML file auto-generated by the solar_system_generator.py script'))
 
 define_camera(world)
+add_light(world)
 
 draw_sun(world)
 draw_mercury(world)

@@ -95,6 +95,9 @@ void Translate::draw_curve() {
         return;
     }
 
+    float emissive[4] = { 255, 255, 255 }; 
+    glMaterialfv(GL_FRONT, GL_EMISSION, emissive);
+
     float pos[4];
     float deriv[4];
 
