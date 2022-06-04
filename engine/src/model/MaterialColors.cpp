@@ -24,6 +24,7 @@ MaterialColors::MaterialColors(
 void MaterialColors::apply_color() {
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
     glMaterialfv(GL_FRONT, GL_EMISSION, emissive);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 }

@@ -529,11 +529,12 @@ void set_gl_settings(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glShadeModel(GL_SMOOTH);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glPolygonMode(GL_FRONT, modes[mode]);
+
+    float black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 
     glewInit();
 }
