@@ -10,7 +10,7 @@ void write_triangle(tuple<float, float, float> p1, tuple<float, float, float> p2
 
 string replace_extension(string filepath, string newExt);
 
-tuple<float,float,float> cross(tuple<float,float,float> a, tuple<float,float,float> b, float radius);
+tuple<float,float,float> cross(tuple<float,float,float> a, tuple<float,float,float> b);
 
 tuple<float,float,float> normalize(tuple<float,float,float> p);
 

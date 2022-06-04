@@ -79,11 +79,11 @@ void drawPyramid(float radius, float height, int slices, float stacks, string na
 
             if (currentHeight == 0) {
                 auto vector = make_tuple(-get<0>(p1),height,-get<2>(p1));
-                auto tangent_p1 = normalize( cross(p1,make_tuple(0,1,0),radius) );
-                auto tangent_p2 = normalize( cross(p2,make_tuple(0,1,0),radius) );
+                auto tangent_p1 = normalize( cross(p1,make_tuple(0,1,0)) );
+                auto tangent_p2 = normalize( cross(p2,make_tuple(0,1,0)) );
 
-                normal      = normalize( cross(vector,tangent_p2,radius) );
-                next_normal = normalize( cross(vector,tangent_p1,radius) );
+                normal      = normalize( cross(vector,tangent_p2) );
+                next_normal = normalize( cross(vector,tangent_p1) );
             }
 
             auto normal_p1 = next_normal;

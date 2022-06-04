@@ -17,7 +17,7 @@ string replace_extension(string filepath, string newExt) {
     return filepath.replace(filepath.find_last_of(".") + 1, newExt.length(), newExt);
 }
 
-tuple<float,float,float> cross(tuple<float,float,float> a, tuple<float,float,float> b, float radius) {
+tuple<float,float,float> cross(tuple<float,float,float> a, tuple<float,float,float> b) {
     float xa,ya,za;
     float xb,yb,zb;
 
