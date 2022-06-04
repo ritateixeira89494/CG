@@ -141,22 +141,25 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
     Model *m;
 
     while (model != nullptr) {
-        const char *modelPath = model->Attribute("file");
+        const char *model_path = model->Attribute("file");
 
         const XMLElement *texture = model->FirstChildElement("texture");
 
-        if (texture); // TODO: Pass texture path to model.
+        char *texture_path = nullptr;
+
+        if (texture) { // If texture is provided
+            texture_path = (char *) texture->Attribute("file");
+            cout << "Texture found in " << texture_path << endl; // TODO: Debug print
+        }
 
         const char *mainColor = model->Attribute("color");
 
-        if (mainColor) {
+        if (mainColor) { // If color is provided
             tuple<float, float, float> color = {0, 0, 0};
             sscanf(mainColor, "%f %f %f", &get<0>(color), &get<1>(color), &get<2>(color));
-            m = new Model(modelPath, color);
-
-        } else {
-            m = new Model(modelPath);
         }
+
+        m = new Model(model_path, texture_path, nullptr);
 
         const XMLElement *lightingColorElement = model->FirstChildElement(
                 "color"); // TODO: Finish implementing the color attributes

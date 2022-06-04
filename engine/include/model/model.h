@@ -17,16 +17,23 @@ namespace model {
             /**
              * Map to store the ids of the vbo that is going to be storing the model in the GPU.
              */
-            static map<string, pair<unsigned int, long>> model_ids;
+            static map<string, tuple<unsigned int, long, unsigned int>> model_ids;
 
             /// Number of triangles in the model
             long n_triangles;
+
             /// List of triangles
             unsigned int vbo_buffer = 0;
 
+            // Id of the texture model coordenates
+            unsigned int model_tex_id = 0;
+
+            // Id of the texture image
+            unsigned int tex_id = 0;
+
             string texture_path;
 
-            LightingColors lightingColors;
+            LightingColors *lightingColors;
 
             tuple<float, float, float> color;
 
@@ -56,7 +63,7 @@ namespace model {
             /*
              * // TODO: Document this constructor
              */
-            Model(const char *path, const string &texture_path, LightingColors color);
+            Model(const char *path, char *texture_path, LightingColors *color);
 
             /**
              * @brief Get the number of triangles
@@ -72,6 +79,14 @@ namespace model {
              * @return Number of triangles loaded
              */
             long load_model(char *path); // Loads the model from a ".3d" file
+
+
+            /**
+             * @brief Loads a texture from a image.
+             * @return
+             */
+            void loadTexture();
+
             /**
              * @brief Get the triangle list
              *
@@ -86,6 +101,9 @@ namespace model {
              * @param cam_mode bool telling if camera mode is active or not 
              */
             void render(bool cam_mode);
+
+
+            vector<tuple<float, float>> parseTextureFile(char *path);
     };
 }
 

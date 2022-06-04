@@ -18,7 +18,7 @@ using namespace std;
     
   In this function we draw a square in XY Axis, with z = 0.
 */
-void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin) {
+void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin, ofstream &text_file) {
     auto p1 = make_tuple(xOr, yOr, -origin);
     auto p2 = make_tuple(xOr, yOr + edge, -origin);
     auto p3 = make_tuple(xOr + edge, yOr, -origin);
@@ -45,10 +45,11 @@ void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin
 /*!
     Draw square in YZ Axis, with x = 0.
 */
-void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file, float origin) {
-    auto p1 = make_tuple(-origin, yOr + edge, zOr);
-    auto p2 = make_tuple(-origin, yOr, zOr);
-    auto p3 = make_tuple(-origin, yOr, zOr + edge);
+void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file, float origin, ofstream &text_file) {
+    // Usefull points
+    auto p1 = make_tuple(-origin, yOr + edge, zOr); // (0, 1)
+    auto p2 = make_tuple(-origin, yOr, zOr); // (0, 0)
+    auto p3 = make_tuple(-origin, yOr, zOr + edge); // (1, 0)
 
     auto p4 = make_tuple(-origin, yOr + edge, zOr + edge);
     auto p5 = make_tuple(-origin, yOr + edge, zOr);
@@ -62,25 +63,35 @@ void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file, float origin
     auto p11 = make_tuple(origin, yOr + edge, zOr);
     auto p12 = make_tuple(origin, yOr + edge, zOr + edge);
 
+    // Generating the triangles
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
     write_triangle(p7, p8, p9, file);
     write_triangle(p10, p11, p12, file);
+
+    // Generating the texture coordenates
+    //write_triangle(,tex_file);
 }
 
 void drawBox(float length, float divisions, string nameOfFile) {
     ofstream file;
     file.open(nameOfFile);
 
+    // Texture file
+    ofstream texture_file;
+    texture_file.open(nameOfFile.substr(0, nameOfFile.length() - 3) + ".text");
+
     float increment = length / divisions;
     for (float divisionX = 0, line = -length / 2, column = -length / 2;
          divisionX < divisions; line = line + increment, divisionX++) {
         for (float divisionY = 0, column = -length / 2;
              divisionY < divisions; column = column + increment, divisionY++) {
-            drawSquareUp(line, column, increment, length / 2, &file); //1 -> Box, 0-> Plane
-            drawSquareDown(line, column, increment, &file, length / 2); //1 -> Box, 0-> Plane
-            drawSquareXY(line, column, increment, &file, length / 2);
-            drawSquareYZ(line, column, increment, &file, length / 2);
+            drawSquareUp(line, column, increment, length / 2, &file, texture_file); //1 -> Box, 0-> Plane
+            drawSquareDown(line, column, increment, &file, length / 2, texture_file); //1 -> Box, 0-> Plane
+            drawSquareXY(line, column, increment, &file, length / 2, texture_file);
+            drawSquareYZ(line, column, increment, &file, length / 2, texture_file);
         }
     }
+
+    texture_file.close();
 }

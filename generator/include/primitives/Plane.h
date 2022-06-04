@@ -9,8 +9,9 @@ using namespace std;
   This two functions are used in the design of the box, but they draw the same planes as the necessary in plane design.
   So, they need to be public, and in this file.
 */
-void drawSquareUp(float xOr, float yOr, float side, float height, ofstream *file);
-void drawSquareDown(float xOr, float yOr, float edge, ofstream *file, float origin);
+void drawSquareUp(float xOr, float yOr, float side, float height, ofstream *file, ofstream &text_file);
+
+void drawSquareDown(float xOr, float yOr, float edge, ofstream *file, float origin, ofstream &text_file);
 
 /*!
     Draw a plane from individual points, line by line.

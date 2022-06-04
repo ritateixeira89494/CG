@@ -7,6 +7,8 @@
 
 #endif
 
+#include <IL/il.h>
+
 #include "model/transforms/Transform.h"
 #include "model/transforms/Translate.h"
 #include "interface/display.h"
@@ -503,6 +505,24 @@ void on_mouse_motion(int x, int y) {
     glutPostRedisplay();
 }
 
+
+void initGL() {
+// alguns settings para OpenGL
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glClearColor(0, 0, 0, 0);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    glEnable(GL_TEXTURE_2D);
+}
+
 void run(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -525,6 +545,8 @@ void run(int argc, char *argv[]) {
 
 
     glewInit();
+
+    initGL();
 
     file_path.assign(argv[1]);
     scene = Scene(argv[1]);
