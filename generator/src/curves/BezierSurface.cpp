@@ -1,4 +1,5 @@
 #include "utils/utils.h"
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cert-err34-c"
 
@@ -27,7 +28,7 @@ std::vector<std::vector<float>> bezier_matrix = {
  */
 static Matrix M = Matrix(bezier_matrix);
 
-std::tuple<tuple<float, float, float>,tuple<float, float, float>>
+std::tuple<tuple<float, float, float>, tuple<float, float, float>>
 BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const float u, const float v) {
     // [u^3, u^2, u, 1]
     Matrix u_vector = Matrix({
@@ -43,20 +44,20 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
                              });
 
     Matrix u_vector_deriv = Matrix({
-                                     {3*u*u, 2*u, 1, 0}
-                             });
+                                           {3 * u * u, 2 * u, 1, 0}
+                                   });
 
     Matrix v_vector_deriv = Matrix({
-                                     {3*v*v},
-                                     {2*v},
-                                     {1},
-                                     {0}
-                             });
+                                           {3 * v * v},
+                                           {2 * v},
+                                           {1},
+                                           {0}
+                                   });
 
     Matrix res_x = u_vector * *pre_cal_x * v_vector; // u * M * P_x * M * v
     Matrix res_y = u_vector * *pre_cal_y * v_vector; // u * M * P_y * M * v
     Matrix res_z = u_vector * *pre_cal_z * v_vector; // u * M * P_z * M * v
-                                                     //
+    //
     // Getting the scalar of the matrix.
     float x = res_x.get_matrix()[0][0];
     float y = res_y.get_matrix()[0][0];
@@ -66,7 +67,7 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
     Matrix x_deriv_u = u_vector_deriv * *pre_cal_x * v_vector; // u' * M * P_x * M * v
     Matrix y_deriv_u = u_vector_deriv * *pre_cal_y * v_vector; // u' * M * P_y * M * v
     Matrix z_deriv_u = u_vector_deriv * *pre_cal_z * v_vector; // u' * M * P_z * M * v
- 
+
     Matrix x_deriv_v = u_vector * *pre_cal_x * v_vector_deriv; // u * M * P_z * M * v'
     Matrix y_deriv_v = u_vector * *pre_cal_y * v_vector_deriv; // u * M * P_z * M * v'
     Matrix z_deriv_v = u_vector * *pre_cal_z * v_vector_deriv; // u * M * P_z * M * v'
@@ -75,12 +76,13 @@ BezierSurface::P(Matrix *pre_cal_x, Matrix *pre_cal_y, Matrix *pre_cal_z, const 
     auto v_deriv = make_tuple(x_deriv_v.get_matrix()[0][0], y_deriv_v.get_matrix()[0][0], z_deriv_v.get_matrix()[0][0]);
 
     // Calculate normal vector
-    auto normal = normalize( cross(v_deriv, u_deriv) ); // n = u * v
+    auto normal = normalize(cross(v_deriv, u_deriv)); // n = u * v
 
-    return make_tuple(make_tuple(x,y,z), normal);
+    return make_tuple(make_tuple(x, y, z), normal);
 }
 
-std::tuple<std::vector<std::vector<tuple<float, float, float>>>, std::vector<std::vector<tuple<float, float, float>>>>
+std::tuple<std::vector<std::vector<tuple<float, float, float>>>, std::vector<std::vector<tuple<float, float, float>>>,
+        std::vector<tuple<float, float>>>
 BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, float> *>> control_points,
                                              int tessellation) {
     if (tessellation <= 1) { // Check if the tessellation value is valid.
@@ -107,21 +109,45 @@ BezierSurface::get_all_points_bezier_surface(vector<vector<tuple<float, float, f
 
     std::vector<std::vector<tuple<float, float, float>>> res;
     std::vector<std::vector<tuple<float, float, float>>> normals;
+    std::vector<tuple<float, float>> textures;
 
     // Finally, calculates the surface points
     for (int i = 0; i < tessellation; i++) {
         const float t_i = ((float) i) / ((float) tessellation - 1);
         res.emplace_back();
         normals.emplace_back();
+
+        float t_x = ((float) i) / ((float) tessellation);
+        float t_x_1 = ((float) i + 1) / ((float) tessellation);
+
         for (int j = 0; j < tessellation; j++) {
             const float t_j = ((float) j) / ((float) tessellation - 1);
             auto p = BezierSurface::P(&pre_cal_x, &pre_cal_y, &pre_cal_z, t_i, t_j);
+
+            float t_y = ((float) j) / ((float) tessellation);
+            float t_y_1 = ((float) j + 1) / ((float) tessellation);
+
+            // Texture coordinates
+            auto t1 = make_tuple(t_x, t_y);
+            auto t2 = make_tuple(t_x, t_y_1);
+            auto t3 = make_tuple(t_x_1, t_y);
+            auto t4 = make_tuple(t_x_1, t_y_1);
+
             res[i].push_back(get<0>(p));
             normals[i].push_back(get<1>(p));
+
+            // Texture
+            textures.push_back(t4);
+            textures.push_back(t3);
+            textures.push_back(t2);
+
+            textures.push_back(t3);
+            textures.push_back(t1);
+            textures.push_back(t2);
         }
     }
 
-    return make_tuple(res, normals);
+    return make_tuple(res, normals, textures);
 }
 
 void
@@ -154,8 +180,17 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
     vector<int *> patches = {}; // Structure to store the patches indexes
     vector<tuple<float, float, float> *> control_points = {};
 
-
+    // Normal file
     string normal_file = replace_extension(output_file, "normal");
+
+    // Texture file
+    ofstream texture_file;
+    auto out_str = string(output_file);
+    string text_path = out_str.substr(0, out_str.length() - 3) + ".text";
+    texture_file.open(text_path);
+
+    // Reset output file
+    remove(output_file);
 
     FILE *f = fopen(file_path, "r");
 
@@ -163,9 +198,6 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
         cerr << "Invalid bezier patch file path!" << endl;
         exit(1);
     }
-
-    // Reset output file
-    remove(output_file);
 
     if (fscanf(f, "%d", &n_patches) <= 0) {
         cerr << "Invalid bezier patch file format!" << endl;
@@ -199,7 +231,7 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
     }
 
     for (const int *patch: patches) {
-        vector<vector<tuple<float, float, float> *>> c_p_patch; // Control Points of the patch
+        vector<vector<tuple<float, float, float> * >> c_p_patch; // Control Points of the patch
 
         for (int i = 0; i < 4; i++) {
             c_p_patch.emplace_back();
@@ -209,9 +241,20 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
         }
 
         auto points = BezierSurface::get_all_points_bezier_surface(c_p_patch, tessellation);
+
         BezierSurface::generate_triangles(get<0>(points), output_file);
         BezierSurface::generate_triangles(get<1>(points), normal_file.c_str());
+
+        auto vertices = get<0>(points);
+        auto normals = get<1>(points);
+        auto textures = get<2>(points);
+        for (int i = 0; i < textures.size() - 2; i += 3) {
+            write_text_triangule(textures[i], textures[i + 1], textures[i + 2], texture_file);
+        }
     }
+
+    fclose(f);
+    texture_file.close();
 
     // Free everything
     for (auto point: control_points) delete (point);

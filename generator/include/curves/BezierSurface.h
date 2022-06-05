@@ -12,7 +12,8 @@ class BezierSurface {
          * @param tessellation the tessellation level.
          * @return tuple with all points and all normal vectors of the bezier surface.
          */
-        static std::tuple<std::vector<std::vector<tuple<float, float, float>>>, std::vector<std::vector<tuple<float, float, float>>>>
+        static std::tuple<std::vector<std::vector<tuple<float, float, float>>>, std::vector<std::vector<tuple<float, float, float>>>,
+                std::vector<tuple<float, float>>>
         get_all_points_bezier_surface(vector<vector<tuple<float, float, float> *>> control_points, int tessellation);
 
         /**
