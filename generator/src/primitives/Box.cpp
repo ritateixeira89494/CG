@@ -19,26 +19,51 @@ using namespace std;
   In this function we draw a square in XY Axis, with z = 0.
 */
 void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin, ofstream &text_file) {
-    auto p1 = make_tuple(xOr, yOr, -origin);
-    auto p2 = make_tuple(xOr, yOr + edge, -origin);
-    auto p3 = make_tuple(xOr + edge, yOr, -origin);
+    // Usefull points
+    auto p1 = make_tuple(xOr, yOr, -origin); // (0, 0)
+    auto p2 = make_tuple(xOr, yOr + edge, -origin); // (0, 1)
+    auto p3 = make_tuple(xOr + edge, yOr, -origin); // (1, 0)
 
-    auto p4 = make_tuple(xOr, yOr + edge, -origin);
-    auto p5 = make_tuple(xOr + edge, yOr + edge, -origin);
-    auto p6 = make_tuple(xOr + edge, yOr, -origin);
+    auto p4 = make_tuple(xOr, yOr + edge, -origin); // (0, 1)
+    auto p5 = make_tuple(xOr + edge, yOr + edge, -origin); // (1, 1)
+    auto p6 = make_tuple(xOr + edge, yOr, -origin); // (1, 0)
 
-    auto p7 = make_tuple(xOr, yOr, origin);
-    auto p9 = make_tuple(xOr + edge, yOr + edge, origin);
-    auto p8 = make_tuple(xOr, yOr + edge, origin);
+    auto p7 = make_tuple(xOr, yOr, origin); // (0, 0)
+    auto p9 = make_tuple(xOr + edge, yOr + edge, origin); // (1, 1)
+    auto p8 = make_tuple(xOr, yOr + edge, origin); // (0, 1)
 
-    auto p10 = make_tuple(xOr, yOr, origin);
-    auto p11 = make_tuple(xOr + edge, yOr, origin);
-    auto p12 = make_tuple(xOr + edge, yOr + edge, origin);
+    auto p10 = make_tuple(xOr, yOr, origin); // (0, 0)
+    auto p11 = make_tuple(xOr + edge, yOr, origin); // (1, 0)
+    auto p12 = make_tuple(xOr + edge, yOr + edge, origin); // (1, 1)
 
+    // Texture coordenates
+    auto t1 = make_tuple(0, 0);
+    auto t2 = make_tuple(0, 1);
+    auto t3 = make_tuple(1, 0);
+
+    auto t4 = make_tuple(0, 1);
+    auto t5 = make_tuple(1, 1);
+    auto t6 = make_tuple(1, 0);
+
+    auto t7 = make_tuple(0, 0);
+    auto t8 = make_tuple(1, 1);
+    auto t9 = make_tuple(0, 1);
+
+    auto t10 = make_tuple(0, 0);
+    auto t11 = make_tuple(1, 0);
+    auto t12 = make_tuple(1, 1);
+
+    // Generating the triangles
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
     write_triangle(p8, p7, p9, file);
     write_triangle(p10, p11, p12, file);
+
+    // Generating the texture coordenates
+    write_text_triangule(t1, t2, t3, text_file);
+    write_text_triangule(t4, t5, t6, text_file);
+    write_text_triangule(t7, t8, t9, text_file);
+    write_text_triangule(t10, t11, t12, text_file);
 }
 
 
@@ -47,21 +72,38 @@ void drawSquareXY(float xOr, float yOr, float edge, ofstream *file, float origin
 */
 void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file, float origin, ofstream &text_file) {
     // Usefull points
-    auto p1 = make_tuple(-origin, yOr + edge, zOr); // (0, 1)
+    auto p1 = make_tuple(-origin, yOr + edge, zOr); // (1, 0)
     auto p2 = make_tuple(-origin, yOr, zOr); // (0, 0)
-    auto p3 = make_tuple(-origin, yOr, zOr + edge); // (1, 0)
+    auto p3 = make_tuple(-origin, yOr, zOr + edge); // (0, 1)
 
-    auto p4 = make_tuple(-origin, yOr + edge, zOr + edge);
-    auto p5 = make_tuple(-origin, yOr + edge, zOr);
-    auto p6 = make_tuple(-origin, yOr, zOr + edge);
+    auto p4 = make_tuple(-origin, yOr + edge, zOr + edge); // (1, 1)
+    auto p5 = make_tuple(-origin, yOr + edge, zOr); // (1, 0)
+    auto p6 = make_tuple(-origin, yOr, zOr + edge); // (0, 1)
 
-    auto p7 = make_tuple(origin, yOr + edge, zOr);
-    auto p8 = make_tuple(origin, yOr, zOr + edge);
-    auto p9 = make_tuple(origin, yOr, zOr);
+    auto p7 = make_tuple(origin, yOr + edge, zOr); // (1, 0)
+    auto p8 = make_tuple(origin, yOr, zOr + edge); // (0, 1)
+    auto p9 = make_tuple(origin, yOr, zOr); // (0, 0)
 
-    auto p10 = make_tuple(origin, yOr, zOr + edge);
-    auto p11 = make_tuple(origin, yOr + edge, zOr);
-    auto p12 = make_tuple(origin, yOr + edge, zOr + edge);
+    auto p10 = make_tuple(origin, yOr, zOr + edge); // (0, 1)
+    auto p11 = make_tuple(origin, yOr + edge, zOr); // (1, 0)
+    auto p12 = make_tuple(origin, yOr + edge, zOr + edge); // (1, 1)
+
+    // Texture coordenates
+    auto t1 = make_tuple(1, 0);
+    auto t2 = make_tuple(0, 0);
+    auto t3 = make_tuple(0, 1);
+
+    auto t4 = make_tuple(1, 1);
+    auto t5 = make_tuple(1, 0);
+    auto t6 = make_tuple(0, 1);
+
+    auto t7 = make_tuple(1, 0);
+    auto t8 = make_tuple(0, 1);
+    auto t9 = make_tuple(0, 0);
+
+    auto t10 = make_tuple(0, 1);
+    auto t11 = make_tuple(1, 0);
+    auto t12 = make_tuple(1, 1);
 
     // Generating the triangles
     write_triangle(p1, p2, p3, file);
@@ -70,7 +112,10 @@ void drawSquareYZ(float yOr, float zOr, float edge, ofstream *file, float origin
     write_triangle(p10, p11, p12, file);
 
     // Generating the texture coordenates
-    //write_triangle(,tex_file);
+    write_text_triangule(t1, t2, t3, text_file);
+    write_text_triangule(t4, t5, t6, text_file);
+    write_text_triangule(t7, t8, t9, text_file);
+    write_text_triangule(t10, t11, t12, text_file);
 }
 
 void drawBox(float length, float divisions, string nameOfFile) {

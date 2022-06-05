@@ -19,6 +19,11 @@ namespace model {
              */
             static map<string, tuple<unsigned int, long, unsigned int>> model_ids;
 
+            /**
+             * Map to store the already loaded image textures.
+             */
+            static map<string, unsigned int> texture_ids;
+
             /// Number of triangles in the model
             long n_triangles;
 
@@ -103,7 +108,7 @@ namespace model {
             void render(bool cam_mode);
 
 
-            vector<tuple<float, float>> parseTextureFile(char *path);
+            vector <tuple<float, float>> parseTextureCoordinates(char *path);
     };
 }
 

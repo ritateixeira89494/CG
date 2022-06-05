@@ -19,6 +19,8 @@ using namespace std;
 namespace model {
     map<string, tuple<unsigned int, long, unsigned int>> Model::model_ids = {}; // Path of the model -> (vbo_id, n_triangles, tex_id)
 
+    map<string, unsigned int> Model::texture_ids = {}; // Texture path -> id of texture
+
     long Model::get_n_triangles() const {
         return n_triangles;
     }
@@ -69,15 +71,15 @@ namespace model {
 
             // Reading the .text file
             string str_path = string(path);
-            auto t = parseTextureFile(
+            auto t = parseTextureCoordinates(
                     const_cast<char *>((str_path.substr(0, str_path.length() - 3) + ".text").c_str()));
 
             // Texture coordenates
             glGenBuffers(1, &model_tex_id);
             glBindBuffer(GL_ARRAY_BUFFER, model_tex_id);
-            glBufferData(GL_ARRAY_BUFFER, (long) sizeof(float) * 2 * triangles.size(), t.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, (long) (sizeof(float) * 2 * t.size()), t.data(), GL_STATIC_DRAW);
 
-            model_ids.insert({str_path, {vbo_buffer, n_triangles, 0}});
+            model_ids.insert({str_path, {vbo_buffer, n_triangles, model_tex_id}});
         } else {
             vbo_buffer = get<0>(model_ids[str_path]);
             n_triangles = get<1>(model_ids[str_path]);
@@ -116,7 +118,7 @@ namespace model {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer);
         glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
-        if (!(this->texture_path.empty())) {
+        if (!(this->texture_path.empty())) { // Has a texture
             glBindTexture(GL_TEXTURE_2D, this->tex_id);
             glBindBuffer(GL_ARRAY_BUFFER, this->model_tex_id);
             glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
@@ -129,45 +131,56 @@ namespace model {
 
 
     void Model::loadTexture() {
-        unsigned int t, tw, th;
-        unsigned char *texData;
+        if (model_ids.count(this->texture_path) == 0) {
 
-        ilInit();
-        ilEnable(IL_ORIGIN_SET);
-        ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
-        ilGenImages(1, &t);
-        ilBindImage(t);
-        ilLoadImage((ILstring) texture_path.c_str());
-        tw = ilGetInteger(IL_IMAGE_WIDTH);
-        th = ilGetInteger(IL_IMAGE_HEIGHT);
-        ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-        texData = ilGetData();
+            unsigned int t, tw, th;
+            unsigned char *texData;
 
-        glGenTextures(1, &tex_id);
+            ilInit();
+            ilEnable(IL_ORIGIN_SET);
+            ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+            ilGenImages(1, &t);
+            ilBindImage(t);
+            if (!ilLoadImage((ILstring) texture_path.c_str())) {
+                cerr << "\'" << texture_path << "\'" << " path texture image is invalid!" << endl;
+                exit(1);
+            }
 
-        glBindTexture(GL_TEXTURE_2D, tex_id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            tw = ilGetInteger(IL_IMAGE_WIDTH);
+            th = ilGetInteger(IL_IMAGE_HEIGHT);
+            ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+            texData = ilGetData();
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glGenTextures(1, &tex_id);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (signed) tw, (signed) th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
-        glGenerateMipmap(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, tex_id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (signed) tw, (signed) th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+        } else {
+            this->tex_id = texture_ids[this->texture_path];
+        }
     }
 
 
     Model::Model(const char *path, char *texture_path, LightingColors *lightingColor) : Model(path) {
-        this->texture_path = texture_path;
+        this->texture_path = texture_path ? texture_path : "";
         // TODO: Loading the texture coordenate and rendering the texture
+        if (!(this->texture_path.empty())) loadTexture();
 
         this->lightingColors = lightingColor;
     }
 
 
-    vector<tuple<float, float>> Model::parseTextureFile(char *path) {
+    vector<tuple<float, float>> Model::parseTextureCoordinates(char *path) {
         vector<tuple<float, float>> tex_points;
 
         tuple<float, float> point1;
@@ -184,11 +197,14 @@ namespace model {
                       &get<0>(point3), &get<1>(point3)
 
         ) != EOF) {
+            cout << "(" << get<0>(point1) << "," << get<1>(point1) << ");";
+            cout << "(" << get<0>(point2) << "," << get<1>(point2) << ");";
+            cout << "(" << get<0>(point3) << "," << get<1>(point3) << ")" << endl;
 
             tex_points.push_back(point1);
             tex_points.push_back(point2);
             tex_points.push_back(point3);
         }
-        return {};
+        return tex_points;
     }
 }

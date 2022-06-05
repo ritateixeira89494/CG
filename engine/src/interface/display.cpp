@@ -507,7 +507,7 @@ void on_mouse_motion(int x, int y) {
 
 
 void initGL() {
-// alguns settings para OpenGL
+    // alguns settings para OpenGL
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -516,9 +516,6 @@ void initGL() {
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glClearColor(0, 0, 0, 0);
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
 
     glEnable(GL_TEXTURE_2D);
 }
@@ -541,7 +538,7 @@ void run(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glPolygonMode(GL_FRONT, GL_LINE);
+    glPolygonMode(GL_FRONT, GL_FILL);
 
 
     glewInit();
