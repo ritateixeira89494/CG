@@ -52,9 +52,10 @@ void drawPlane(float length, float divisions, string name) {
     normalFile.open(normalPath);
 
     float increment = length / divisions;
+    float len_half = length/2;
     //Draw base and top
-    for (float line = 0; line < length; line = line + increment) {
-        for (float collumn = 0; collumn < length; collumn = collumn + increment) {
+    for (float line = -len_half; line < len_half; line = line + increment) {
+        for (float collumn = -len_half; collumn < len_half; collumn = collumn + increment) {
             drawSquareUp(line, collumn, increment, 0.0f, &vertexFile, &normalFile);
         }
     }
