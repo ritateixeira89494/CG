@@ -98,8 +98,8 @@ void drawPlane(float length, float divisions, string name) {
 
     float increment = length / divisions;
     //Draw base and top
-    for (float line = 0; line < length; line = line + increment) {
-        for (float collumn = 0; collumn < length; collumn = collumn + increment) {
+    for (float line = -length; line < length; line = line + increment) {
+        for (float collumn = -length; collumn < length; collumn = collumn + increment) {
             drawSquareUp(line, collumn, increment, 0.0f, &vertexFile, &normalFile, texture_file);
         }
     }
