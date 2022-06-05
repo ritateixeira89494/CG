@@ -20,6 +20,9 @@ namespace lighting {
 
     void Directional::place() {
         float pos[4] = { dirX, dirY, dirZ, 0.0f };
-        glLightfv(GL_LIGHT0 + id, GL_POSITION, pos);
+        glLightfv(GL_LIGHT0 + this->id, GL_POSITION, pos);
+        glLightf(GL_LIGHT0 + this->id, GL_CONSTANT_ATTENUATION, 0.2);
+        glLightf(GL_LIGHT0 + this->id, GL_LINEAR_ATTENUATION, 0);
+        glLightf(GL_LIGHT0 + this->id, GL_QUADRATIC_ATTENUATION, 0);
     }
 }

@@ -44,5 +44,8 @@ namespace lighting {
         glLightfv(GL_LIGHT0 + this->id, GL_POSITION, pos);
         glLightfv(GL_LIGHT0 + this->id, GL_SPOT_DIRECTION, dir);
         glLightf(GL_LIGHT0 + this->id, GL_SPOT_CUTOFF, this->cutoff);
+        glLightf(GL_LIGHT0 + this->id, GL_CONSTANT_ATTENUATION, 0.2);
+        glLightf(GL_LIGHT0 + this->id, GL_LINEAR_ATTENUATION, 0);
+        glLightf(GL_LIGHT0 + this->id, GL_QUADRATIC_ATTENUATION, 0);
     }
 }

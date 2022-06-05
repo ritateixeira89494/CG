@@ -204,7 +204,11 @@ void render_rec(View v, int start_x, int start_y, int w, int h, bool horizontal)
 }
 
 void render() {
-    glClearColor(1, 1, 1, 1); // Set a white background in the entire window
+    if(!cam_mode) {
+        glClearColor(1, 1, 1, 1); // Set a white background in the entire window
+    } else {
+            glClearColor(0.36, 0.8, 0.89, 1);
+    }
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT); // Clear the bit buffer and the color buffer with the color set above
 

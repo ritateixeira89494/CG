@@ -3,6 +3,7 @@ import xml.etree.cElementTree as Tree
 from numpy import pi, sin, cos
 from sys import argv, version_info
 
+ambient = (40, 40, 40)
 
 def define_camera(world):
     camera = Tree.SubElement(world, 'camera')
@@ -147,7 +148,7 @@ def draw_sun(parent):
         ('rotate', [('time', '60'), ('x', '0'), ('y', '1'), ('z', '0')], None)
     ]
     diffuse = (252, 229, 112)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (252, 229, 112)
     shininess = 128
@@ -166,7 +167,7 @@ def draw_mercury(parent):
         ('scale', [('x', '0.49'), ('y', '0.49'), ('z', '0.49')], None),
     ]
     diffuse = (128, 128, 128)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -185,7 +186,7 @@ def draw_venus(parent):
         ('scale', [('x', '1.21'), ('y', '1.21'), ('z', '1.21')], None)
     ]
     diffuse = (255, 198, 73)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -204,7 +205,7 @@ def draw_earth(parent):
         ('scale', [('x', '1.27'), ('y', '1.27'), ('z', '1.27')], None),
     ]
     diffuse = (79, 76, 176)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -225,7 +226,7 @@ def draw_moon(parent):
         ('scale', [('x', '0.35'), ('y', '0.35'), ('z', '0.35')], None),
     ]
     diffuse = (148, 144, 141)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -244,7 +245,7 @@ def draw_mars(parent):
         ('scale', [('x', '0.68'), ('y', '0.68'), ('z', '0.68')], None),
     ]
     diffuse = (226, 123, 88)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -263,7 +264,7 @@ def draw_jupiter(parent):
         ('scale', [('x', '5'), ('y', '5'), ('z', '5')], None),
     ]
     diffuse = (211, 156, 126)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -283,7 +284,7 @@ def draw_saturn(parent):
     ]
     asteroids = 1000
     diffuse = (52, 62, 71)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -300,7 +301,7 @@ def draw_saturn(parent):
 
 
 def draw_saturn_asteroid(parent, radius, translate_time, rotation):
-    models = [(sphere_very_low_detail, "../textures/moon.jpg")]
+    models = [(sphere_very_low_detail, "")]
     comment = 'Saturn Asteroid'
     points = get_ctrl_points_circle(radius)
     transforms = [
@@ -310,7 +311,7 @@ def draw_saturn_asteroid(parent, radius, translate_time, rotation):
         ('scale', [('x', '0.01'), ('y', '0.01'), ('z', '0.01')], None),
     ]
     diffuse = (118, 118, 118)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -329,7 +330,7 @@ def draw_uranus(parent):
         ('scale', [('x', '2.57'), ('y', '2.57'), ('z', '2.57')], None),
     ]
     diffuse = (101, 134, 139)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -339,7 +340,7 @@ def draw_uranus(parent):
 
 def draw_neptune(parent):
     radius = 95
-    models = [(sphere, "neptune.jpg")]
+    models = [(sphere, "../textures/neptune.jpg")]
     comment = 'Neptune'
     points = get_ctrl_points_circle(radius)
     transforms = [
@@ -348,7 +349,7 @@ def draw_neptune(parent):
         ('scale', [('x', '2.27'), ('y', '2.27'), ('z', '2.27')], None),
     ]
     diffuse = (91, 93, 223)
-    ambient = (10, 10, 10)
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128
@@ -358,7 +359,7 @@ def draw_neptune(parent):
 
 def draw_comet_trail(parent):
     length = 40
-    models = [(sphere_very_low_detail, "../textures/moon.jpg")]
+    models = [(sphere_very_low_detail, "")]
     comment = 'Comet Trail'
     trail_num = 1000
 
@@ -378,7 +379,7 @@ def draw_comet_trail(parent):
             ('scale', [('x', '0.02'), ('y', '0.02'), ('z', '0.02')], None)
         ]
         diffuse = (118, 118, 118)
-        ambient = (10, 10, 10)
+        global ambient
         specular = (255, 255, 255)
         emissive = (0, 0, 0)
         shininess = 128
@@ -398,8 +399,8 @@ def draw_comet(parent):
         ('translate', [('time', '100'), ('align', 'True'), ('draw', 'True')], points),
         ('scale', [('x', '1'), ('y', '1'), ('z', '1')], None),
     ]
-    diffuse = (118, 118, 118)
-    ambient = (10, 10, 10)
+    diffuse = (118, 118, 118) 
+    global ambient
     specular = (255, 255, 255)
     emissive = (0, 0, 0)
     shininess = 128

@@ -27,5 +27,8 @@ namespace lighting {
     void Point::place() {
         float pos[4] = { this->posX, this->posY, this->posZ, 1.0f };
         glLightfv(GL_LIGHT0 + this->id, GL_POSITION, pos);
+        glLightf(GL_LIGHT0 + this->id, GL_CONSTANT_ATTENUATION, 0.2);
+        glLightf(GL_LIGHT0 + this->id, GL_LINEAR_ATTENUATION, 0);
+        glLightf(GL_LIGHT0 + this->id, GL_QUADRATIC_ATTENUATION, 0);
     }
 }
