@@ -91,7 +91,7 @@ namespace model {
             // Texture coordenates
             glGenBuffers(1, &model_tex_id);
             glBindBuffer(GL_ARRAY_BUFFER, model_tex_id);
-            glBufferData(GL_ARRAY_BUFFER, (long) (sizeof(float) * 2 * t.size()), t.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr) (sizeof(float) * t.size()), t.data(), GL_STATIC_DRAW);
 
             model_ids.insert({str_path, {vbo_buffer[0], n_triangles, model_tex_id}});
         } else {

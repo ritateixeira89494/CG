@@ -158,7 +158,7 @@ drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxB
 */
 void drawTopSphere(int radius, int slices, int stacks, ofstream *file, ofstream *norm_file, ofstream &text) {
     //Alfa = xOz plano
-    float incrementAlfa = 2.f * M_PI / slices;
+    float incrementAlfa = 2.f * ((float) M_PI) / ((float) slices);
     float currentalfa;
     float zero = 0.0f;
     float proxAlfa;
@@ -176,10 +176,12 @@ void drawTopSphere(int radius, int slices, int stacks, ofstream *file, ofstream 
     // Mas o y avança em paralelo, de 0.5 para cima e baixo ao mesmo tempo, porque desenhamos as duas faces da esfera assim.
     float current_y_bitmap = 0;
 
-    for (currentBeta = 0, proxBeta = incrementBeta;
-         currentBeta < (M_PI / 2); currentBeta += incrementBeta, proxBeta += incrementBeta) {
-        for (currentalfa = 0, proxAlfa = incrementAlfa;
-             currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
+    for (currentBeta = 0, proxBeta = incrementBeta, current_y_bitmap = 0.5;
+         currentBeta <
+         (M_PI / 2); currentBeta += incrementBeta, proxBeta += incrementBeta, current_y_bitmap += increment_Y_bitmap) {
+        for (currentalfa = 0, proxAlfa = incrementAlfa, current_x_bitmap = 0;
+             currentalfa < 2 *
+                           M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa, current_x_bitmap += increment_X_bitmap) {
             drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file, current_y_bitmap,
                            increment_Y_bitmap, current_x_bitmap, increment_X_bitmap, norm_file, text);
             drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file, -current_y_bitmap,
