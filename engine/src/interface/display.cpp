@@ -8,6 +8,8 @@
 
 #endif
 
+#include <IL/il.h>
+
 #include "model/transforms/Transform.h"
 #include "model/transforms/Translate.h"
 #include "interface/display.h"
@@ -23,7 +25,7 @@ using namespace interface;
 
 Scene scene;
 
-GLuint modes[3] = {GL_FILL, GL_LINE,  GL_POINT};
+GLuint modes[3] = {GL_FILL, GL_LINE, GL_POINT};
 int mode = 0; // Specifies the current active mode in the modes array
 
 bool cam_mode = false;
@@ -55,21 +57,21 @@ View selected;
 void placeAxis() {
     glBegin(GL_LINES);
     // X Axis in red
-    float red[4] = { 1.0f, 0.0f, 0.0f, 1.0f};
+    float red[4] = {1.0f, 0.0f, 0.0f, 1.0f};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, red);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, red);
     glVertex3f(-1000.0f, 0.0f, 0.0f);
     glVertex3f(1000.0f, 0.0f, 0.0f);
     // Y Axis in Green
-    float green[4] = { 0.0f, 1.0f, 0.0f, 1.0f};
+    float green[4] = {0.0f, 1.0f, 0.0f, 1.0f};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, green);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, green);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, green);
     glVertex3f(0.0f, -1000.0f, 0.0f);
     glVertex3f(0.0f, 1000.0f, 0.0f);
     // Z Axis in Blue
-    float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f};
+    float blue[4] = {0.0f, 0.0f, 1.0f, 1.0f};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, blue);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blue);
@@ -529,11 +531,13 @@ void set_gl_settings(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glPolygonMode(GL_FRONT, modes[mode]);
 
-    float black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    float black[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 
     glewInit();

@@ -16,15 +16,21 @@
 
 #endif
 
+#include <IL/il.h>
+#include <fstream>
+#include <cstring>
+
 using namespace std;
 
 namespace model {
-    map<string, pair<unsigned int, long>> Model::model_ids = {}; // Path of the model -> (vbo_id, n_triangles)
+    map<string, tuple<unsigned int, long, unsigned int>> Model::model_ids = {}; // Path of the model -> (vbo_id, n_triangles, tex_id)
     map<string, pair<unsigned int, long>> Model::normal_ids = {};
+    map<string, unsigned int> Model::texture_ids = {}; // Texture path -> id of texture
 
     void Model::set_material_colors(MaterialColors colors) {
         materialColors = colors;
     }
+
 
     long Model::get_n_triangles() const {
         return n_triangles;
@@ -48,6 +54,7 @@ namespace model {
             float point2[3];
             float point3[3];
 
+            // Reading the .3d file
             while (
                     fscanf(f, "(%f,%f,%f);(%f,%f,%f);(%f,%f,%f)\n",
                            &point1[0], &point1[1], &point1[2],
@@ -70,13 +77,27 @@ namespace model {
             }
             n_triangles = (long) (triangles.size() / 3);
 
+            // Vertices
+            glGenBuffers(1, &vbo_buffer[0]); // Initialize vbo buffer
+            glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[0]);
             glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr) (triangles.size() * sizeof(float)), triangles.data(),
                          GL_STATIC_DRAW);
 
-            model_ids.insert({str_path, {vbo_buffer[0], n_triangles}});
+            // Reading the .text file
+            string str_path = string(path);
+            vector<float> t = parseTextureCoordinates(
+                    const_cast<char *>((str_path.substr(0, str_path.length() - 3) + ".text").c_str()));
+
+            // Texture coordenates
+            glGenBuffers(1, &model_tex_id);
+            glBindBuffer(GL_ARRAY_BUFFER, model_tex_id);
+            glBufferData(GL_ARRAY_BUFFER, (long) (sizeof(float) * 2 * t.size()), t.data(), GL_STATIC_DRAW);
+
+            model_ids.insert({str_path, {vbo_buffer[0], n_triangles, model_tex_id}});
         } else {
-            vbo_buffer[0] = model_ids[str_path].first;
-            n_triangles = model_ids[str_path].second;
+            vbo_buffer[0] = get<0>(model_ids[str_path]);
+            n_triangles = get<1>(model_ids[str_path]);
+            model_tex_id = get<2>(model_ids[str_path]);
         }
 
         return n_triangles;
@@ -166,13 +187,100 @@ namespace model {
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer[1]);
         glNormalPointer(GL_FLOAT, 0, 0);
-        
+
+        if (!(this->texture_path.empty())) { // Has a texture
+            glBindTexture(GL_TEXTURE_2D, this->tex_id);
+            glBindBuffer(GL_ARRAY_BUFFER, this->model_tex_id);
+            glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
+        }
+
         glDrawArrays(GL_TRIANGLES, 0, (int) n_triangles);
+
+        glBindTexture(GL_TEXTURE_2D, 0); // Resetting the texture
     }
 
     Model::Model(const char *path, const string &texture_path, const MaterialColors materialColor) : Model(path) {
         this->texture_path = texture_path;
         this->materialColors = materialColor;
+
+    void Model::loadTexture() {
+        if (model_ids.count(this->texture_path) == 0) {
+
+            unsigned int t, tw, th;
+            unsigned char *texData;
+
+            ilInit();
+            ilEnable(IL_ORIGIN_SET);
+            ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+            ilGenImages(1, &t);
+            ilBindImage(t);
+            if (!ilLoadImage((ILstring) texture_path.c_str())) {
+                cerr << "\'" << texture_path << "\'" << " path texture image is invalid!" << endl;
+                exit(1);
+            }
+
+            tw = ilGetInteger(IL_IMAGE_WIDTH);
+            th = ilGetInteger(IL_IMAGE_HEIGHT);
+            ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+            texData = ilGetData();
+
+            glGenTextures(1, &tex_id);
+
+            glBindTexture(GL_TEXTURE_2D, tex_id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (signed) tw, (signed) th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+        } else {
+            this->tex_id = texture_ids[this->texture_path];
+        }
     }
 
+
+    Model::Model(const char *path, char *texture_path, MaterialColors *materialColors) : Model(path) {
+        this->texture_path = texture_path ? texture_path : "";
+        // TODO: Loading the texture coordenate and rendering the texture
+        if (!(this->texture_path.empty())) loadTexture();
+
+        this->materialColors = materialColors;
+    }
+
+
+    vector<float> Model::parseTextureCoordinates(char *path) {
+        vector<float> tex_points;
+
+        tuple<float, float> point1;
+        tuple<float, float> point2;
+        tuple<float, float> point3;
+
+        FILE *f = fopen(path, "r");
+
+        // Reading the .text file
+        while (fscanf(f, "(%f,%f);(%f,%f);(%f,%f)\n",
+
+                      &get<0>(point1), &get<1>(point1),
+                      &get<0>(point2), &get<1>(point2),
+                      &get<0>(point3), &get<1>(point3)) != EOF) {
+            cout << "(" << get<0>(point1) << "," << get<1>(point1) << ");";
+            cout << "(" << get<0>(point2) << "," << get<1>(point2) << ");";
+            cout << "(" << get<0>(point3) << "," << get<1>(point3) << ")" << endl;
+
+            tex_points.push_back(get<0>(point1));
+            tex_points.push_back(get<1>(point1));
+
+            tex_points.push_back(get<0>(point2));
+            tex_points.push_back(get<1>(point2));
+
+            tex_points.push_back(get<0>(point3));
+            tex_points.push_back(get<1>(point3));
+        }
+        return tex_points;
+    }
 }

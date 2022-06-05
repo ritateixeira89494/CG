@@ -39,3 +39,11 @@ tuple<float,float,float> normalize(tuple<float,float,float> p) {
 
     return make_tuple(x/len,y/len,z/len);
 }
+
+}
+
+void write_text_triangule(tuple<float, float> t1, tuple<float, float> t2, tuple<float, float> t3, ofstream &file) {
+    file << "(" << get<0>(t1) << "," << get<1>(t1) << ");";
+    file << "(" << get<0>(t2) << "," << get<1>(t2) << ");";
+    file << "(" << get<0>(t3) << "," << get<1>(t3) << ")\n";
+}

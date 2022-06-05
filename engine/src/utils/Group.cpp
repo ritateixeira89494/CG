@@ -142,27 +142,30 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
     Model *m;
 
     while (model != nullptr) {
-        const char *modelPath = model->Attribute("file");
+        const char *model_path = model->Attribute("file");
 
         const XMLElement *texture = model->FirstChildElement("texture");
 
-        if (texture); // TODO: Pass texture path to model.
+        char *texture_path = nullptr;
+
+        if (texture) { // If texture is provided
+            texture_path = (char *) texture->Attribute("file");
+            cout << "Texture found in " << texture_path << endl; // TODO: Debug print
+        }
 
         const char *mainColor = model->Attribute("color");
 
-        if (mainColor) {
+        if (mainColor) { // If color is provided
             tuple<float, float, float> color = {0, 0, 0};
             sscanf(mainColor, "%f %f %f", &get<0>(color), &get<1>(color), &get<2>(color));
-            m = new Model(modelPath, color);
-
-        } else {
-            m = new Model(modelPath);
         }
 
         XMLElement *color_elem = model->FirstChildElement("color");
         MaterialColors colors = getColor(color_elem);
 
+        m = new Model(model_path, texture_path, nullptr);
         m->set_material_colors(colors);
+
         currentModels.push_back(m);
         model = model->NextSiblingElement();
     }
@@ -177,7 +180,7 @@ MaterialColors Group::getColor(XMLElement *color_elem) {
     auto spec = color_elem->FirstChildElement("specular");
     auto emiss = color_elem->FirstChildElement("emissive");
     auto shine = color_elem->FirstChildElement("shininess");
-    
+
     int diffuse[4] = { 255, 255, 255, 255 };
     int ambient[4] = { 1, 1, 1, 1 };
     int specular[4] = { 255, 255, 255, 255 };
@@ -207,12 +210,12 @@ MaterialColors Group::getColor(XMLElement *color_elem) {
         emiss->QueryIntAttribute("G", &(emissive[1]));
         emiss->QueryIntAttribute("B", &(emissive[2]));
     }
-    
+
     if(shine) {
         shine->QueryIntAttribute("value",&shininess);
     }
 
-    return MaterialColors(diffuse, ambient, specular, emissive, shininess); 
+    return MaterialColors(diffuse, ambient, specular, emissive, shininess);
 }
 
 vector<Group *> Group::getSubGroups(XMLElement *firstGroup) {
