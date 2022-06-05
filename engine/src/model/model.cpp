@@ -14,6 +14,10 @@
 
 #endif
 
+#include <IL/il.h>
+#include <fstream>
+#include <cstring>
+
 using namespace std;
 
 namespace model {
