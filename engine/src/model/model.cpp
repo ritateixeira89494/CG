@@ -201,7 +201,10 @@ namespace model {
 
     Model::Model(const char *path, const string &texture_path, const MaterialColors materialColor) : Model(path) {
         this->texture_path = texture_path;
+        if (!(this->texture_path.empty())) loadTexture();
+
         this->materialColors = materialColor;
+    }
 
     void Model::loadTexture() {
         if (model_ids.count(this->texture_path) == 0) {
@@ -243,16 +246,6 @@ namespace model {
         }
     }
 
-
-    Model::Model(const char *path, char *texture_path, MaterialColors *materialColors) : Model(path) {
-        this->texture_path = texture_path ? texture_path : "";
-        // TODO: Loading the texture coordenate and rendering the texture
-        if (!(this->texture_path.empty())) loadTexture();
-
-        this->materialColors = materialColors;
-    }
-
-
     vector<float> Model::parseTextureCoordinates(char *path) {
         vector<float> tex_points;
 
@@ -262,15 +255,17 @@ namespace model {
 
         FILE *f = fopen(path, "r");
 
+        if (!f) {
+            cerr << "\"" << path << "\" path to texture coordinates is invalid!" << endl;
+            return {};
+        }
+
         // Reading the .text file
         while (fscanf(f, "(%f,%f);(%f,%f);(%f,%f)\n",
 
                       &get<0>(point1), &get<1>(point1),
                       &get<0>(point2), &get<1>(point2),
                       &get<0>(point3), &get<1>(point3)) != EOF) {
-            cout << "(" << get<0>(point1) << "," << get<1>(point1) << ");";
-            cout << "(" << get<0>(point2) << "," << get<1>(point2) << ");";
-            cout << "(" << get<0>(point3) << "," << get<1>(point3) << ")" << endl;
 
             tex_points.push_back(get<0>(point1));
             tex_points.push_back(get<1>(point1));

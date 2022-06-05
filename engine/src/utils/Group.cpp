@@ -146,10 +146,10 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 
         const XMLElement *texture = model->FirstChildElement("texture");
 
-        char *texture_path = nullptr;
+        string texture_path;
 
         if (texture) { // If texture is provided
-            texture_path = (char *) texture->Attribute("file");
+            texture_path = texture->Attribute("file");
             cout << "Texture found in " << texture_path << endl; // TODO: Debug print
         }
 
@@ -163,8 +163,7 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
         XMLElement *color_elem = model->FirstChildElement("color");
         MaterialColors colors = getColor(color_elem);
 
-        m = new Model(model_path, texture_path, nullptr);
-        m->set_material_colors(colors);
+        m = new Model(model_path, texture_path, colors);
 
         currentModels.push_back(m);
         model = model->NextSiblingElement();
@@ -181,38 +180,38 @@ MaterialColors Group::getColor(XMLElement *color_elem) {
     auto emiss = color_elem->FirstChildElement("emissive");
     auto shine = color_elem->FirstChildElement("shininess");
 
-    int diffuse[4] = { 255, 255, 255, 255 };
-    int ambient[4] = { 1, 1, 1, 1 };
-    int specular[4] = { 255, 255, 255, 255 };
-    int emissive[4] = { 1, 1, 1, 1 };
+    int diffuse[4] = {255, 255, 255, 255};
+    int ambient[4] = {1, 1, 1, 1};
+    int specular[4] = {255, 255, 255, 255};
+    int emissive[4] = {1, 1, 1, 1};
     int shininess = 128;
 
-    if(diff) {
+    if (diff) {
         diff->QueryIntAttribute("R", &(diffuse[0]));
         diff->QueryIntAttribute("G", &(diffuse[1]));
         diff->QueryIntAttribute("B", &(diffuse[2]));
     }
 
-    if(amb) {
+    if (amb) {
         amb->QueryIntAttribute("R", &(ambient[0]));
         amb->QueryIntAttribute("G", &(ambient[1]));
         amb->QueryIntAttribute("B", &(ambient[2]));
     }
 
-    if(spec) {
+    if (spec) {
         spec->QueryIntAttribute("R", &(specular[0]));
         spec->QueryIntAttribute("G", &(specular[1]));
         spec->QueryIntAttribute("B", &(specular[2]));
     }
 
-    if(emiss) {
+    if (emiss) {
         emiss->QueryIntAttribute("R", &(emissive[0]));
         emiss->QueryIntAttribute("G", &(emissive[1]));
         emiss->QueryIntAttribute("B", &(emissive[2]));
     }
 
-    if(shine) {
-        shine->QueryIntAttribute("value",&shininess);
+    if (shine) {
+        shine->QueryIntAttribute("value", &shininess);
     }
 
     return MaterialColors(diffuse, ambient, specular, emissive, shininess);

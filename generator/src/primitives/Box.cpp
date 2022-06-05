@@ -167,8 +167,7 @@ void drawBox(float length, float divisions, string nameOfFile) {
         }
     }
 
-    texture_file.close();
-
     vertexFile.close();
     normalFile.close();
+    texture_file.close();
 }
