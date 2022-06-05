@@ -75,7 +75,7 @@ namespace model {
 
             // Reading the .text file
             string str_path = string(path);
-            auto t = parseTextureCoordinates(
+            vector<float> t = parseTextureCoordinates(
                     const_cast<char *>((str_path.substr(0, str_path.length() - 3) + ".text").c_str()));
 
             // Texture coordenates
@@ -184,8 +184,8 @@ namespace model {
     }
 
 
-    vector<tuple<float, float>> Model::parseTextureCoordinates(char *path) {
-        vector<tuple<float, float>> tex_points;
+    vector<float> Model::parseTextureCoordinates(char *path) {
+        vector<float> tex_points;
 
         tuple<float, float> point1;
         tuple<float, float> point2;
@@ -198,16 +198,19 @@ namespace model {
 
                       &get<0>(point1), &get<1>(point1),
                       &get<0>(point2), &get<1>(point2),
-                      &get<0>(point3), &get<1>(point3)
-
-        ) != EOF) {
+                      &get<0>(point3), &get<1>(point3)) != EOF) {
             cout << "(" << get<0>(point1) << "," << get<1>(point1) << ");";
             cout << "(" << get<0>(point2) << "," << get<1>(point2) << ");";
             cout << "(" << get<0>(point3) << "," << get<1>(point3) << ")" << endl;
 
-            tex_points.push_back(point1);
-            tex_points.push_back(point2);
-            tex_points.push_back(point3);
+            tex_points.push_back(get<0>(point1));
+            tex_points.push_back(get<1>(point1));
+
+            tex_points.push_back(get<0>(point2));
+            tex_points.push_back(get<1>(point2));
+
+            tex_points.push_back(get<0>(point3));
+            tex_points.push_back(get<1>(point3));
         }
         return tex_points;
     }

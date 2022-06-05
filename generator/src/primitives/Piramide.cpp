@@ -1,6 +1,7 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <iostream>
 
 #include "primitives/Piramide.h"
 #include "utils/utils.h"
@@ -29,22 +30,20 @@ void drawBasePyramid(float radius, int height, int slices, int stacks, ofstream 
         auto t2 = make_tuple(0, 1);
         auto t3 = make_tuple(1, 1);
 
-        write_triangle(p1, p2, p3, file);
-
-        write_text_triangule(t1, t2, t3, text);
+        //write_triangle(p1, p2, p3, file);
+        // TODO: Base is removed
+        //write_text_triangule(t1, t2, t3, text);
     }
 
 }
 
 void drawPyramid(float radius, float height, int slices, float stacks, string nameFile) {
-
     ofstream file;
     file.open(nameFile);
 
     // Texture file
     ofstream text_file;
     text_file.open(nameFile.substr(0, nameFile.length() - 3) + ".text");
-
 
     drawBasePyramid(radius, height, slices, stacks, &file, text_file);
 
@@ -53,7 +52,7 @@ void drawPyramid(float radius, float height, int slices, float stacks, string na
 
     float currentRadius = 0;
     float zero = 0.0f;
-    float alfa = (2 * M_PI) / slices;
+    float alfa = (2.f * (float) M_PI) / ((float) slices);
     float proxRadius = alfa;
 
     float incX_bitmap = 1.0f / ((float) slices);
@@ -66,7 +65,7 @@ void drawPyramid(float radius, float height, int slices, float stacks, string na
     float current_x_bitmap = 0;
     float current_y_bitmap = 0;
     int vertex = 0;
-    for (currentRadius = 0, current_x_bitmap = 0;
+    for (currentRadius = 0, current_y_bitmap = 0;
          currentRadius < 2 * M_PI; currentRadius += alfa, proxRadius += alfa, current_x_bitmap += incX_bitmap) {
         for (currentHeight = 0, current_y_bitmap = 0;
              currentHeight < height; currentHeight += h, current_y_bitmap += incY_bitmap) {
@@ -99,6 +98,16 @@ void drawPyramid(float radius, float height, int slices, float stacks, string na
             // Generating the texture coordenates
             write_text_triangule(t1, t2, t3, text_file);
             write_text_triangule(t4, t5, t6, text_file);
+
+            cout << currentRadius << " " << currentHeight << " (" << get<0>(t1) << "," << get<1>(t1)
+                 << ");";
+
+            cout << "(" << get<0>(t2) << "," << get<1>(t2) << ");";
+            cout << "(" << get<0>(t3) << "," << get<1>(t3) << ")\n";
+
+            cout << "(" << get<0>(t4) << "," << get<1>(t4) << ");";
+            cout << "(" << get<0>(t5) << "," << get<1>(t5) << ");";
+            cout << "(" << get<0>(t6) << "," << get<1>(t6) << ")\n";
         }
     }
 

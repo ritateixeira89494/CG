@@ -108,7 +108,7 @@ namespace model {
             void render(bool cam_mode);
 
 
-            vector <tuple<float, float>> parseTextureCoordinates(char *path);
+            vector<float> parseTextureCoordinates(char *path);
     };
 }
 

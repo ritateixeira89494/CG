@@ -38,25 +38,53 @@ void drawSquareUpT(float xOr, float yOr, float edge, float height, ofstream *fil
     Also, we start by calculating each point, and then we write them to files.
 */
 void
-drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxBeta, float radius, ofstream *file) {
+drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxBeta, float radius, ofstream *file,
+               float current_y_bitmap, float increment_Y_bitmap, float current_x_bitmap, float increment_X_bitmap,
+               ofstream &text) {
     //Point 1
     float x1 = radius * cos(currentBeta) * sin(currentalfa);
+
     float y1 = radius * sin(currentBeta);
     float z1 = radius * cos(currentBeta) * cos(currentalfa);
 
-    //Point 2
+//Point 2
     float x2 = radius * cos(currentBeta) * sin(proxAlfa);
     float y2 = radius * sin(currentBeta);
     float z2 = radius * cos(currentBeta) * cos(proxAlfa);
 
-    //Point 3
+//Point 3
     float x3 = radius * cos(proxBeta) * sin(currentalfa);
     float y3 = radius * sin(proxBeta);
     float z3 = radius * cos(proxBeta) * cos(currentalfa);
-    //Point 4
+//Point 4
     float x4 = radius * cos(proxBeta) * sin(proxAlfa);
     float y4 = radius * sin(proxBeta);
     float z4 = radius * cos(proxBeta) * cos(proxAlfa);
+
+    // Texture stuff
+    float x1t = current_x_bitmap;
+    float y1t = current_y_bitmap;
+
+    float x2t = current_x_bitmap + increment_X_bitmap;
+    float y2t = current_y_bitmap;
+
+    float x3t = current_x_bitmap;
+    float y3t = current_y_bitmap + increment_Y_bitmap;
+
+    float x4t = current_x_bitmap + increment_X_bitmap;
+    float y4t = current_y_bitmap + increment_Y_bitmap;
+
+
+    // Texture points
+    tuple<float, float> t1;
+    tuple<float, float> t2;
+    tuple<float, float> t3;
+    tuple<float, float> t4;
+    tuple<float, float> t5;
+    tuple<float, float> t6;
+
+
+    ////
 
     tuple<float, float, float> p1;
     tuple<float, float, float> p2;
@@ -73,6 +101,15 @@ drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxB
         p4 = make_tuple(x4, y4, z4);
         p5 = make_tuple(x3, y3, z3);
         p6 = make_tuple(x2, y2, z2);
+
+        // Texture
+        t1 = make_tuple(x3t, y3t);
+        t2 = make_tuple(x1t, y1t);
+        t3 = make_tuple(x2t, y2t);
+
+        t4 = make_tuple(x4t, y4t);
+        t5 = make_tuple(x3t, y3t);
+        t6 = make_tuple(x2t, y2t);
     } else {
         p1 = make_tuple(x3, y3, z3);
         p2 = make_tuple(x2, y2, z2);
@@ -81,18 +118,31 @@ drawFaceSphere(float currentalfa, float proxAlfa, float currentBeta, float proxB
         p4 = make_tuple(x4, y4, z4);
         p5 = make_tuple(x2, y2, z2);
         p6 = make_tuple(x3, y3, z3);
+
+        // Texture
+        t1 = make_tuple(x3t, y3t);
+        t2 = make_tuple(x2t, y2t);
+        t3 = make_tuple(x1t, y1t);
+
+        t4 = make_tuple(x4t, y4t);
+        t5 = make_tuple(x2t, y2t);
+        t6 = make_tuple(x3t, y3t);
     }
+
     write_triangle(p1, p2, p3, file);
     write_triangle(p4, p5, p6, file);
+
+    write_text_triangule(t1, t2, t3, text);
+    write_text_triangule(t4, t5, t6, text);
 }
 
 /*!
     In this function we describe all points, in both alfa and beta coordinates.
 	Also, we divide each level of the sphere in parallelograms.
 */
-void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
+void drawTopSphere(int radius, int slices, int stacks, ofstream *file, ofstream &text) {
     //Alfa = xOz plano
-    float incrementAlfa = 2 * M_PI / slices;
+    float incrementAlfa = 2.f * M_PI / slices;
     float currentalfa;
     float zero = 0.0f;
     float proxAlfa;
@@ -102,12 +152,24 @@ void drawTopSphere(int radius, int slices, int stacks, ofstream *file) {
     float currentBeta;
     float proxBeta;
 
-    for (currentBeta = 0, proxBeta = incrementBeta;
-         currentBeta < (M_PI / 2); currentBeta += incrementBeta, proxBeta += incrementBeta) {
-        for (currentalfa = 0, proxAlfa = incrementAlfa;
-             currentalfa < 2 * M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa) {
-            drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file);
-            drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file);
+    // Bitmap part
+    float increment_X_bitmap = 1.0f / ((float) stacks);
+    float increment_Y_bitmap = 1.0f / ((float) slices);
+    // O x avança por faixas verticais
+    float current_x_bitmap = 0;
+    // Mas o y avança em paralelo, de 0.5 para cima e baixo ao mesmo tempo, porque desenhamos as duas faces da esfera assim.
+    float current_y_bitmap = 0;
+
+    for (currentBeta = 0, proxBeta = incrementBeta, current_y_bitmap = 0.5;
+         currentBeta <
+         (M_PI / 2); currentBeta += incrementBeta, proxBeta += incrementBeta, current_y_bitmap += increment_Y_bitmap) {
+        for (currentalfa = 0, proxAlfa = incrementAlfa, current_x_bitmap = 0;
+             currentalfa < 2 *
+                           M_PI; currentalfa += incrementAlfa, proxAlfa += incrementAlfa, current_x_bitmap += increment_X_bitmap) {
+            drawFaceSphere(currentalfa, proxAlfa, currentBeta, proxBeta, radius, file, current_y_bitmap,
+                           increment_Y_bitmap, current_x_bitmap, increment_X_bitmap, text);
+            drawFaceSphere(currentalfa, proxAlfa, -currentBeta, -proxBeta, radius, file, -current_y_bitmap,
+                           -increment_Y_bitmap, current_x_bitmap, increment_X_bitmap, text);
         }
     }
 }
@@ -119,8 +181,12 @@ void drawSphere(int radius, int slices, int stacks, string filename) {
     ofstream file;
     file.open(filename);
 
+    // Texture file
+    ofstream text_file;
+    text_file.open(filename.substr(0, filename.length() - 3) + ".text");
 
-    drawTopSphere(radius, slices, stacks / 2, &file);
+
+    drawTopSphere(radius, slices, stacks / 2, &file, text_file);
 
     file.close();
 }
