@@ -199,6 +199,10 @@ void BezierSurface::processBezierPatches(char *file_path, char *output_file, int
         exit(1);
     }
 
+    // Reset output file
+    remove(output_file);
+    remove(normal_file.c_str());
+
     if (fscanf(f, "%d", &n_patches) <= 0) {
         cerr << "Invalid bezier patch file format!" << endl;
         exit(1);
