@@ -52,7 +52,7 @@ void drawPlane(float length, float divisions, string name) {
     normalFile.open(normalPath);
 
     float increment = length / divisions;
-    float len_half = length/2;
+    float len_half = length;
     //Draw base and top
     for (float line = -len_half; line < len_half; line = line + increment) {
         for (float collumn = -len_half; collumn < len_half; collumn = collumn + increment) {
