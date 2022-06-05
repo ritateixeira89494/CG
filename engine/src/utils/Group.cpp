@@ -150,7 +150,6 @@ vector<Model *> Group::getModels(XMLNode *modelsNode) {
 
         if (texture) { // If texture is provided
             texture_path = texture->Attribute("file");
-            cout << "Texture found in " << texture_path << endl; // TODO: Debug print
         }
 
         const char *mainColor = model->Attribute("color");
