@@ -55,7 +55,7 @@ void drawPlane(float length, float divisions, string name) {
     //Draw base and top
     for (float line = 0; line < length; line = line + increment) {
         for (float collumn = 0; collumn < length; collumn = collumn + increment) {
-            drawSquareUp(line, collumn, increment, 0.0f, &normalFile, &normalFile);
+            drawSquareUp(line, collumn, increment, 0.0f, &vertexFile, &normalFile);
         }
     }
     vertexFile.close();
